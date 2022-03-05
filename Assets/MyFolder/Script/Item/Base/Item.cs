@@ -8,6 +8,7 @@ public class Item : MonoBehaviour
     [Header("名前")]public string name;
     [Header("アイテムのタイプ")]public string type;
     [Header("アイテムの説明")] public string itemDescription;
+    [Header("ステージ難易度に応じたID")] public int diffId;
     public bool isUsedFlag;
     public GameObject itemObj;
     public GameObject itemPanelObj;
@@ -21,7 +22,7 @@ public class Item : MonoBehaviour
         itemObj = this.gameObject;
         if (itemObj == null)
         {
-            Debug.Log("nulnll");
+            Debug.Log("null");
         }
     }
 

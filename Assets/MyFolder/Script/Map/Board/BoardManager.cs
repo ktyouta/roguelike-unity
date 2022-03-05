@@ -82,10 +82,6 @@ public class BoardManager : MonoBehaviour
     public RandomCreatePoint singleMountain = new RandomCreatePoint(5,8);
     public RandomCreatePoint singleForest = new RandomCreatePoint(6, 9);
 
-    //固定オブジェクト
-    public BuildingObject castle = new BuildingObject(9,4,1,1);
-    public BuildingObject building = new BuildingObject(4, 2, 1, 1);
-
     //MAPの材料
     //フロア
     [Header("出口")] public GameObject exit;
@@ -106,9 +102,16 @@ public class BoardManager : MonoBehaviour
     //マップ用オブジェクト(装飾用)
     [Header("石タイル")] public GameObject stoneTile;
 
+    //固定オブジェクト
+    public BuildingObject castle = new BuildingObject(9, 4, 1, 1);
+    public BuildingObject building = new BuildingObject(4, 2, 1, 1);
+
     //エネミー
     [Header("敵")] public GameObject enemy;
     [Header("敵2")] public GameObject enemy2;
+
+    //アイテム(宝箱)
+    [Header("宝箱")] public GameObject treasure;
 
     //アイテム(消費系)
     [Header("食べ物")] public GameObject food;
@@ -131,6 +134,15 @@ public class BoardManager : MonoBehaviour
     [Header("マップの分割数")] public int borderDivision = 3;
     [Header("境界線")] public int secondBorder = 8;
 
+    //区画ごとの属性
+    [Header("草原区画の属性")] public floorAttribute grassDivisionAttribute;
+    [Header("土区画の属性")] public floorAttribute soilDivisionAttribute;
+    [Header("岩区画の属性")] public floorAttribute stoneDivisionAttribute;
+    [Header("砂漠区画の属性")] public floorAttribute desertDivisionAttribute;
+
+    //NPC
+    [Header("テスト用NPC")] public GameObject testNpc;
+
     //変換用
     private Transform boardHolder;
 
@@ -146,9 +158,11 @@ public class BoardManager : MonoBehaviour
     private int thirdBorder;
     private int nextLineValue;
     private int randomSettingObjectNum;
+    //一区画分の横幅
+    private int singleDivisionColumns;
    
     //リスト
-    //6×6のマスでobjectがない場所を管理する
+    //objectがない場所を管理する
     private List<Vector3> gridPositons = new List<Vector3>();
     //マップ生成の際に取得したリストのインデックスを格納するリスト
     private List<int> mapListIndex = new List<int>();
@@ -158,14 +172,11 @@ public class BoardManager : MonoBehaviour
     private List<floorAttribute> createMapTileList = new List<floorAttribute>();
     //マップオブジェクトを格納するリスト
     private List<floorAttribute> mapTileList = new List<floorAttribute>();
-    //境界線を格納する
+    //境界線を格納するリスト
     private List<int> mapBorderList = new List<int>();
-
-    //区画ごとの属性
-    [Header("草原区画の属性")]public floorAttribute grassDivisionAttribute;
-    [Header("土区画の属性")] public floorAttribute soilDivisionAttribute;
-    [Header("岩区画の属性")] public floorAttribute stoneDivisionAttribute;
-    [Header("砂漠区画の属性")] public floorAttribute desertDivisionAttribute;
+    //抽選用のアイテムリスト
+    List<Item> lotteryList = new List<Item>();
+    List<Item> lotteryList2 = new List<Item>();
 
     //フィールド生成
     /**
@@ -445,10 +456,10 @@ public class BoardManager : MonoBehaviour
      */
     private void createBorderLineList()
     {
-        int border = columns / borderDivision;
+        singleDivisionColumns = columns / borderDivision;
         for (int i=0;i< borderDivision + 1; i++)
         {
-            mapBorderList.Add(border*i);
+            mapBorderList.Add(singleDivisionColumns * i);
         }
     }
 
@@ -489,6 +500,11 @@ public class BoardManager : MonoBehaviour
     //Mapにランダムで引数のものを配置する(敵、壁、アイテム)
     void LayoutObjectAtRandom(GameObject tile, int minimum, int maximum)
     {
+        //tileがセットされていない場合はreturn
+        if (tile == null)
+        {
+            return;
+        }
         //生成するアイテムの個数を最小最大値からランダムに決め、objectCountに設定する
         int objectCount = Random.Range(minimum, maximum);
         //割り当て用の座標が余っている場合のみ配置可能
@@ -517,14 +533,34 @@ public class BoardManager : MonoBehaviour
             {
                 InitialiseList(mapBorderList[i] + 1, mapBorderList[i + 1]);
                 nextLineValue = mapBorderList[i + 1];
-                settingObjectFirstSection(mapTileList[i],i);
+                settingObjectBySection(mapTileList[i],i);
             }
         }
+    }
+
+    /**
+     * 宝箱から出現するアイテムのリストを作成
+     */
+    private void addTreasureItemList()
+    {
+        GManager.instance.treasureItemList.Add(food.GetComponent<Item>());
+    }
+
+    /**
+     * 宝箱から出現するアイテムのリストを作成
+     */
+    private void createTreasureItemList()
+    {
+        lotteryList.Add(portion.GetComponent<Item>());
+        lotteryList2.Add(food.GetComponent<Item>());
+        GManager.instance.lotteryitemList.Add(lotteryList);
+        GManager.instance.lotteryitemList.Add(lotteryList2);
     }
 
     //ゲームボードをレイアウトする
     public void SetupScene(int level)
     {
+        createTreasureItemList();
         createFloorTileList();
         createBorderLineList();
         //外壁と床を作成します
@@ -540,32 +576,34 @@ public class BoardManager : MonoBehaviour
     /**
      * マップの各区画にオブジェクトを設置する
      */
-    private void settingObjectFirstSection(floorAttribute floorDivisionObj,int settingObjRule)
+    private void settingObjectBySection(floorAttribute floorDivisionObj,int settingObjRule)
     {
         mapListIndex.Clear();
         //草原フロア
         if (floorDivisionObj.settingMapObjRule == Define.FOREST_DIVISION)
         {
             //木オブジェクト(集合体)を設置
-            createMapRandomObjects(HardWood, 1, 1, singleForest, true);
+            createMapRandomObjects(HardWood);
+            //石タイル(装飾用)を設置
+            //createMapRandomObjects(stoneTile);
         }
         //土フロア
         else if (floorDivisionObj.settingMapObjRule == Define.SOIL_DIVISION)
         {
             //土山のオブジェクト(集合体)を設置
-            createMapRandomObjects(soilMountain, 1, 1, singleForest, true);
+            //createMapRandomObjects(soilMountain, 1);
         }
         //岩エリア
         else if (floorDivisionObj.settingMapObjRule == Define.STONE_DIVISION)
         {
             //岩山のオブジェクト(集合体)を設置
-            createMapRandomObjects(StoneMountain, 1, 1, singleForest, true);
+            //createMapRandomObjects(StoneMountain, 1);
         }
         //砂漠エリア
         else if (floorDivisionObj.settingMapObjRule == Define.DESERT_DIVISION)
         {
             //土山のオブジェクト(集合体)を設置
-            createMapRandomObjects(WaterPlace, 1, 1, singleForest, true);
+            //createMapRandomObjects(WaterPlace, 1);
         }
 
         //使用したリストを削除する
@@ -578,7 +616,11 @@ public class BoardManager : MonoBehaviour
             //ランダム化された位置で、最小値と最大値に基づいてランダムな数の食品タイルをインスタンス化します。
             LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum);
             //ポーションをインスタンス化
-            LayoutObjectAtRandom(portion, portionCount.minmum, portionCount.maximum);
+            //LayoutObjectAtRandom(portion, portionCount.minmum, portionCount.maximum);
+            //宝箱をインスタンス化
+            LayoutObjectAtRandom(treasure, portionCount.minmum, portionCount.maximum);
+            //NPCをインスタンス化
+            LayoutObjectAtRandom(testNpc, 1, 1);
         }
         //第二区画
         else if(settingObjRule == Define.SECOND_SETTING)
@@ -640,13 +682,37 @@ public class BoardManager : MonoBehaviour
      * 乱数を用いてオブジェクト(集合体)を生成する
      * 最初の一点を取得後周りにオブジェクトを設置する
      * @param tile　設置するオブジェクト
-     * @param minimum 作成するオブジェクト集合体の最小値
-     * @param maximum　作成するオブジェクト集合体の最大値
      */
-    public void createMapRandomObjects(GameObject tile, int minimum, int maximum,RandomCreatePoint createNum,bool isDence)
+    public void createMapRandomObjects(GameObject tile)
     {
+        TileBase tileObj;
+        //設置するオブジェクトにTileBaseがアタッチされていない場合は設置不可
+        if ((tileObj = tile.GetComponent<TileBase>()) == null)
+        {
+            return;
+        }
+        //設置ルールがランダムの場合は、ルール0～2を代入
+        int settingAlgorithmNum = tileObj.settingFuncRule == Define.RANDOM_SETTING ? Random.Range(Define.NORMAL_SETTING, Define.RANDOM_SETTING) : tileObj.settingFuncRule;
+        //オブジェクト(集合体)の設置個数を計算
+        int mapSingleDivisionSpace = rows * singleDivisionColumns;
+        int rectangleSpace = 1;
+        if (settingAlgorithmNum == Define.NORMAL_SETTING || settingAlgorithmNum == Define.DENCE_SETTING)
+        {
+           
+        }
+        else
+        {
+            rectangleSpace = (int)((singleDivisionColumns * tileObj.horizontalParam) * (rows*tileObj.verticalParam));
+        }
+        Debug.Log("singleDivisionColumns * tileObj.horizontalParam"+ singleDivisionColumns * tileObj.horizontalParam);
+        Debug.Log("rows*tileObj.verticalParam"+ rows * tileObj.verticalParam);
+        Debug.Log("mapSingleDivisionSpace"+ mapSingleDivisionSpace);
+        Debug.Log("rectangleSpace"+ rectangleSpace);
+        Debug.Log("mapSingleDivisionSpace/rectangleSpace"+ mapSingleDivisionSpace / rectangleSpace) ;
+        int settingNum = (int)((mapSingleDivisionSpace / rectangleSpace) * 0.2);
+        Debug.Log("settingNum"+settingNum);
         //乱数の数だけオブジェクト(オブジェクトの集合体)を作成する
-        for (int i=0;i< Random.Range(minimum, maximum); i++)
+        for (int i=0;i< settingNum; i++)
         {
             var permitCounter = 0;
             int getIndex;
@@ -685,15 +751,32 @@ public class BoardManager : MonoBehaviour
                 Vector3 randomPosition = gridPositons[getIndex];
                 Debug.Log("firstPosition"+randomPosition);
                 Instantiate(tile, gridPositons[getIndex], Quaternion.identity);
-                if (isDence)
+                //TileBaseで定義されたオブジェクトの設置ルールに従い関数を呼び出す
+                if (settingAlgorithmNum == Define.NORMAL_SETTING)
                 {
-                    //createDenceTile(tile, getIndex, createNum);
-                    createDenceTileVertical(tile, getIndex);
+                    createTile(tile, getIndex, tileObj.minSettingNum,tileObj.maxSettingNum);
+                }
+                else if (settingAlgorithmNum == Define.DENCE_SETTING)
+                {
+                    createDenceTile(tile, getIndex, tileObj.minSettingNum, tileObj.maxSettingNum);
+                }
+                else if (settingAlgorithmNum == Define.STRETCHING_SETTING)
+                {
+                    createDenceTileVertical(tile, getIndex,tileObj.verticalParam);
                 }
                 else
                 {
-                    createTile(tile, getIndex, createNum);
+                    createDenceTileVertical(tile, getIndex,tileObj.verticalParam);
                 }
+                //if (isDence)
+                //{
+                //    //createDenceTile(tile, getIndex, createNum);
+                //    createDenceTileVertical(tile, getIndex);
+                //}
+                //else
+                //{
+                //    createTile(tile, getIndex, createNum);
+                //}
             }
         }
     }
@@ -703,10 +786,10 @@ public class BoardManager : MonoBehaviour
      * @param tile 設置するゲームオブジェクト
      * @param position 最初に取得する地点
      */
-    public void createTile(GameObject tile, int getIndex, RandomCreatePoint createNum)
+    public void createTile(GameObject tile, int getIndex, int minNum,int maxNum)
     {
         //乱数で値取得(設置するオブジェクトの数)
-        int randomNum = Random.Range(createNum.minmum, createNum.maximum);
+        int randomNum = Random.Range(minNum, maxNum);
         Debug.Log("randomnum" + randomNum);
         int minXRange = -1;
         int maxXRange = 1;
@@ -752,10 +835,10 @@ public class BoardManager : MonoBehaviour
      * @param tile 設置するゲームオブジェクト
      * 
      */
-    public void createDenceTile(GameObject tile, int getIndex, RandomCreatePoint createNum)
+    public void createDenceTile(GameObject tile, int getIndex, int minNum, int maxNum)
     {
         //乱数で値取得(設置するオブジェクトの数)
-        int randomNum = Random.Range(createNum.minmum, createNum.maximum);
+        int randomNum = Random.Range(minNum, maxNum);
         Debug.Log("randomnum" + randomNum);
         int minXRange = isLeft;
         int maxXRange = isRight;
@@ -922,7 +1005,7 @@ public class BoardManager : MonoBehaviour
     /**
      * 初期取得点から縦方向にオブジェクトを設置し横方向に広げる
      */
-    private void createDenceTileVertical(GameObject tile, int getIndex)
+    private void createDenceTileVertical(GameObject tile, int getIndex,float verticalSettingParam)
     {
         //上方向に拡張
         if (getIndex < (gridPositons.Count/2))
@@ -930,7 +1013,8 @@ public class BoardManager : MonoBehaviour
             verticalPlus = true;
         }
         //int verticalParam = getIndex;
-        int verticalParam = Random.Range(2,rows-2);
+        //int verticalParam = Random.Range(2,rows-2);
+        int verticalParam = (int)(rows * verticalSettingParam);
         Debug.Log("count" + verticalParam);
         for (int i=0;i< verticalParam; i++)
         {
@@ -972,8 +1056,10 @@ public class BoardManager : MonoBehaviour
     //verticalParamから左右に拡張する
     private void createDenceTileHorizontal(GameObject tile,int verticalParam)
     {
-        int rightParam = Random.Range(1,5);
-        int leftParam = Random.Range(1,5);
+        //int rightParam = Random.Range(1,5);
+        //int leftParam = Random.Range(1,5);
+        int rightParam = Random.Range(1, (int)(singleDivisionColumns*tile.GetComponent<TileBase>().horizontalParam));
+        int leftParam = Random.Range(1, (int)(singleDivisionColumns * tile.GetComponent<TileBase>().horizontalParam));
         int horizontalParam = verticalParam;
         Debug.Log("right"+rightParam);
         Debug.Log("left" + leftParam);

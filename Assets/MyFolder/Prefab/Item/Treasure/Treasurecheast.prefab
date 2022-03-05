@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1832148257335570541
+--- !u!1 &1462914090350629713
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8698357232594665277}
-  - component: {fileID: 4869680232685392217}
-  - component: {fileID: 4080993653158441701}
-  - component: {fileID: 7273490126189779941}
-  - component: {fileID: 2054905488620782088}
-  - component: {fileID: 8190532374305305967}
-  m_Layer: 6
-  m_Name: Player
-  m_TagString: Player
+  - component: {fileID: 4606208658248272307}
+  - component: {fileID: 2464253830007889910}
+  - component: {fileID: 7877912644979544368}
+  - component: {fileID: 1508569015856181638}
+  - component: {fileID: 8336267657096205686}
+  - component: {fileID: -2727456182850015515}
+  m_Layer: 8
+  m_Name: Treasurecheast
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8698357232594665277
+--- !u!4 &4606208658248272307
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832148257335570541}
+  m_GameObject: {fileID: 1462914090350629713}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5059917, y: -0.5669153, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalPosition: {x: -9.7042, y: 0.2756, z: 0}
+  m_LocalScale: {x: 0.06384371, y: 0.062237706, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &4869680232685392217
+--- !u!212 &2464253830007889910
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832148257335570541}
+  m_GameObject: {fileID: 1462914090350629713}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -72,46 +72,42 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1040176953
-  m_SortingLayer: 3
+  m_SortingLayerID: -1335258425
+  m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fbe1e7b94bb1a4a099d5bcb15a00141c, type: 3}
+  m_Sprite: {fileID: 5587380359013993915, guid: 4d5ce8285eeb837499e80503c466d7e8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 9.001353, y: 8.78125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &4080993653158441701
-Animator:
-  serializedVersion: 3
+--- !u!114 &7877912644979544368
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832148257335570541}
+  m_GameObject: {fileID: 1462914090350629713}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 834cc7e8304bb5c41aa9f894b7e61ccd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!61 &7273490126189779941
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3fbef7d46f5e48459ff046d8dc76d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treasureHp: 100
+  isOpen: 0
+  lotteryId: 0
+--- !u!61 &1508569015856181638
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832148257335570541}
+  m_GameObject: {fileID: 1462914090350629713}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -122,64 +118,46 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 9.001353, y: 8.78125}
+    newSize: {x: 9.001353, y: 8.78125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 0.9}
+  m_Size: {x: 9.157626, y: 8.90625}
   m_EdgeRadius: 0
---- !u!50 &2054905488620782088
-Rigidbody2D:
-  serializedVersion: 4
+--- !u!95 &8336267657096205686
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832148257335570541}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &8190532374305305967
+  m_GameObject: {fileID: 1462914090350629713}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b9f8ec093119ae2488bdaf3579755966, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-2727456182850015515
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832148257335570541}
+  m_GameObject: {fileID: 1462914090350629713}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 182165b102f44eb408f51bc483a1a1a6, type: 3}
+  m_Script: {fileID: 11500000, guid: e3fbef7d46f5e48459ff046d8dc76d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
-  blockingLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  treasureLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  restartLevelDelay: 1
-  pointsPerFood: 10
-  wallDamage: 1
-  foodText: {fileID: 0}
-  playerHpText: {fileID: 0}
-  levelText: {fileID: 0}
+  treasureHp: 100
+  isOpen: 0
+  lotteryId: 0

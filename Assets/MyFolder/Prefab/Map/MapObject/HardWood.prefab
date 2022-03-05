@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3196656286512391295
+--- !u!1 &2446497166442999195
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,37 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4373415634037647310}
-  - component: {fileID: 5724594959183760646}
-  - component: {fileID: 2414253973686380544}
+  - component: {fileID: 3539274707762589226}
+  - component: {fileID: 4818465708379817186}
+  - component: {fileID: 8327756473034821727}
+  - component: {fileID: 7917939770233247115}
   m_Layer: 0
-  m_Name: Stone
-  m_TagString: Untagged
+  m_Name: HardWood
+  m_TagString: Forest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4373415634037647310
+--- !u!4 &3539274707762589226
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3196656286512391295}
+  m_GameObject: {fileID: 2446497166442999195}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.80766, y: -1.995142, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -9.331156, y: 0.9767027, z: 0}
+  m_LocalScale: {x: 1.1083525, y: 0.9933015, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5724594959183760646
+--- !u!212 &4818465708379817186
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3196656286512391295}
+  m_GameObject: {fileID: 2446497166442999195}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -69,10 +70,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1184975715
-  m_SortingLayer: 1
+  m_SortingLayerID: -1335258425
+  m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7045597996626604202, guid: 6cb85717d1b667e4d914666cd5823773, type: 3}
+  m_Sprite: {fileID: 8878772332188096440, guid: 066a8f1d76574e6439e9ee33f9c4d563, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,20 +84,49 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2414253973686380544
+--- !u!61 &8327756473034821727
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2446497166442999195}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.03125, y: 1.03125}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &7917939770233247115
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3196656286512391295}
+  m_GameObject: {fileID: 2446497166442999195}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7534a943259e71c4e8f6266f799d3a74, type: 3}
+  m_Script: {fileID: 11500000, guid: ed3bd922a28fd8d4497cd0a0d628b7b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settingFuncRule: 0
+  settingFuncRule: 2
   denceParam: 0
-  verticalParam: 0
-  horizontalParam: 0
+  minSettingNum: 0
+  maxSettingNum: 0
+  verticalParam: 0.3
+  horizontalParam: 0.3
   objectSettingNum: 0
+  recoveryValue: 1

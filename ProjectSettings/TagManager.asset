@@ -10,6 +10,8 @@ TagManager:
   - Food
   - Equipment
   - Forest
+  - NpcTalkPanel
+  - NpcImage
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - UI
   - Player
   - Enemy
-  - 
+  - Treasure
   - 
   - 
   - 
@@ -61,4 +63,7 @@ TagManager:
     locked: 0
   - name: Building
     uniqueID: 2363114423
+    locked: 0
+  - name: Foreground
+    uniqueID: 3105615547
     locked: 0

@@ -6,6 +6,18 @@ using UnityEngine.UI;
 
 public class GManager : MonoBehaviour
 {
+    //宝箱の抽選に用いるアイテムリストのクラス
+    class TreasureItem
+    {
+        public List<Item> itemList;
+        public List<Item> itemList2;
+        public TreasureItem(List<Item> list, List<Item> list2)
+        {
+            itemList = list;
+            itemList2 = list2;
+        }
+    }
+
     public float levelStartDelay = 2f;                        //レベルを開始する前に待機する時間（秒単位）。
     public float turnDelay = 0.2f;                            //各プレイヤーのターン間の遅延。
     public static GManager instance = null;
@@ -39,6 +51,9 @@ public class GManager : MonoBehaviour
     private Button statusButton;
     private Button itemButton;
     private Button closeButton;
+    public GameObject npcWindowImage;
+    public GameObject npcImage;
+    public Text npcMessageText;
     [HideInInspector]public int level;
 
     private List<Enemy> enemies;                            //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
@@ -49,6 +64,14 @@ public class GManager : MonoBehaviour
     private bool spaceKey = false;
     private GameObject itemObj;
     public List<Item> itemList = new List<Item>();
+
+    //宝箱用のアイテムリスト
+    public List<Item> treasureItemList = new List<Item>();
+
+    TreasureItem treasureLotteryList = new TreasureItem(new List<Item>(), new List<Item>());
+
+    //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
+    public List<List<Item>> lotteryitemList = new List<List<Item>>();
 
     //Start is called before the first frame update
     void Awake()
@@ -110,6 +133,8 @@ public class GManager : MonoBehaviour
         closeButton.onClick.AddListener(() => closeMenu());
         itemUsePanel = GameObject.Find("ItemUseList");
         itemDescriptionPanel = GameObject.Find("ItemDescriptionPanel");
+        npcWindowImage = GameObject.FindWithTag("NpcTalkPanel");
+        npcImage = GameObject.FindWithTag("NpcImage");
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -129,6 +154,15 @@ public class GManager : MonoBehaviour
         if (itemDescriptionPanel != null)
         {
             itemDescriptionPanel.SetActive(false);
+        }
+        if (npcWindowImage != null)
+        {
+            npcMessageText = npcWindowImage.transform.Find("TalkText").gameObject.GetComponent<Text>();
+            npcWindowImage.SetActive(false);
+        }
+        if (npcImage != null)
+        {
+            npcImage.SetActive(false);
         }
         //GManager.instance.level++;
         //Debug.Log("level" + level);
