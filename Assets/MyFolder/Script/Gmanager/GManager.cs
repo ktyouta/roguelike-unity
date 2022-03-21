@@ -53,7 +53,9 @@ public class GManager : MonoBehaviour
     private Button closeButton;
     public GameObject npcWindowImage;
     public GameObject npcImage;
+    public GameObject choisePanel;
     public Text npcMessageText;
+    public Text npcNameText;
     [HideInInspector]public int level;
 
     private List<Enemy> enemies;                            //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
@@ -135,6 +137,7 @@ public class GManager : MonoBehaviour
         itemDescriptionPanel = GameObject.Find("ItemDescriptionPanel");
         npcWindowImage = GameObject.FindWithTag("NpcTalkPanel");
         npcImage = GameObject.FindWithTag("NpcImage");
+        choisePanel = GameObject.FindWithTag("ChioseMessagePanel");
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -158,11 +161,16 @@ public class GManager : MonoBehaviour
         if (npcWindowImage != null)
         {
             npcMessageText = npcWindowImage.transform.Find("TalkText").gameObject.GetComponent<Text>();
+            npcNameText = npcWindowImage.transform.Find("NpcNameText").gameObject.GetComponent<Text>();
             npcWindowImage.SetActive(false);
         }
         if (npcImage != null)
         {
             npcImage.SetActive(false);
+        }
+        if (choisePanel != null)
+        {
+            choisePanel.SetActive(false);
         }
         //GManager.instance.level++;
         //Debug.Log("level" + level);

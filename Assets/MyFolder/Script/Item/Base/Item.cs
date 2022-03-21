@@ -9,7 +9,7 @@ public class Item : MonoBehaviour
     [Header("アイテムのタイプ")]public string type;
     [Header("アイテムの説明")] public string itemDescription;
     [Header("ステージ難易度に応じたID")] public int diffId;
-    public bool isUsedFlag;
+    public bool isUsedFlag = false;
     public GameObject itemObj;
     public GameObject itemPanelObj;
     public GameObject itemPanel;

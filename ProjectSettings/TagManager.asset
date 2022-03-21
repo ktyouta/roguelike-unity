@@ -12,6 +12,7 @@ TagManager:
   - Forest
   - NpcTalkPanel
   - NpcImage
+  - ChioseMessagePanel
   layers:
   - Default
   - TransparentFX

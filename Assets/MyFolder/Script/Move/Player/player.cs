@@ -61,88 +61,91 @@ public class player : MovingObject
     private void OnDisable()
     {
         //Playerオブジェクトが無効になっている場合は、現在のローカルフードの合計をGameManagerに保存して、次のレベルで再ロードできるようにします。
-        GManager.instance.playerFoodPoints = GManager.instance.playerFoodPoints;
+        //GManager.instance.playerFoodPoints = GManager.instance.playerFoodPoints;
     }
 
 
     private void Update()
     {
-        //プレイヤーの状態が通常
-        if (plState == playerState.Normal)
+        //プレイヤーの状態が通常以外
+        if (plState != playerState.Normal)
         {
-            //ゲームオーバーまたはメニューオープン時
-            if (isDefeat || GManager.instance.isMenuOpen)
-            {
-                return;
-            }
-            CheckIfGameOver();
-
-            //レベルアップ
-            if (GManager.instance.nowExprience >= GManager.instance.nowMaxExprience)
-            {
-                GManager.instance.updateLevel();
-                GManager.instance.updateStatus();
-            }
-            //Debug.Log(GManager.instance.playersTurn);
-            //プレイヤーの番でない場合、関数を終了します。
-            if (!GManager.instance.playersTurn)
-            {
-                return;
-            }
-
-            int horizontal = 0;      //水平移動方向を格納するために使用されます
-            int vertical = 0;        //垂直移動方向を格納するために使用されます。
-            bool leftShift = false;       //攻撃
-
-            //入力マネージャーから入力を取得し、整数に丸め、水平に保存してx軸の移動方向を設定します
-            horizontal = (int)(Input.GetAxisRaw("Horizontal"));
-
-            //入力マネージャーから入力を取得し、整数に丸め、垂直に保存してy軸の移動方向を設定します
-            vertical = (int)(Input.GetAxisRaw("Vertical"));
-
-            //攻撃
-            leftShift = Input.GetKey("left shift");
-
-            //水平に移動するかどうかを確認し、移動する場合は垂直にゼロに設定します。(ズレ防止)
-            if (horizontal != 0)
-            {
-                vertical = 0;
-                nextHorizontalKey = 1;
-                if (horizontal < 0)
-                {
-                    nextHorizontalKey *= (-1);
-                }
-                nextVerticalkey = 0;
-            }
-            else if (vertical != 0)
-            {
-                horizontal = 0;
-                nextVerticalkey = 1;
-                if (vertical < 0)
-                {
-                    nextVerticalkey *= (-1);
-                }
-                nextHorizontalKey = 0;
-            }
-            //水平または垂直にゼロ以外の値があるかどうかを確認します
-            if (horizontal != 0 || vertical != 0)
-            {
-                //ジェネリックパラメーターWallを渡してAttemptMoveを呼び出します。
-                //これは、プレイヤーが壁に遭遇した場合プレイヤーがwallクラスを操作するためです。
-                //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
-                AttemptMove(horizontal, vertical);
-            }
-            else if (leftShift && !isAttack)
-            {
-                //Debug.Log("leftshift"+leftShift);
-                Attack();
-                isAttack = true;
-            }
-            else if (!leftShift)
-            {
-                isAttack = false;
-            }
+            return;
         }
+        
+        //ゲームオーバーまたはメニューオープン時
+        if (isDefeat || GManager.instance.isMenuOpen)
+        {
+            return;
+        }
+        CheckIfGameOver();
+
+        //レベルアップ
+        if (GManager.instance.nowExprience >= GManager.instance.nowMaxExprience)
+        {
+            GManager.instance.updateLevel();
+            GManager.instance.updateStatus();
+        }
+        //Debug.Log(GManager.instance.playersTurn);
+        //プレイヤーの番でない場合、関数を終了します。
+        if (!GManager.instance.playersTurn)
+        {
+            return;
+        }
+
+        int horizontal = 0;      //水平移動方向を格納するために使用されます
+        int vertical = 0;        //垂直移動方向を格納するために使用されます。
+        bool leftShift = false;       //攻撃
+
+        //入力マネージャーから入力を取得し、整数に丸め、水平に保存してx軸の移動方向を設定します
+        horizontal = (int)(Input.GetAxisRaw("Horizontal"));
+
+        //入力マネージャーから入力を取得し、整数に丸め、垂直に保存してy軸の移動方向を設定します
+        vertical = (int)(Input.GetAxisRaw("Vertical"));
+
+        //攻撃
+        leftShift = Input.GetKey("left shift");
+
+        //水平に移動するかどうかを確認し、移動する場合は垂直にゼロに設定します。(ズレ防止)
+        if (horizontal != 0)
+        {
+            vertical = 0;
+            nextHorizontalKey = 1;
+            if (horizontal < 0)
+            {
+                nextHorizontalKey *= (-1);
+            }
+            nextVerticalkey = 0;
+        }
+        else if (vertical != 0)
+        {
+            horizontal = 0;
+            nextVerticalkey = 1;
+            if (vertical < 0)
+            {
+                nextVerticalkey *= (-1);
+            }
+            nextHorizontalKey = 0;
+        }
+        //水平または垂直にゼロ以外の値があるかどうかを確認します
+        if (horizontal != 0 || vertical != 0)
+        {
+            //ジェネリックパラメーターWallを渡してAttemptMoveを呼び出します。
+            //これは、プレイヤーが壁に遭遇した場合プレイヤーがwallクラスを操作するためです。
+            //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
+            AttemptMove(horizontal, vertical);
+        }
+        else if (leftShift && !isAttack)
+        {
+            //Debug.Log("leftshift"+leftShift);
+            Attack();
+            isAttack = true;
+        }
+        else if (!leftShift)
+        {
+            isAttack = false;
+        }
+        
     }
 
     public void setPlayerState(playerState state)

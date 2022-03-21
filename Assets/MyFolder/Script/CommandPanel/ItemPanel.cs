@@ -47,6 +47,7 @@ public class ItemPanel : MonoBehaviour
                     }
                     if (i >= beforeCount)
                     {
+                        Debug.Log("buttonposy"+buttonPosy);
                         //GameObject listButton = Instantiate(itemBtn) as GameObject;
                         GameObject listButton = Instantiate(itemBtn, new Vector3(-10, buttonPosy, 0f), Quaternion.identity) as GameObject;
                         listButton.transform.SetParent(itemPanelObj, false);

@@ -5,7 +5,7 @@ using UnityEngine;
 //abstractをつけると、抽象クラスの宣言になる
 public abstract class MovingObject : MonoBehaviour
 {
-    public float moveTime = 0.03f;            //オブジェクトの移動にかかる時間（秒単位）
+    private float moveTime = 0.075f;            //オブジェクトの移動にかかる時間（秒単位）※最初の設定は0.1
     [Header("レイヤー設定")]public LayerMask blockingLayer;            //衝突がチェックされるレイヤー
     [Header("敵オブジェクト")] public LayerMask enemyLayer;
     [Header("プレイヤーオブジェクト")] public LayerMask playerLayer;
@@ -84,7 +84,6 @@ public abstract class MovingObject : MonoBehaviour
         {
             //newPostionに、移動途中の位置を設定(現在位置、目的位置、呼び出されるごと(1フレーム)に移動する距離)
             Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
-
             //アタッチされたRigidbody2DでMovePositionを呼び出し、それを計算された位置に移動します。
             rb2D.MovePosition(newPostion);
 

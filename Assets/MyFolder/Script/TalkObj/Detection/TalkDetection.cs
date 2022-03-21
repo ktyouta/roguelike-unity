@@ -15,7 +15,7 @@ public class TalkDetection : MonoBehaviour
         if (npcObj != null)
         {
             //NPCゲームオブジェクトの子オブジェクト(NpcCanvas)を取得
-            npcCanvasInDetection = npcObj.GetComponent<NpcController>().npcCanvas;
+            npcCanvasInDetection = npcObj.GetComponent<TalkBase>().npcCanvas;
         }
     }
 

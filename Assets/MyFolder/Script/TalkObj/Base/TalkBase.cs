@@ -19,7 +19,7 @@ public abstract class TalkBase : MonoBehaviour
     [HideInInspector] public GameObject npcCanvas;
 
     // Start is called before the first frame update
-    public void Start()
+    public virtual void Start()
     {
         playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
         npcCanvas = this.gameObject.transform.Find("NpcCanvas").gameObject;
@@ -27,6 +27,10 @@ public abstract class TalkBase : MonoBehaviour
         {
             npcCanvas.SetActive(false);
         }
+        topArea = this.gameObject.transform.Find("TopTalkArea").gameObject.GetComponent<TalkDetection>();
+        bottomArea = this.gameObject.transform.Find("BottomTalkArea").gameObject.GetComponent<TalkDetection>();
+        rightArea = this.gameObject.transform.Find("RightTalkArea").gameObject.GetComponent<TalkDetection>();
+        leftArea = this.gameObject.transform.Find("LeftTalkArea").gameObject.GetComponent<TalkDetection>();
     }
 
     private void Update()
