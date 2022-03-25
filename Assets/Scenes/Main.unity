@@ -2727,7 +2727,7 @@ MonoBehaviour:
     difficultyID: 1
   testNpc: {fileID: 6775205117751671897, guid: 6738c7efdaa3a31479e2761bc19a6e7e, type: 3}
   testGiveItemNpc: {fileID: 836499785425302275, guid: 402d0aa49180eb44e8df10d0565d6b4d, type: 3}
-  testBranchMessageNpc: {fileID: 2308650552444531995, guid: ec62a5e76815d344e8da6a69ee03109b, type: 3}
+  testBranchMessageNpc: {fileID: 5963479344652640800, guid: 457ad14b5573c774cadc54b975dd96f5, type: 3}
 --- !u!4 &1483692205
 Transform:
   m_ObjectHideFlags: 0
@@ -3113,7 +3113,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26998}
+  m_AnchoredPosition: {x: 142.74, y: -116.26995}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

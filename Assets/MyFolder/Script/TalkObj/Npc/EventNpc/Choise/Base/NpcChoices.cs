@@ -68,18 +68,18 @@ public abstract class NpcChoices : NpcBase
             clickChioseButtonFlag = false;
             GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
             //処理を待機
-            yield return new WaitForSeconds(0.07f);
+            yield return null;
             GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            MessageClass displayMessageBlock = getNodeMessageBlock(branchMessages[i].branchMessageBlock);
             //選択肢を表示するパターン
-            if (branchMessages[i].branchMessageBlock[nowNodeIndex].isSelect)
+            if (displayMessageBlock.isSelect)
             {
                 GManager.instance.choisePanel.SetActive(true);
                 // 会話をwindowのtextフィールドに表示
-                showMessage(branchMessages[i].branchMessageBlock[nowNodeIndex].message);
+                showMessage(displayMessageBlock.message);
                 var parentPosition = GManager.instance.choisePanel.transform.position;
-                //List<choiseMessageFuncClass> messageBlocks = choiseMessageBlock[choiseCount].choiseMessage[nowNodeIndex].choiseMessages;
                 //現在のノード番号に一致する選択肢を取得
-                List<choiseMessageFuncClass> messageBlocks = getNodeMessageBlock(choiseMessageBlock[choiseCount].choiseMessage);
+                List<choiseMessageFuncClass> messageBlocks = getNodeChoiseBlock(choiseMessageBlock[choiseCount].choiseMessage);
                 //現在の選択肢を表示する
                 for (int j=0;j< messageBlocks.Count; j++)
                 {
@@ -105,9 +105,15 @@ public abstract class NpcChoices : NpcBase
             else
             {
                 // 会話をwindowのtextフィールドに表示
-                showMessage(branchMessages[i].branchMessageBlock[nowNodeIndex].message);
+                showMessage(displayMessageBlock.message);
                 // キー入力を待機
                 yield return new WaitUntil(() => Input.anyKeyDown);
+                //getNodeMessageBlock関数で現在のノードに一致したメッセージを取得できていない場合
+                if (displayMessageBlock.messageNodeNumber == -1)
+                {
+                    nowNodeIndex = -1;
+                    yield return null;
+                }
             }
         }
     }
@@ -121,7 +127,7 @@ public abstract class NpcChoices : NpcBase
     /**
      * 現在のノード番号に一致した選択肢を返す
      */
-    List<choiseMessageFuncClass> getNodeMessageBlock(List<ChoiseMessageClass> messagesBlock)
+    List<choiseMessageFuncClass> getNodeChoiseBlock(List<ChoiseMessageClass> messagesBlock)
     {
         List<choiseMessageFuncClass> tempMessageBlock = new List<choiseMessageFuncClass>();
         tempMessageBlock.Add(new choiseMessageFuncClass() { message = "ノードに一致する選択肢がありません。", funcNumber = -1 });
@@ -131,6 +137,26 @@ public abstract class NpcChoices : NpcBase
             if (messagesBlock[i].messageNodeNumber == nowNodeIndex)
             {
                 return messagesBlock[i].choiseMessages;
+            }
+        }
+        return tempMessageBlock;
+    }
+
+    /**
+     * 現在のノード番号に一致した会話を返す
+     */
+    MessageClass getNodeMessageBlock(List<MessageClass> messagesBlock)
+    {
+        MessageClass tempMessageBlock = new MessageClass();
+        tempMessageBlock.message = "ノードに一致する会話がありません。";
+        tempMessageBlock.isSelect = false;
+        tempMessageBlock.messageNodeNumber = -1;
+        for (int i = 0; i < messagesBlock.Count; i++)
+        {
+            //現在のノードに一致する選択肢が見つかった場合
+            if (messagesBlock[i].messageNodeNumber == nowNodeIndex)
+            {
+                return messagesBlock[i];
             }
         }
         return tempMessageBlock;
