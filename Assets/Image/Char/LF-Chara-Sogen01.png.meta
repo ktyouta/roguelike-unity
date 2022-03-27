@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: -1266957100203126329
     second: LF-Chara-Sogen01_1
+  - first:
+      213: 3466958545821223350
+    second: LF-Chara-Sogen01_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -117,7 +120,7 @@ TextureImporter:
         width: 28
         height: 50
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -138,7 +141,7 @@ TextureImporter:
         width: 30
         height: 53
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -146,6 +149,27 @@ TextureImporter:
       bones: []
       spriteID: 7c1dbb0ea3dda6ee0800000000000000
       internalID: -1266957100203126329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LF-Chara-Sogen01_2
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 446
+        width: 29
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b9cdaebd6c1d1030800000000000000
+      internalID: 3466958545821223350
       vertices: []
       indices: 
       edges: []

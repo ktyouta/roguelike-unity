@@ -14,8 +14,11 @@ public abstract class NpcBase : TalkBase
     protected override IEnumerator OnAction()
     {
         GManager.instance.npcNameText.text = npcName + "ÅF";
-        GManager.instance.npcImage.SetActive(true);
-        GManager.instance.npcImage.GetComponent<Image>().sprite = npcPicture;
+        if(npcPicture != null)
+        {
+            GManager.instance.npcImage.SetActive(true);
+            GManager.instance.npcImage.GetComponent<Image>().sprite = npcPicture;
+        }
         yield return TalkEvent();
         GManager.instance.npcImage.GetComponent<Image>().sprite = null;
         GManager.instance.npcImage.SetActive(false);
@@ -23,5 +26,4 @@ public abstract class NpcBase : TalkBase
     }
 
     protected abstract IEnumerator TalkEvent();
-    
 }

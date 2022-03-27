@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1335258425
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 6231259272000768003, guid: 65617d8b6d9c8ab42bfef9a6a2e46975, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -122,10 +122,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88a7f07da020ba4e86a3622190b32e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 1
   name: "\u304D\u306E\u3053"
   type: foodRecovery
   itemDescription: "\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u6E80\u8179\u5EA6\u3092\u56DE\u5FA9\u3059\u308B"
+  diffId: 0
+  buyPrice: 100
+  sellPrice: 50
+  isUsedFlag: 0
   itemObj: {fileID: 0}
   itemPanelObj: {fileID: 0}
   itemPanel: {fileID: 0}

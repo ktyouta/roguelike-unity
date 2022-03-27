@@ -46,7 +46,7 @@ public abstract class NpcChoices : NpcBase
     [Header("通常のメッセージ")] public List<MessageClass> message = new List<MessageClass>();
     //選択肢
     [Header("分岐を含む全ての選択肢")] public List<ChioseMessageBlockClass> choiseMessageBlock = new List<ChioseMessageBlockClass>();
-    [Header("選択肢ボタン")] public GameObject itemBtn;
+    [Header("選択肢ボタン")] public GameObject selectBtn;
     //現在表示されるメッセージのインデックス
     protected int nowNodeIndex = 0;
     protected bool clickChioseButtonFlag = false;
@@ -58,7 +58,7 @@ public abstract class NpcChoices : NpcBase
         int choiseCount = 0;
         for (int i = 0; i < branchMessages.Count; i++)
         {
-            //現在のノードから選択肢を取得できなかった場合は、会話を終了する
+            //現在のノードからメッセージまたは選択肢を取得できなかった場合は、会話を終了する
             if (nowNodeIndex == -1)
             {
                 showMessage("会話を終了します。");
@@ -71,20 +71,28 @@ public abstract class NpcChoices : NpcBase
             yield return null;
             GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
             MessageClass displayMessageBlock = getNodeMessageBlock(branchMessages[i].branchMessageBlock);
+            // 会話をwindowのtextフィールドに表示
+            showMessage(displayMessageBlock.message);
             //選択肢を表示するパターン
             if (displayMessageBlock.isSelect)
             {
                 GManager.instance.choisePanel.SetActive(true);
-                // 会話をwindowのtextフィールドに表示
-                showMessage(displayMessageBlock.message);
                 var parentPosition = GManager.instance.choisePanel.transform.position;
                 //現在のノード番号に一致する選択肢を取得
                 List<choiseMessageFuncClass> messageBlocks = getNodeChoiseBlock(choiseMessageBlock[choiseCount].choiseMessage);
+                //選択肢の数から選択肢パネルの高さを求める
+                float panelHeight = messageBlocks.Count * 40f + 10;
+                RectTransform choisePanelRect = GManager.instance.choisePanel.GetComponent<RectTransform>();
+                Vector2 size = choisePanelRect.sizeDelta;
+                size.y = panelHeight;
+                choisePanelRect.sizeDelta = size;
+                //ボタンの設置座標を設定するためにpivotを取得
+                float pivotY = choisePanelRect.pivot.y;
                 //現在の選択肢を表示する
                 for (int j=0;j< messageBlocks.Count; j++)
                 {
                     //選択肢ボタンの生成
-                    GameObject choiseButton = Instantiate(itemBtn, new Vector3(parentPosition.x-10, parentPosition.y+20-j*35, 0f), Quaternion.identity) as GameObject;
+                    GameObject choiseButton = Instantiate(selectBtn, new Vector3(parentPosition.x-10, pivotY + panelHeight*0.5f - 30 - j*35, 0f), Quaternion.identity) as GameObject;
                     //choisePanelの子オブジェクトにする
                     choiseButton.transform.SetParent(GManager.instance.choisePanel.transform,false);
                     choiseButton.transform.Find("Text").GetComponent<Text>().text = messageBlocks[j].message;
@@ -104,8 +112,6 @@ public abstract class NpcChoices : NpcBase
             //通常のメッセージ
             else
             {
-                // 会話をwindowのtextフィールドに表示
-                showMessage(displayMessageBlock.message);
                 // キー入力を待機
                 yield return new WaitUntil(() => Input.anyKeyDown);
                 //getNodeMessageBlock関数で現在のノードに一致したメッセージを取得できていない場合

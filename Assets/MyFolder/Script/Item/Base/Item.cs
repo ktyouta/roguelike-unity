@@ -9,6 +9,8 @@ public class Item : MonoBehaviour
     [Header("アイテムのタイプ")]public string type;
     [Header("アイテムの説明")] public string itemDescription;
     [Header("ステージ難易度に応じたID")] public int diffId;
+    [Header("買値")] public int buyPrice;
+    [Header("売値")] public int sellPrice;
     public bool isUsedFlag = false;
     public GameObject itemObj;
     public GameObject itemPanelObj;
@@ -51,12 +53,20 @@ public class Item : MonoBehaviour
         if (other.tag == "Player")
         {
             //アイテム取得後、非表示
-            GManager.instance.addItem(itemObj.GetComponent<Item>());
-            int itemId = GManager.instance.itemList.Count;
-            itemObj.GetComponent<Item>().id = itemId;
-            //Debug.Log("reid" + itemObj.GetComponent<RecoveryItem>().id);
-            itemObj.SetActive(false);
+            addItemInventory();
         }
+    }
+
+    /**
+     * プレイヤーのインベントリにアイテムを追加する
+     */
+    public void addItemInventory()
+    {
+        GManager.instance.addItem(itemObj.GetComponent<Item>());
+        int itemId = GManager.instance.itemList.Count;
+        itemObj.GetComponent<Item>().id = itemId;
+        //Debug.Log("reid" + itemObj.GetComponent<RecoveryItem>().id);
+        itemObj.SetActive(false);
     }
 
     //public void changeListPos(int index)

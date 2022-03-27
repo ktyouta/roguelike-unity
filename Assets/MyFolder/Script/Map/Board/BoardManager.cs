@@ -144,6 +144,7 @@ public class BoardManager : MonoBehaviour
     [Header("テスト用NPC")] public GameObject testNpc;
     [Header("アイテムを渡すテスト用NPC")] public GameObject testGiveItemNpc;
     [Header("会話分岐テスト用NPC")] public GameObject testBranchMessageNpc;
+    [Header("道具屋テスト用NPC")] public GameObject testSalesNpc;
 
     //変換用
     private Transform boardHolder;
@@ -627,6 +628,8 @@ public class BoardManager : MonoBehaviour
             LayoutObjectAtRandom(testGiveItemNpc, 1,1);
             //NPC(会話分岐用)をインスタンス化
             LayoutObjectAtRandom(testBranchMessageNpc,1,1);
+            //NPC(道具屋)をインスタンス化
+            LayoutObjectAtRandom(testSalesNpc,1,1);
         }
         //第二区画
         else if(settingObjRule == Define.SECOND_SETTING)

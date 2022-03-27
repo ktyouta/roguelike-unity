@@ -13,6 +13,9 @@ TagManager:
   - NpcTalkPanel
   - NpcImage
   - ChioseMessagePanel
+  - ShopPanelTag
+  - ShopItemPanelTag
+  - ShopSelectPanelTag
   layers:
   - Default
   - TransparentFX

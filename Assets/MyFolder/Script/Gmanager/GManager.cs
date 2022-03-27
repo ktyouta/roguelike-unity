@@ -31,6 +31,7 @@ public class GManager : MonoBehaviour
     [Header("プレイヤーの攻撃力")] public int playerAttack;
     [Header("プレイヤーの防御力")] public int playerDefence;
     [Header("プレイヤーのレベル")] public int playerLevel = 1;
+    [Header("プレイヤーの魅力")] public int playerCharm = 0;
     [HideInInspector] public int nowExprience;
     [Header("次のレベルまでの経験値")] public int nowMaxExprience;
     [HideInInspector] public int mostRecentExperience;
@@ -54,8 +55,12 @@ public class GManager : MonoBehaviour
     public GameObject npcWindowImage;
     public GameObject npcImage;
     public GameObject choisePanel;
+    public GameObject shopPanel;
+    public GameObject shopItemListPanel;
+    public GameObject ShopSelectPanel;
     public Text npcMessageText;
     public Text npcNameText;
+    public Text playerMoneyText;
     [HideInInspector]public int level;
 
     private List<Enemy> enemies;                            //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
@@ -138,6 +143,9 @@ public class GManager : MonoBehaviour
         npcWindowImage = GameObject.FindWithTag("NpcTalkPanel");
         npcImage = GameObject.FindWithTag("NpcImage");
         choisePanel = GameObject.FindWithTag("ChioseMessagePanel");
+        shopPanel = GameObject.FindWithTag("ShopPanelTag");
+        shopItemListPanel = GameObject.FindWithTag("ShopItemPanelTag");
+        ShopSelectPanel = GameObject.FindWithTag("ShopSelectPanelTag");
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -171,6 +179,19 @@ public class GManager : MonoBehaviour
         if (choisePanel != null)
         {
             choisePanel.SetActive(false);
+        }
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(false);
+        }
+        if (shopItemListPanel != null)
+        {
+            shopItemListPanel.SetActive(false);
+            playerMoneyText = shopItemListPanel.transform.Find("PlayerMoneyText").gameObject.GetComponent<Text>();
+        }
+        if (ShopSelectPanel != null)
+        {
+            ShopSelectPanel.SetActive(false);
         }
         //GManager.instance.level++;
         //Debug.Log("level" + level);

@@ -163,7 +163,7 @@ MonoBehaviour:
       - message: "\u30A2\u30A4\u30C6\u30E0\u3092\u53D7\u3051\u53D6\u3089\u306A\u3044\u3002"
         funcNumber: 1
       messageNodeNumber: 0
-  itemBtn: {fileID: 8902715597154352145, guid: 09909cee08d777e4b91a34b0ea381c1e, type: 3}
+  selectBtn: {fileID: 8902715597154352145, guid: 09909cee08d777e4b91a34b0ea381c1e, type: 3}
   giveItem: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
 --- !u!1 &2760583120820049205
 GameObject:
