@@ -12,7 +12,7 @@ public class ItemPanel : MonoBehaviour
     [Header("アイテム説明用パネル")]public GameObject itemDescriptionPanel;
     private int beforeCount = 0;
     private int nowCount = 0;
-    private int buttonPosy = 110;
+    private int buttonPos = 110;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,19 +37,19 @@ public class ItemPanel : MonoBehaviour
             itemPanel.enabled = false;
             if (nowCount > beforeCount)
             {
-                buttonPosy = 110;
+                buttonPos = 110;
                 Debug.Log("itemlistcount"+ GManager.instance.itemList.Count);
                 for (var i = 0; i < GManager.instance.itemList.Count; i++)
                 {
                     if (!GManager.instance.itemList[i].isUsedFlag)
                     {
-                        buttonPosy -= 30;
+                        buttonPos -= 30;
                     }
                     if (i >= beforeCount)
                     {
-                        Debug.Log("buttonposy"+buttonPosy);
+                        Debug.Log("buttonPos" + buttonPos);
                         //GameObject listButton = Instantiate(itemBtn) as GameObject;
-                        GameObject listButton = Instantiate(itemBtn, new Vector3(-10, buttonPosy, 0f), Quaternion.identity) as GameObject;
+                        GameObject listButton = Instantiate(itemBtn, new Vector3(-10, buttonPos, 0f), Quaternion.identity) as GameObject;
                         listButton.transform.SetParent(itemPanelObj, false);
                         //Debug.Log("count" + GManager.instance.itemList.Count);
                         listButton.transform.Find("Text").GetComponent<Text>().text = GManager.instance.itemList[i].name;

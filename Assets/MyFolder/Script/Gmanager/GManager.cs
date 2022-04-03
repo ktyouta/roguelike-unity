@@ -57,7 +57,7 @@ public class GManager : MonoBehaviour
     public GameObject choisePanel;
     public GameObject shopPanel;
     public GameObject shopItemListPanel;
-    public GameObject ShopSelectPanel;
+    public GameObject shopSelectPanel;
     public Text npcMessageText;
     public Text npcNameText;
     public Text playerMoneyText;
@@ -145,7 +145,7 @@ public class GManager : MonoBehaviour
         choisePanel = GameObject.FindWithTag("ChioseMessagePanel");
         shopPanel = GameObject.FindWithTag("ShopPanelTag");
         shopItemListPanel = GameObject.FindWithTag("ShopItemPanelTag");
-        ShopSelectPanel = GameObject.FindWithTag("ShopSelectPanelTag");
+        shopSelectPanel = GameObject.FindWithTag("ShopSelectPanelTag");
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -189,9 +189,9 @@ public class GManager : MonoBehaviour
             shopItemListPanel.SetActive(false);
             playerMoneyText = shopItemListPanel.transform.Find("PlayerMoneyText").gameObject.GetComponent<Text>();
         }
-        if (ShopSelectPanel != null)
+        if (shopSelectPanel != null)
         {
-            ShopSelectPanel.SetActive(false);
+            shopSelectPanel.SetActive(false);
         }
         //GManager.instance.level++;
         //Debug.Log("level" + level);

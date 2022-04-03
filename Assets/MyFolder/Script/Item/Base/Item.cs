@@ -30,12 +30,7 @@ public class Item : MonoBehaviour
 
     public virtual void useItem()
     {
-        //changeListPos(id);
         itemPanelObj = GameObject.Find("ItemUseList");
-        if (itemPanelObj == null)
-        {
-            Debug.Log(itemPanelObj);
-        }
         commandPanel = GameObject.Find("CommandPanel");
         itemPanel = GameObject.Find("ItemPanel");
         itemDescriptionPanel = GameObject.Find("ItemDescriptionPanel");
@@ -44,7 +39,6 @@ public class Item : MonoBehaviour
         commandPanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
         GManager.instance.isMenuOpen = !GManager.instance.isMenuOpen;
-        //GManager.instance.playersTurn = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

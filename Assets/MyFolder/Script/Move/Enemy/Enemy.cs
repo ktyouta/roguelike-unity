@@ -67,35 +67,35 @@ public class Enemy : MovingObject
     //MoveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void MoveEnemy()
     {
+        //画面内にいる場合のみ移動
+        if (!sr.isVisible) return;
+
         // X軸とY軸の移動方向の変数を宣言します。これらの範囲は-1から1です。
         //これらの値により、基本的な方向（上、下、左、右）を選択できます。
         int xDir = 0;
         int yDir = 0;
 
-        //画面内にいる場合のみ移動
-        if (sr.isVisible)
+        //x軸がイプシロン(ほぼ)の方が大きい場合
+        if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
         {
-            //x軸がイプシロン(ほぼ)の方が大きい場合
-            if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
-            {
-                //ターゲット（プレーヤー）の位置のy座標がこの敵の位置のy座標より大きい場合は、y方向1（上に移動）を設定します。 そうでない場合は、-1に設定します（下に移動します）。
-                yDir = target.position.y > transform.position.y ? 1 : -1;
-            }
-            //y軸が同じ場合
-            else
-            {
-                //ターゲットのx位置が敵のx位置より大きいかどうかを確認します。そうであれば、x方向を1（右に移動）に設定し、そうでなければ-1（左に移動）に設定します。
-                xDir = target.position.x > transform.position.x ? 1 : -1;
-            }
-
-            //Debug.Log("enemyMove");
-            //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
-            AttemptMove(xDir, yDir);
-            if (!canMove)
-            {
-                enemiesAttack(xDir, yDir);
-            }
+            //ターゲット（プレーヤー）の位置のy座標がこの敵の位置のy座標より大きい場合は、y方向1（上に移動）を設定します。 そうでない場合は、-1に設定します（下に移動します）。
+            yDir = target.position.y > transform.position.y ? 1 : -1;
         }
+        //y軸が同じ場合
+        else
+        {
+            //ターゲットのx位置が敵のx位置より大きいかどうかを確認します。そうであれば、x方向を1（右に移動）に設定し、そうでなければ-1（左に移動）に設定します。
+            xDir = target.position.x > transform.position.x ? 1 : -1;
+        }
+
+        //Debug.Log("enemyMove");
+        //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
+        AttemptMove(xDir, yDir);
+        if (!canMove)
+        {
+            enemiesAttack(xDir, yDir);
+        }
+        
     }
 
 
