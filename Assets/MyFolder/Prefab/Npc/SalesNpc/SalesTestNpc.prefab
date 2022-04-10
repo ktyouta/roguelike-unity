@@ -470,7 +470,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "z\u30DC\u30BF\u30F3\u3067\u4F1A\u8A71"
+  m_Text: "z:\u8A71\u3059"
 --- !u!1 &7955798343083259147
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,8 +637,8 @@ MonoBehaviour:
   npcPicture: {fileID: 0}
   npcName: "\u9053\u5177\u5C4B"
   salesItemList:
-  - {fileID: 6051048925190670385, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-  - {fileID: 4706168525636249354, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+  - {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+  - {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
   shopMenu:
   - menu: "\u8CB7\u3044\u306B\u304D\u305F"
     funcNumber: 0

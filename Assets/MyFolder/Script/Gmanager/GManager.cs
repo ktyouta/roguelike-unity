@@ -40,6 +40,8 @@ public class GManager : MonoBehaviour
     public string shieldName = "なし";
     [HideInInspector] public List<string> logMessage = new List<string>();
     [Header("プレイヤーの現在の上限HP")] public int nowPlayerMaxHp = 100;
+    [HideInInspector] public player playerObj;
+    [Header("アイテムの所持数制限")] public int nowMaxPosession;
 
     //public GameObject canvas;
     public GameObject levelText;
@@ -52,6 +54,7 @@ public class GManager : MonoBehaviour
     private Button statusButton;
     private Button itemButton;
     private Button closeButton;
+    public Text playerStatusPanel;
     public GameObject npcWindowImage;
     public GameObject npcImage;
     public GameObject choisePanel;
@@ -62,15 +65,20 @@ public class GManager : MonoBehaviour
     public Text npcNameText;
     public Text playerMoneyText;
     [HideInInspector]public int level;
+    [Header("インベントリーに展開されるアイテムボタン")] public GameObject itemBtn;
+
 
     private List<Enemy> enemies;                            //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
     private bool enemiesMoving;                                //enemyのターンかチェック
     private bool doingSetup;
     private bool loadFlg = false;
     [HideInInspector] public bool isMenuOpen = false;
+    [HideInInspector] public bool isCloseCommand = true;
     private bool spaceKey = false;
     private GameObject itemObj;
-    public List<Item> itemList = new List<Item>();
+    public List<GameObject> itemList = new List<GameObject>();
+    private IEnumerator coroutine;
+    [Header("インベントリーの子オブジェクト(テキスト)")]public Text itemPanel;
 
     //宝箱用のアイテムリスト
     public List<Item> treasureItemList = new List<Item>();
@@ -78,7 +86,7 @@ public class GManager : MonoBehaviour
     TreasureItem treasureLotteryList = new TreasureItem(new List<Item>(), new List<Item>());
 
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
-    public List<List<Item>> lotteryitemList = new List<List<Item>>();
+    public List<List<GameObject>> lotteryitemList = new List<List<GameObject>>();
 
     //Start is called before the first frame update
     void Awake()
@@ -153,10 +161,12 @@ public class GManager : MonoBehaviour
         if (statusText != null)
         {
             statusText.SetActive(false);
+            playerStatusPanel = statusText.transform.Find("PlayerStatusText").GetComponent<Text>();
         }
         if (itemText != null)
         {
             itemText.SetActive(false);
+            itemPanel = itemText.transform.Find("ItemPanelText").GetComponent<Text>();
         }
         if (itemUsePanel != null)
         {
@@ -230,7 +240,7 @@ public class GManager : MonoBehaviour
         GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         //Debug.Log(enemyObjects);
         //Debug.Log("enemyObject" + enemyObjects.Length);
-
+        playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
         //作成したエネミーにidを割り振り、リストに格納する
         for (var i = 0; i < enemyObjects.Length; i++)
         {
@@ -251,25 +261,39 @@ public class GManager : MonoBehaviour
         //プレーヤーが再び移動できるように、doingSetupをfalseに設定します
         doingSetup = false;
     }
+
     //更新はフレームごとに呼び出されます。
     void Update()
     {
-        spaceKey = Input.GetKeyDown("space");
-        //コマンドパネル開閉
-        if (spaceKey)
-        {
-            isMenuOpen = !isMenuOpen;
-            commandPanel.SetActive(isMenuOpen);
-            statusText.SetActive(false);
-            itemText.SetActive(false);
-            itemUsePanel.SetActive(false);
-            itemDescriptionPanel.SetActive(false);
-        }
-       
-        if (isMenuOpen)
+        if (!isCloseCommand)
         {
             return;
         }
+        //spaceKey = Input.GetKeyDown("space");
+        //コマンドパネル開閉
+        if (Input.GetKeyDown("space"))
+        {
+            //isMenuOpen = !isMenuOpen;
+            //commandPanel.SetActive(isMenuOpen);
+            //statusText.SetActive(false);
+            //itemText.SetActive(false);
+            //itemUsePanel.SetActive(false);
+            //itemDescriptionPanel.SetActive(false);
+
+            //TODO:コルーチンを用いる
+            playerObj.setPlayerState(player.playerState.Command);
+            isCloseCommand = false;
+            coroutine = deploymentMyCommandPanel();
+            StartCoroutine(coroutine);
+        }
+
+        
+       
+        //コルーチンを用いたメニュー処理の実装により削除される予定
+        //if (isMenuOpen)
+        //{
+        //    return;
+        //}
         //playersTurnまたはenemiesMovingまたはdoingSetupが現在trueでないことを確認してください。
         if (playersTurn || enemiesMoving || doingSetup)
         {
@@ -291,11 +315,32 @@ public class GManager : MonoBehaviour
         
     }
 
+    /**
+     * コマンドメニュー展開(実装中)
+     */
+    IEnumerator deploymentMyCommandPanel()
+    {
+        isMenuOpen = false;
+        commandPanel.SetActive(true);
+        yield return null;
+        //閉じるボタンが押下されるか、スペースキーが押下された場合にメニューを閉じる
+        yield return new WaitUntil(() => isCloseCommand || Input.GetKeyDown("space"));
+        isMenuOpen = true;
+        isCloseCommand = true;
+        StopCoroutine(coroutine);
+        coroutine = null;
+        commandPanel.SetActive(false);
+        statusText.SetActive(false);
+        itemText.SetActive(false);
+        itemUsePanel.SetActive(false);
+        itemDescriptionPanel.SetActive(false);
+        itemPanel.enabled = false;
+        playerObj.setPlayerState(player.playerState.Normal);
+    }
+
     //hpが0になった敵をリストから削除
     public void removeEnemyToList(int index)
     {
-        //Debug.Log("num"+index);
-        //Debug.Log(enemies);
         int listIndex = -1;
         for (int i=0;i<enemies.Count;i++)
         {
@@ -367,58 +412,108 @@ public class GManager : MonoBehaviour
         enemiesMoving = false;
     }
 
-    public List<string> wrightAttackLog(string attackerName,string enemyName,int damage)
+    /**
+     * 引数で指定したパネルの子オブジェクト(ボタン)をすべて削除する
+     */
+    public void deleteChildButton(Transform childButtons)
+    {
+        //選択肢ボタンをすべて削除
+        foreach (Transform child in childButtons)
+        {
+            if (child.name != "ItemPanelText" && child.name != "Scrollbar")
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    public void wrightAttackLog(string attackerName,string enemyName,int damage)
     {
         string newMessage;
         newMessage = attackerName + "が" + enemyName + "に" + damage + "のダメージを与えた";
-        GManager.instance.logMessage.Insert(0, newMessage);
-        return GManager.instance.logMessage;
+        GManager.instance.logMessage.Add(newMessage);
     }
 
-    public List<string> wrightUseFoodLog(string foodName, string name,int foodPoint)
+    public void wrightUseFoodLog(string foodName, string name,int foodPoint)
     {
         string newMessage;
         newMessage = foodName + "を使用した";
         newMessage += "\n";
         newMessage += name + "の満腹度が" + foodPoint + "回復した";
-        GManager.instance.logMessage.Insert(0, newMessage);
-        return GManager.instance.logMessage;
+        GManager.instance.logMessage.Add(newMessage);
     }
 
-    public List<string> wrightDeadLog(string name)
+    public void wrightDeadLog(string name)
     {
         string newMessage;
         newMessage = name + "は倒れた";
-        GManager.instance.logMessage.Insert(0, newMessage);
-        return GManager.instance.logMessage;
+        GManager.instance.logMessage.Add(newMessage);
     }
 
-    public List<string> wrightLevelupLog(string name)
+    public void wrightLevelupLog(string name)
     {
         string newMessage;
         newMessage = name + "のレベルが" + GManager.instance.playerLevel + "になった";
-        GManager.instance.logMessage.Insert(0, newMessage);
-        return GManager.instance.logMessage;
+        GManager.instance.logMessage.Add(newMessage);
     }
 
+    public void wrightInventoryFullLog()
+    {
+        string newMessage;
+        newMessage = "荷物がいっぱいです。";
+        GManager.instance.logMessage.Add(newMessage);
+    }
+
+    /**
+     * コマンドパネルを閉じる
+     */
     public void closeMenu()
     {
-        commandPanel.SetActive(false);
-        statusText.SetActive(false);
-        itemText.SetActive(false);
-        itemUsePanel.SetActive(false);
-        itemDescriptionPanel.SetActive(false);
-        isMenuOpen = false;
+        //commandPanel.SetActive(false);
+        //statusText.SetActive(false);
+        //itemText.SetActive(false);
+        //itemUsePanel.SetActive(false);
+        //itemDescriptionPanel.SetActive(false);
+        //isMenuOpen = false;
+        isMenuOpen = true;
+        isCloseCommand = true;
     }
 
+    /**
+     * ステータスパネルを開く
+     */
     public void openStatus()
     {
         itemText.SetActive(false);
         statusText.SetActive(true);
+        //プレイヤーのステータスを表示
+        string status;
+        status = "プレイヤー名 : " + GManager.instance.playerName;
+        status += "\n";
+        status += "レベル : " + GManager.instance.playerLevel;
+        status += "\n";
+        status += "HP : " + GManager.instance.playerHp;
+        status += "\n";
+        status += "攻撃力 : " + GManager.instance.playerAttack;
+        status += "\n";
+        status += "防御力 : " + GManager.instance.playerDefence;
+        status += "\n";
+        status += "満腹度 : " + GManager.instance.playerFoodPoints;
+        status += "\n";
+        status += "所持金 : " + GManager.instance.playerMoney;
+        status += "\n";
+        status += "武器 : " + GManager.instance.weaponName;
+        status += "\n";
+        status += "盾 : " + GManager.instance.shieldName;
+        playerStatusPanel.text = status;
     }
 
+    /**
+     * アイテムボタン押下
+     */
     public void openItem()
     {
+        deleteChildButton(itemText.transform);
         statusText.SetActive(false);
         itemText.SetActive(true);
         GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
@@ -426,25 +521,110 @@ public class GManager : MonoBehaviour
         {
             itemBtns[i].GetComponent<Image>().color = new Color32(140, 168, 166, 255);
         }
+        Vector3 parentPosition = itemText.transform.position;
+        deploymentMyInventory(parentPosition);
+    }
+
+    /**
+     * インベントリー内のアイテムを展開する
+     */
+    void deploymentMyInventory(Vector3 parentPosition)
+    {
+        //アイテムを所持していない
+        if (itemList.Count < 1 && itemPanel != null)
+        {
+            itemPanel.enabled = true;
+            itemPanel.text = "アイテムを所持していません";
+            return;
+        }
+        for (var i = 0; i < itemList.Count; i++)
+        {
+            //メニューボタンの生成
+            GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x -10, parentPosition.y + 80 - i * 35, 0f), Quaternion.identity) as GameObject;
+            listButton.transform.SetParent(itemText.transform, false);
+            listButton.transform.Find("Text").GetComponent<Text>().text = itemList[i].GetComponent<Item>().name;
+            int index = i;
+            listButton.GetComponent<ItemNameButton>().itemNameButtonId = index;
+            //アイテムをクリックしたときの関数を設定
+            listButton.GetComponent<Button>().onClick.AddListener(() => clickItemButton(itemList[index], listButton, index));
+        }
+    }
+
+    /**
+     * itemPanelに展開されたアイテム名をクリック
+     */
+    public void clickItemButton(GameObject argItem, GameObject listButton, int index)
+    {
+        GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
+        Item item = argItem.GetComponent<Item>();
+        for (int i = 0; i < itemBtns.Length; i++)
+        {
+            if (itemBtns[i].GetComponent<ItemNameButton>().itemNameButtonId == index)
+            {
+                itemBtns[i].GetComponent<Image>().color = Color.cyan;
+            }
+            else
+            {
+                itemBtns[i].GetComponent<Image>().color = new Color32(140, 168, 166, 255);
+            }
+        }
+        itemDescriptionPanel.SetActive(true);
+        string description = "アイテム名：" + item.name;
+        description += "\n\n";
+        description += item.itemDescription;
+        itemDescriptionPanel.transform.Find("Text").GetComponent<Text>().text = description;
+        GManager.instance.itemUsePanel.SetActive(true);
+        GManager.instance.itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = true;
+        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = true;
+        //消費系アイテム
+        if (item.type == "foodRecovery" || item.type == "portion")
+        {
+            GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "つかう";
+        }
+        //装備系アイテム
+        else if (item.type == "Equipment")
+        {
+            if (((EquipmentBase)item).isEquip)
+            {
+                GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "はずす";
+                GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = false;
+                GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "そうび";
+            }
+        }
+        GManager.instance.itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.AddListener(() => { adduUseItemFunc(item, listButton); });
+        GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.AddListener(() => { addPutItemFunc(argItem); });
+        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.AddListener(() => { Debug.Log("投げる"); GManager.instance.itemUsePanel.SetActive(false); });
+    }
+
+    /**
+     * アイテムを使用
+     */
+    public void adduUseItemFunc(Item item, GameObject useBtnObj)
+    {
+        item.useItem();
+        isCloseCommand = true;
+    }
+
+    //足元にアイテムを置く
+    public void addPutItemFunc(GameObject item)
+    {
+        item.GetComponent<Item>().putItem();
+        isCloseCommand = true;
     }
 
     /**
      * 取得したアイテムをリストに追加する
      */
-    public void addItem(Item item)
+    public void addItem(GameObject item)
     {
         GManager.instance.itemList.Add(item);
-    }
-
-    /**
-     * アイテムを消費する
-     */
-    public void consumeItem(int index)
-    {
-        Debug.Log("beforcount" + GManager.instance.itemList.Count);
-        Debug.Log("remove" + index);
-        GManager.instance.itemList.RemoveAt(index);
-        Debug.Log("aftercount" + GManager.instance.itemList.Count);
     }
 
     /**
@@ -452,11 +632,7 @@ public class GManager : MonoBehaviour
      */
     public void updateLevel()
     {
-        //Debug.Log("before" + GManager.instance.beforeLevelupExperience);
         GManager.instance.nowExprience = GManager.instance.mostRecentExperience - (GManager.instance.nowMaxExprience - GManager.instance.beforeLevelupExperience);
-        //Debug.Log("mostrecent" + GManager.instance.mostRecentExperience);
-        //Debug.Log("max" + GManager.instance.nowMaxExprience);
-        //Debug.Log("now" + GManager.instance.nowExprience);
         GManager.instance.playerLevel++;
         GManager.instance.nowMaxExprience = GManager.instance.nowMaxExprience + 10 * GManager.instance.playerLevel;
         GManager.instance.wrightLevelupLog(GManager.instance.playerName);

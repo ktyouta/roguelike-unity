@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class NpcSales : NpcBase
 {
-    [Header("商品のリスト")] public List<Item> salesItemList;
+    [Header("商品のリスト")] public List<GameObject> salesItemList;
     [Header("ショップの選択肢")] public List<ShopChoiseClass> shopMenu;
     [Header("売買時の選択肢")] public List<ShopChoiseClass> tradeMenu;
     [Header("会話開始直後のメッセージ")] public string startMessage;
@@ -100,7 +100,7 @@ public class NpcSales : NpcBase
         RectTransform choisePanelRect = GManager.instance.shopItemListPanel.GetComponent<RectTransform>();
         //ボタンの設置座標を設定するためにpivotを取得
         float pivotY = choisePanelRect.pivot.y;
-        List<Item> displayItemList = new List<Item>();
+        List<GameObject> displayItemList = new List<GameObject>();
         string npcTradeMessage = "";
         //買いに来た
         if (shopMode == 0)
@@ -122,7 +122,7 @@ public class NpcSales : NpcBase
     /**
      * アイテムのリストをパネルに展開する
      */
-    void deploymentItemList(List<Item> displayItemList, Vector3 parentPosition)
+    void deploymentItemList(List<GameObject> displayItemList, Vector3 parentPosition)
     {
         for (int i = 0; i < displayItemList.Count; i++)
         {
@@ -131,26 +131,28 @@ public class NpcSales : NpcBase
             //choisePanelの子オブジェクトにする
             choiseButton.transform.SetParent(GManager.instance.shopItemListPanel.transform, false);
             string tradePrice = "";
+            Item item = displayItemList[i].GetComponent<Item>();
             if (shopMode == 0)
             {
-                tradePrice = displayItemList[i].buyPrice.ToString();
+                tradePrice = item.buyPrice.ToString();
             }
             else if (shopMode == 1)
             {
-                tradePrice = displayItemList[i].sellPrice.ToString();
+                tradePrice = item.sellPrice.ToString();
             }
-            choiseButton.transform.Find("Text").GetComponent<Text>().text = displayItemList[i].name + "       " + tradePrice + "$";
-            Item argItem = displayItemList[i];
-            //選択肢をクリックした際のメソッドを設定
-            choiseButton.GetComponent<Button>().onClick.AddListener(() => clickItemName(argItem));
+            choiseButton.transform.Find("Text").GetComponent<Text>().text = item.name + "       " + tradePrice + "$";
+            //アイテム名をクリックした際のメソッドを設定
+            GameObject tempItem = displayItemList[i];
+            choiseButton.GetComponent<Button>().onClick.AddListener(() => clickItemName(tempItem));
         }
     }
 
     /**
      * アイテム名をクリック
      */
-    void clickItemName(Item item)
+    void clickItemName(GameObject argItem)
     {
+        Item item = argItem.GetComponent<Item>();
         GManager.instance.itemDescriptionPanel.SetActive(true);
         string description = "アイテム名：" + item.name;
         description += "\n\n";
@@ -178,14 +180,14 @@ public class NpcSales : NpcBase
             choiseButton.transform.Find("Text").GetComponent<Text>().text = tempTradeMenu[i].menu;
             int funcIndex = tempTradeMenu[i].funcNumber;
             //選択肢をクリックした際のメソッドを設定
-            choiseButton.GetComponent<Button>().onClick.AddListener(() => clickShopTradeMenu(funcIndex,item));
+            choiseButton.GetComponent<Button>().onClick.AddListener(() => clickShopTradeMenu(funcIndex, argItem));
         }
     }
 
     /**
      * 売買決定時の関数
      */
-    void clickShopTradeMenu(int index,Item item)
+    void clickShopTradeMenu(int index,GameObject item)
     {
         switch (index)
         {
@@ -216,8 +218,9 @@ public class NpcSales : NpcBase
     /**
      * アイテム購入決定
      */
-    void decisionBuyItem(Item item)
+    void decisionBuyItem(GameObject argItem)
     {
+        Item item = argItem.GetComponent<Item>();
         //所持金の判定
         if (GManager.instance.playerMoney < item.buyPrice)
         {
@@ -226,7 +229,7 @@ public class NpcSales : NpcBase
         }
         //所持金から差し引く
         GManager.instance.playerMoney -= item.buyPrice;
-        GManager.instance.addItem(item);
+        GManager.instance.addItem(argItem);
         //購入したアイテムにIDを割り当てる
         int itemId = GManager.instance.itemList.Count;
         item.id = itemId;
@@ -238,12 +241,13 @@ public class NpcSales : NpcBase
     /**
      * アイテム売却決定
      */
-    void decisionSellItem(Item item)
+    void decisionSellItem(GameObject argItem)
     {
+        Item item = argItem.GetComponent<Item>();
         item.isUsedFlag = true;
         for (int i=0;i< GManager.instance.itemList.Count;i++)
         {
-            if (GManager.instance.itemList[i].id == item.id)
+            if (GManager.instance.itemList[i].GetComponent<Item>().id == item.id)
             {
                 GManager.instance.itemList.RemoveAt(i);
                 showMessage("買い取りました。");

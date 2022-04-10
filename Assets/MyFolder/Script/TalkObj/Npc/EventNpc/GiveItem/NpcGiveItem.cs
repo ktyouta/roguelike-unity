@@ -77,6 +77,6 @@ public class NpcGiveItem : NpcBase
 
     protected void giveItemToPlayer()
     {
-        GManager.instance.addItem(giveItem.GetComponent<Item>());
+        GManager.instance.addItem(giveItem);
     }
 }

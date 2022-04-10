@@ -178,8 +178,8 @@ public class BoardManager : MonoBehaviour
     //境界線を格納するリスト
     private List<int> mapBorderList = new List<int>();
     //抽選用のアイテムリスト
-    List<Item> lotteryList = new List<Item>();
-    List<Item> lotteryList2 = new List<Item>();
+    List<GameObject> lotteryList = new List<GameObject>();
+    List<GameObject> lotteryList2 = new List<GameObject>();
 
     //フィールド生成
     /**
@@ -554,8 +554,8 @@ public class BoardManager : MonoBehaviour
      */
     private void createTreasureItemList()
     {
-        lotteryList.Add(portion.GetComponent<Item>());
-        lotteryList2.Add(food.GetComponent<Item>());
+        lotteryList.Add(portion);
+        lotteryList2.Add(food);
         GManager.instance.lotteryitemList.Add(lotteryList);
         GManager.instance.lotteryitemList.Add(lotteryList2);
     }

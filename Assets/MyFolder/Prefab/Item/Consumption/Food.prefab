@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1790636213761801690}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.742828, y: -2.9405737, z: 0}
+  m_LocalPosition: {x: 8, y: 3, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children: []
   m_Father: {fileID: 0}
@@ -130,10 +130,11 @@ MonoBehaviour:
   buyPrice: 100
   sellPrice: 50
   isUsedFlag: 0
-  itemObj: {fileID: 0}
   itemPanelObj: {fileID: 0}
   itemPanel: {fileID: 0}
   commandPanel: {fileID: 0}
   itemDescriptionPanel: {fileID: 0}
+  isEnter: 0
+  isPut: 0
   foodPoint: 10
   foodText: {fileID: 0}

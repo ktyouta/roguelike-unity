@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 169949262}
   - component: {fileID: 169949261}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PlayerStatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2896,7 +2896,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477988526}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1873ecc4c025464089c2e3d69b7b966, type: 3}
   m_Name: 
@@ -3100,6 +3100,8 @@ MonoBehaviour:
   shieldName: "\u306A\u3057"
   logMessage: []
   nowPlayerMaxHp: 100
+  playerObj: {fileID: 0}
+  nowMaxPosession: 3
   levelText: {fileID: 0}
   levelImage: {fileID: 0}
   commandPanel: {fileID: 0}
@@ -3107,18 +3109,22 @@ MonoBehaviour:
   itemText: {fileID: 0}
   itemUsePanel: {fileID: 0}
   itemDescriptionPanel: {fileID: 0}
+  playerStatusPanel: {fileID: 0}
   npcWindowImage: {fileID: 0}
   npcImage: {fileID: 0}
   choisePanel: {fileID: 0}
   shopPanel: {fileID: 0}
   shopItemListPanel: {fileID: 0}
-  ShopSelectPanel: {fileID: 0}
+  shopSelectPanel: {fileID: 0}
   npcMessageText: {fileID: 0}
   npcNameText: {fileID: 0}
   playerMoneyText: {fileID: 0}
   level: 1
+  itemBtn: {fileID: 725165651287123956, guid: 6bf867a6b0c37a04bb426e340e81a662, type: 3}
   isMenuOpen: 0
+  isCloseCommand: 1
   itemList: []
+  itemPanel: {fileID: 1657887070}
   treasureItemList: []
 --- !u!1 &1530178040
 GameObject:
@@ -3421,7 +3427,7 @@ GameObject:
   - component: {fileID: 1657887071}
   - component: {fileID: 1657887070}
   m_Layer: 5
-  m_Name: Text
+  m_Name: ItemPanelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3443,7 +3449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26991}
+  m_AnchoredPosition: {x: 142.74, y: -116.27}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070
@@ -4035,7 +4041,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2003744202}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 387b0b7330f06894ca022f77c46ff2f2, type: 3}
   m_Name: 

@@ -12,22 +12,13 @@ public class EquipmentBase : Item
         base.Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public override void useItem()
     {
-        ///GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("Equipment");
-        //Debug.Log(itemBtns.Length);
         for (int i=0;i<GManager.instance.itemList.Count;i++)
         {
-            //Debug.Log(GManager.instance.itemList[i].type);
-            if (GManager.instance.itemList[i].type == type)
+            if (GManager.instance.itemList[i].GetComponent<Item>().type == type)
             {
-                if (GManager.instance.itemList[i].id == id)
+                if (GManager.instance.itemList[i].GetComponent<Item>().id == id)
                 {
                     if (isEquip)
                     {
@@ -53,9 +44,9 @@ public class EquipmentBase : Item
         GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
         for (int i = 0; i < itemBtns.Length; i++)
         {
-            if (GManager.instance.itemList[i].type == "Equipment" && GManager.instance.itemList[i].GetType().Name == itemObj.GetComponent<Item>().GetType().Name)
+            if (GManager.instance.itemList[i].GetComponent<Item>().type == "Equipment" && GManager.instance.itemList[i].GetType().Name == this.gameObject.GetComponent<Item>().GetType().Name)
             {
-                if (((EquipmentBase)GManager.instance.itemList[i]).isEquip)
+                if (((EquipmentBase)GManager.instance.itemList[i].GetComponent<Item>()).isEquip)
                 {
                     itemBtns[i].transform.Find("Text").GetComponent<Text>().text = "E " + itemBtns[i].transform.Find("Text").GetComponent<Text>().text;
                 }

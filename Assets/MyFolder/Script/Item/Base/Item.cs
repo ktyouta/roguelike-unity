@@ -11,23 +11,24 @@ public class Item : MonoBehaviour
     [Header("ステージ難易度に応じたID")] public int diffId;
     [Header("買値")] public int buyPrice;
     [Header("売値")] public int sellPrice;
-    public bool isUsedFlag = false;
-    public GameObject itemObj;
+    [HideInInspector] public bool isUsedFlag = false;
     public GameObject itemPanelObj;
     public GameObject itemPanel;
     public GameObject commandPanel;
     public GameObject itemDescriptionPanel;
+    [HideInInspector] public bool isEnter = false;
+    [HideInInspector] public bool isPut = false;
+    private player playerObj = null;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        itemObj = this.gameObject;
-        if (itemObj == null)
-        {
-            Debug.Log("null");
-        }
+        //itemObj = this.gameObject;
     }
 
+    /**
+     * アイテムを使用
+     */
     public virtual void useItem()
     {
         itemPanelObj = GameObject.Find("ItemUseList");
@@ -41,11 +42,44 @@ public class Item : MonoBehaviour
         GManager.instance.isMenuOpen = !GManager.instance.isMenuOpen;
     }
 
+    /**
+     * アイテムを足元に置く
+     */
+    public void putItem()
+    {
+        playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
+        GameObject newPutItem = Instantiate(this.gameObject, new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, 0.0f), Quaternion.identity) as GameObject;
+        newPutItem.SetActive(true);
+        newPutItem.GetComponent<Item>().isEnter = true;
+        newPutItem.GetComponent<Item>().isPut = true;
+        deleteSelectedItem(id);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
+        
         //衝突したトリガーのタグがFoodであるか確認してください。
         if (other.tag == "Player")
         {
+            //出入り時に2回実行される対策
+            isEnter = !isEnter;
+            if (!isEnter)
+            {
+                return;
+            }
+            //アイテムを足元に置いたとき
+            if (isPut)
+            {
+                isEnter = !isEnter;
+                isPut = !isPut;
+                return;
+            }
+            //アイテムの所持制限を超えている場合
+            if (GManager.instance.itemList.Count > GManager.instance.nowMaxPosession)
+            {
+                GManager.instance.wrightInventoryFullLog();
+                return;
+            }
             //アイテム取得後、非表示
             addItemInventory();
         }
@@ -56,30 +90,21 @@ public class Item : MonoBehaviour
      */
     public void addItemInventory()
     {
-        GManager.instance.addItem(itemObj.GetComponent<Item>());
         int itemId = GManager.instance.itemList.Count;
-        itemObj.GetComponent<Item>().id = itemId;
-        //Debug.Log("reid" + itemObj.GetComponent<RecoveryItem>().id);
-        itemObj.SetActive(false);
+        GetComponent<Item>().id = itemId;
+        GManager.instance.addItem(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 
-    //public void changeListPos(int index)
-    //{
-    //    GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
-    //    float beforePos = itemBtns[0].transform.position.y;
-    //    for (int i=0;i<itemBtns.Length;i++)
-    //    {
-    //        if (itemBtns[i].GetComponent<ItemNameButton>().itemNameButtonId + 1 > index)
-    //        {
-    //            Vector3 pos = itemBtns[i].transform.position;
-    //            pos.y = beforePos;
-    //            beforePos = itemBtns[i].transform.position.y;
-    //            itemBtns[i].transform.position = pos;
-    //        }
-    //        else
-    //        {
-    //            beforePos = itemBtns[i].transform.position.y;
-    //        }
-    //    }
-    //}
+    public void deleteSelectedItem(int selectId)
+    {
+        for (int i = 0; i < GManager.instance.itemList.Count; i++)
+        {
+            if (GManager.instance.itemList[i].GetComponent<Item>().id == selectId)
+            {
+                GManager.instance.itemList.RemoveAt(i);
+                this.gameObject.SetActive(false);
+            }
+        }
+    }
 }

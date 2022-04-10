@@ -22,10 +22,10 @@ public class Treasure : MonoBehaviour
     {
         //Debug.Log("trasurelist"+ GManager.instance.treasureItemList[0]);
         //Item getItem = GManager.instance.treasureItemList[0];
-        Item getItem = GManager.instance.lotteryitemList[lotteryId][Random.Range(0, GManager.instance.lotteryitemList[lotteryId].Count-1)];
-        GManager.instance.addItem(getItem);
+        GameObject getItem = GManager.instance.lotteryitemList[lotteryId][Random.Range(0, GManager.instance.lotteryitemList[lotteryId].Count-1)];
         int itemId = GManager.instance.itemList.Count;
-        getItem.id = itemId;
+        getItem.GetComponent<Item>().id = itemId;
+        GManager.instance.addItem(getItem);
         Destroy(this.gameObject);
     }
 }

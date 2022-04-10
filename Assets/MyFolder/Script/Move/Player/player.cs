@@ -26,7 +26,7 @@ public class player : MovingObject
     public GameObject levelText;
     private bool isDefeat = false;
     private int nowPlayerState = 0;
-    playerState plState = playerState.Normal;
+    public playerState plState = playerState.Normal;
 
     public enum playerState
     {
@@ -72,9 +72,9 @@ public class player : MovingObject
         {
             return;
         }
-        
+
         //ゲームオーバーまたはメニューオープン時
-        if (isDefeat || GManager.instance.isMenuOpen)
+        if (isDefeat || !GManager.instance.isCloseCommand)
         {
             return;
         }
@@ -86,6 +86,7 @@ public class player : MovingObject
             GManager.instance.updateLevel();
             GManager.instance.updateStatus();
         }
+
         //Debug.Log(GManager.instance.playersTurn);
         //プレイヤーの番でない場合、関数を終了します。
         if (!GManager.instance.playersTurn)
