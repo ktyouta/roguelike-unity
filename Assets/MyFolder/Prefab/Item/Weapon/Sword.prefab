@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3457457348018626143}
   - component: {fileID: 2616057097483753827}
   - component: {fileID: 2081860233302547120}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sword
   m_TagString: Equipment
   m_Icon: {fileID: 0}
@@ -126,10 +126,15 @@ MonoBehaviour:
   name: "\u9244\u306E\u5263"
   type: Equipment
   itemDescription: "\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u653B\u6483\u529B\u3092\u4E0A\u6607\u3055\u305B\u308B"
-  itemObj: {fileID: 0}
+  diffId: 0
+  buyPrice: 0
+  sellPrice: 0
+  isUsedFlag: 0
   itemPanelObj: {fileID: 0}
   itemPanel: {fileID: 0}
   commandPanel: {fileID: 0}
   itemDescriptionPanel: {fileID: 0}
+  isEnter: 0
+  isPut: 0
   isEquip: 0
   attackParam: 3

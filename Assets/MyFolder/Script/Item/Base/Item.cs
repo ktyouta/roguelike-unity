@@ -42,22 +42,8 @@ public class Item : MonoBehaviour
         GManager.instance.isMenuOpen = !GManager.instance.isMenuOpen;
     }
 
-    /**
-     * アイテムを足元に置く
-     */
-    public void putItem()
-    {
-        playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
-        GameObject newPutItem = Instantiate(this.gameObject, new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, 0.0f), Quaternion.identity) as GameObject;
-        newPutItem.SetActive(true);
-        newPutItem.GetComponent<Item>().isEnter = true;
-        newPutItem.GetComponent<Item>().isPut = true;
-        deleteSelectedItem(id);
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
         //衝突したトリガーのタグがFoodであるか確認してください。
         if (other.tag == "Player")
         {
@@ -96,6 +82,9 @@ public class Item : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    /**
+     * アイテムのリストから該当するアイテムを削除する
+     */
     public void deleteSelectedItem(int selectId)
     {
         for (int i = 0; i < GManager.instance.itemList.Count; i++)

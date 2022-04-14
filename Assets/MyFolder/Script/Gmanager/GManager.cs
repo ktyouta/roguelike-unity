@@ -464,6 +464,11 @@ public class GManager : MonoBehaviour
         GManager.instance.logMessage.Add(newMessage);
     }
 
+    public void wrightLog(string message)
+    {
+        GManager.instance.logMessage.Add(message);
+    }
+
     /**
      * コマンドパネルを閉じる
      */
@@ -615,7 +620,7 @@ public class GManager : MonoBehaviour
     //足元にアイテムを置く
     public void addPutItemFunc(GameObject item)
     {
-        item.GetComponent<Item>().putItem();
+        playerObj.putItemFloor(item);
         isCloseCommand = true;
     }
 

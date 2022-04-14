@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8890566393852896437}
   - component: {fileID: 5678178040164831795}
   - component: {fileID: 2989593286908360663}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,10 +126,15 @@ MonoBehaviour:
   name: "\u9244\u306E\u76FE"
   type: Equipment
   itemDescription: "\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u9632\u5FA1\u529B\u3092\u4E0A\u6607\u3055\u305B\u308B"
-  itemObj: {fileID: 0}
+  diffId: 0
+  buyPrice: 0
+  sellPrice: 0
+  isUsedFlag: 0
   itemPanelObj: {fileID: 0}
   itemPanel: {fileID: 0}
   commandPanel: {fileID: 0}
   itemDescriptionPanel: {fileID: 0}
+  isEnter: 0
+  isPut: 0
   isEquip: 0
   defenceParam: 2

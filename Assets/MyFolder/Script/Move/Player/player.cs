@@ -27,6 +27,7 @@ public class player : MovingObject
     private bool isDefeat = false;
     private int nowPlayerState = 0;
     public playerState plState = playerState.Normal;
+    [Header("アイテムレイヤー")] public LayerMask itemLayer;
 
     public enum playerState
     {
@@ -273,8 +274,6 @@ public class player : MovingObject
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(nextHorizontalKey, nextVerticalkey);
         boxCollider.enabled = false;
-        //Debug.Log("start" + start);
-        //Debug.Log("end" + end);
         RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer);
         boxCollider.enabled = true;
         if (hit.transform)
@@ -286,9 +285,7 @@ public class player : MovingObject
             {
                 enemyObject = hitObj.GetComponent<Enemy>();
                 int enemyHp = enemyObject.enemyHp;
-                //Debug.Log("playerAttack: " + enemyHp);
                 enemyObject.enemyHp -= GManager.instance.playerAttack;
-                //Debug.Log("playerAttack: " + enemyObject.enemyHp);
                 GManager.instance.wrightAttackLog(GManager.instance.playerName, enemyObject.enemyName, GManager.instance.playerAttack);
             }
             else if (hit.collider.gameObject.layer == Define.TREASURE_LAYER)
@@ -302,5 +299,32 @@ public class player : MovingObject
             }
         }
         GManager.instance.playersTurn = false;
+    }
+
+    /**
+     * アイテムを使用
+     */
+    public void useItem(GameObject item)
+    {
+        item.GetComponent<Item>().useItem();
+    }
+
+    /**
+     * アイテムをプレイヤーの足元に置く
+     */
+    public void putItemFloor(GameObject item)
+    {
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position, itemLayer);
+        if (hit.transform != null)
+        {
+            GManager.instance.wrightLog("アイテムを置けません。");
+            return;
+        }
+        Item tempItem = item.GetComponent<Item>();
+        GameObject newPutItem = Instantiate(item, new Vector3(transform.position.x,transform.position.y, 0.0f), Quaternion.identity) as GameObject;
+        newPutItem.SetActive(true);
+        newPutItem.GetComponent<Item>().isEnter = true;
+        newPutItem.GetComponent<Item>().isPut = true;
+        tempItem.deleteSelectedItem(tempItem.id);
     }
 }
