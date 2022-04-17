@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8931916911353795747}
   - component: {fileID: 5384062631816331294}
   - component: {fileID: 6051048925190670385}
+  - component: {fileID: 2578787506614536389}
+  - component: {fileID: -6656465945524242731}
   m_Layer: 9
   m_Name: Food
   m_TagString: Food
@@ -122,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88a7f07da020ba4e86a3622190b32e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 1
+  id: 2
   name: "\u304D\u306E\u3053"
   type: foodRecovery
   itemDescription: "\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u6E80\u8179\u5EA6\u3092\u56DE\u5FA9\u3059\u308B"
@@ -138,3 +140,42 @@ MonoBehaviour:
   isPut: 0
   foodPoint: 10
   foodText: {fileID: 0}
+--- !u!50 &2578787506614536389
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790636213761801690}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &-6656465945524242731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790636213761801690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b417dd4888d644eb089cf222bfcf51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isThrownObj: 0
+  isVisibleObj: 0
+  playerHorizontalKey: 0
+  playerVerticalKey: 0
+  itemXSpeed: 10
+  itemYSpeed: 10

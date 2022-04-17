@@ -26,7 +26,7 @@ public class player : MovingObject
     public GameObject levelText;
     private bool isDefeat = false;
     private int nowPlayerState = 0;
-    public playerState plState = playerState.Normal;
+    [HideInInspector] public playerState plState = playerState.Normal;
     [Header("アイテムレイヤー")] public LayerMask itemLayer;
 
     public enum playerState
@@ -34,6 +34,7 @@ public class player : MovingObject
         Normal,
         Talk,
         Command,
+        Wait
     }
 
     //MovingObjectのStart関数をオーバーライドします
@@ -326,5 +327,47 @@ public class player : MovingObject
         newPutItem.GetComponent<Item>().isEnter = true;
         newPutItem.GetComponent<Item>().isPut = true;
         tempItem.deleteSelectedItem(tempItem.id);
+    }
+
+    /**
+     * アイテムを投げる
+     */
+    public void throwItem(GameObject item)
+    {
+        if (item.GetComponent<ThrowObject>() == null)
+        {
+            Debug.Log("オブジェクトにThrowObjectがついていません");
+            return;
+        }
+        if (item.GetComponent<Rigidbody2D>() == null)
+        {
+            Debug.Log("オブジェクトにRigidbody2Dがついていません");
+            return;
+        }
+        setPlayerState(playerState.Wait);
+        Item tempItem = item.GetComponent<Item>();
+        //投げられるアイテムを生成
+        GameObject newThrownItemObj = Instantiate(item, new Vector3(transform.position.x, transform.position.y, 0.0f), Quaternion.identity) as GameObject;
+        newThrownItemObj.SetActive(true);
+        newThrownItemObj.GetComponent<Item>().isEnter = true;
+        ThrowObject th = newThrownItemObj.GetComponent<ThrowObject>();
+        //プレイヤーが向いている方向をセット
+        th.playerHorizontalKey = nextHorizontalKey;
+        th.playerVerticalKey = nextVerticalkey;
+        //ThrowObjectのupdateが走る(アイテムが移動する)
+        th.isThrownObj = true;
+        Item throwItem = newThrownItemObj.GetComponent<Item>();
+        //インベントリーから削除
+        tempItem.deleteSelectedItem(tempItem.id);
+        StartCoroutine("movingItem",th);
+    }
+
+    IEnumerator movingItem(ThrowObject th)
+    {
+        yield return new WaitUntil(() => !th.isThrownObj);
+        //アイテムが画面外に出るか、障害物に当たるまで行動不可
+        setPlayerState(playerState.Normal);
+        GManager.instance.playersTurn = false;
+        yield break;
     }
 }

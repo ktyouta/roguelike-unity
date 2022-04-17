@@ -12,10 +12,10 @@ public class Consumption : Item
 
     public override void useItem()
     {
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
         //changeListPos(id);
         deleteSelectedItem(id);
-        base.useItem();
+        //base.useItem();
         isUsedFlag = true;
         Destroy(this.gameObject);
         GManager.instance.playersTurn = false;

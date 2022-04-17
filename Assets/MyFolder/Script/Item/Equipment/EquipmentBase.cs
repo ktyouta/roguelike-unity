@@ -36,7 +36,6 @@ public class EquipmentBase : Item
             }
         }
         changeListPos(id);
-        base.useItem();
     }
 
     public void changeListPos(int index)

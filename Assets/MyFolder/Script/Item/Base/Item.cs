@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public abstract class Item : MonoBehaviour
 {
     [HideInInspector]public int id;
     [Header("名前")]public string name;
@@ -18,7 +18,6 @@ public class Item : MonoBehaviour
     public GameObject itemDescriptionPanel;
     [HideInInspector] public bool isEnter = false;
     [HideInInspector] public bool isPut = false;
-    private player playerObj = null;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -29,18 +28,7 @@ public class Item : MonoBehaviour
     /**
      * アイテムを使用
      */
-    public virtual void useItem()
-    {
-        itemPanelObj = GameObject.Find("ItemUseList");
-        commandPanel = GameObject.Find("CommandPanel");
-        itemPanel = GameObject.Find("ItemPanel");
-        itemDescriptionPanel = GameObject.Find("ItemDescriptionPanel");
-        itemPanelObj.SetActive(false);
-        itemPanel.SetActive(false);
-        commandPanel.SetActive(false);
-        itemDescriptionPanel.SetActive(false);
-        GManager.instance.isMenuOpen = !GManager.instance.isMenuOpen;
-    }
+    public abstract void useItem();
 
     private void OnTriggerEnter2D(Collider2D other)
     {

@@ -72,7 +72,6 @@ public class GManager : MonoBehaviour
     private bool enemiesMoving;                                //enemyのターンかチェック
     private bool doingSetup;
     private bool loadFlg = false;
-    [HideInInspector] public bool isMenuOpen = false;
     [HideInInspector] public bool isCloseCommand = true;
     private bool spaceKey = false;
     private GameObject itemObj;
@@ -265,7 +264,7 @@ public class GManager : MonoBehaviour
     //更新はフレームごとに呼び出されます。
     void Update()
     {
-        if (!isCloseCommand)
+        if (!isCloseCommand || playerObj.plState != player.playerState.Normal)
         {
             return;
         }
@@ -273,27 +272,12 @@ public class GManager : MonoBehaviour
         //コマンドパネル開閉
         if (Input.GetKeyDown("space"))
         {
-            //isMenuOpen = !isMenuOpen;
-            //commandPanel.SetActive(isMenuOpen);
-            //statusText.SetActive(false);
-            //itemText.SetActive(false);
-            //itemUsePanel.SetActive(false);
-            //itemDescriptionPanel.SetActive(false);
-
-            //TODO:コルーチンを用いる
             playerObj.setPlayerState(player.playerState.Command);
             isCloseCommand = false;
             coroutine = deploymentMyCommandPanel();
             StartCoroutine(coroutine);
         }
-
-        
-       
-        //コルーチンを用いたメニュー処理の実装により削除される予定
-        //if (isMenuOpen)
-        //{
-        //    return;
-        //}
+     
         //playersTurnまたはenemiesMovingまたはdoingSetupが現在trueでないことを確認してください。
         if (playersTurn || enemiesMoving || doingSetup)
         {
@@ -316,16 +300,14 @@ public class GManager : MonoBehaviour
     }
 
     /**
-     * コマンドメニュー展開(実装中)
+     * コマンドメニュー展開
      */
     IEnumerator deploymentMyCommandPanel()
     {
-        isMenuOpen = false;
         commandPanel.SetActive(true);
         yield return null;
         //閉じるボタンが押下されるか、スペースキーが押下された場合にメニューを閉じる
         yield return new WaitUntil(() => isCloseCommand || Input.GetKeyDown("space"));
-        isMenuOpen = true;
         isCloseCommand = true;
         StopCoroutine(coroutine);
         coroutine = null;
@@ -335,7 +317,7 @@ public class GManager : MonoBehaviour
         itemUsePanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
         itemPanel.enabled = false;
-        playerObj.setPlayerState(player.playerState.Normal);
+        //playerObj.setPlayerState(player.playerState.Normal);
     }
 
     //hpが0になった敵をリストから削除
@@ -474,13 +456,6 @@ public class GManager : MonoBehaviour
      */
     public void closeMenu()
     {
-        //commandPanel.SetActive(false);
-        //statusText.SetActive(false);
-        //itemText.SetActive(false);
-        //itemUsePanel.SetActive(false);
-        //itemDescriptionPanel.SetActive(false);
-        //isMenuOpen = false;
-        isMenuOpen = true;
         isCloseCommand = true;
     }
 
@@ -605,7 +580,7 @@ public class GManager : MonoBehaviour
         }
         GManager.instance.itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.AddListener(() => { adduUseItemFunc(item, listButton); });
         GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.AddListener(() => { addPutItemFunc(argItem); });
-        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.AddListener(() => { Debug.Log("投げる"); GManager.instance.itemUsePanel.SetActive(false); });
+        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.AddListener(() => { addThrowItem(argItem); });
     }
 
     /**
@@ -615,12 +590,26 @@ public class GManager : MonoBehaviour
     {
         item.useItem();
         isCloseCommand = true;
+        GManager.instance.playersTurn = false;
+        playerObj.setPlayerState(player.playerState.Normal);
     }
 
-    //足元にアイテムを置く
+    /**
+     * 足元にアイテムを置く
+     */
     public void addPutItemFunc(GameObject item)
     {
         playerObj.putItemFloor(item);
+        isCloseCommand = true;
+        playerObj.setPlayerState(player.playerState.Normal);
+    }
+
+    /**
+     * アイテムを投げる
+     */
+    public void addThrowItem(GameObject item)
+    {
+        playerObj.throwItem(item);
         isCloseCommand = true;
     }
 
