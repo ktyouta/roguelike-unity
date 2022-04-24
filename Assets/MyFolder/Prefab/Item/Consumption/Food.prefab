@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88a7f07da020ba4e86a3622190b32e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 2
+  id: 1
   name: "\u304D\u306E\u3053"
   type: foodRecovery
   itemDescription: "\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u6E80\u8179\u5EA6\u3092\u56DE\u5FA9\u3059\u308B"
@@ -138,6 +138,7 @@ MonoBehaviour:
   itemDescriptionPanel: {fileID: 0}
   isEnter: 0
   isPut: 0
+  recoveryPoint: 0
   foodPoint: 10
   foodText: {fileID: 0}
 --- !u!50 &2578787506614536389
@@ -174,7 +175,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isThrownObj: 0
-  isVisibleObj: 0
   playerHorizontalKey: 0
   playerVerticalKey: 0
   itemXSpeed: 10

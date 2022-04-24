@@ -7,10 +7,11 @@ public class ThrowObject : MonoBehaviour
     [HideInInspector] public bool isThrownObj = false;
     [HideInInspector] public int playerHorizontalKey;
     [HideInInspector] public int playerVerticalKey;
-    private SpriteRenderer sr;
-    private Rigidbody2D rb;
     [HideInInspector] public float itemXSpeed = 10.0f;
     [HideInInspector] public float itemYSpeed = 10.0f;
+    private SpriteRenderer sr;
+    private Rigidbody2D rb;
+    private Item it;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,10 @@ public class ThrowObject : MonoBehaviour
         {
             rb = GetComponent<Rigidbody2D>();
         }
+        if (it == null)
+        {
+            it = GetComponent<Item>();
+        }
     }
 
     // Update is called once per frame
@@ -30,7 +35,7 @@ public class ThrowObject : MonoBehaviour
     {
         if (isThrownObj)
         {
-            float xSpeed = itemXSpeed;
+            float xSpeed = 0.0f;
             float ySpeed = 0.0f;
             if (playerHorizontalKey > 0)
             {
@@ -62,10 +67,23 @@ public class ThrowObject : MonoBehaviour
      */
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag != "Player" && other.tag != "Forest" && other.tag != "Floor")
+        if (other.tag == "Player" || other.tag == "Forest" || other.tag == "Floor" || other.tag == "Untagged")
+        {
+            return;
+        }
+        //ìGÇ…Ç‘Ç¬Ç©Ç¡ÇΩèÍçá
+        if (other.tag == "Enemy")
+        {
+            Enemy enemy = other.GetComponent<Enemy>();
+            //enemy.enemyHp -= 10;
+            it.collisionItem(enemy);
+            Destroy(this.gameObject);
+        }
+        else
         {
             rb.velocity = new Vector2(0.0f, 0.0f);
-            isThrownObj = false;
         }
+        isThrownObj = false;
+        it.deleteSelectedItem(it.id);
     }
 }

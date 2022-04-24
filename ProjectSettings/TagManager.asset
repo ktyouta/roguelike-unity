@@ -17,6 +17,8 @@ TagManager:
   - ShopItemPanelTag
   - ShopSelectPanelTag
   - Floor
+  - Npc
+  - OuterWall
   layers:
   - Default
   - TransparentFX

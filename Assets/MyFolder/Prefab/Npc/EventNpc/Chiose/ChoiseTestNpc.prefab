@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 5963479344652640801}
   m_Layer: 7
   m_Name: ChoiseTestNpc
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

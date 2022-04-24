@@ -18,74 +18,78 @@ public class GManager : MonoBehaviour
         }
     }
 
-    public float levelStartDelay = 2f;                        //レベルを開始する前に待機する時間（秒単位）。
-    public float turnDelay = 0.2f;                            //各プレイヤーのターン間の遅延。
-    public static GManager instance = null;
-    public BoardManager boardScript;
-    public int playerFoodPoints = 100;
-    [HideInInspector] public bool playersTurn = true;
-    [HideInInspector] public int enemyDefeatNum = -1;
+    //プレイヤーのステータス系
     [Header("プレイヤーのHP")] public int playerHp;
+    [Header("プレイヤーの現在の上限HP")] public int nowPlayerMaxHp = 100;
     [Header("プレイヤーの名前")] public string playerName;
     [Header("プレイヤーの所持金")] public int playerMoney;
     [Header("プレイヤーの攻撃力")] public int playerAttack;
     [Header("プレイヤーの防御力")] public int playerDefence;
     [Header("プレイヤーのレベル")] public int playerLevel = 1;
     [Header("プレイヤーの魅力")] public int playerCharm = 0;
-    [HideInInspector] public int nowExprience;
     [Header("次のレベルまでの経験値")] public int nowMaxExprience;
+    [Header("アイテムの所持数制限")] public int nowMaxPosession;
+    [Header("プレイヤーの満腹度")] public int playerFoodPoints;
     [HideInInspector] public int mostRecentExperience;
     [HideInInspector] public int beforeLevelupExperience;
-    public string weaponName = "なし";
-    public string shieldName = "なし";
-    [HideInInspector] public List<string> logMessage = new List<string>();
-    [Header("プレイヤーの現在の上限HP")] public int nowPlayerMaxHp = 100;
     [HideInInspector] public player playerObj;
-    [Header("アイテムの所持数制限")] public int nowMaxPosession;
+    [HideInInspector] public int nowExprience;
 
-    //public GameObject canvas;
+    //パネル制御系
+    [Header("インベントリーに展開されるアイテムボタン")] public GameObject itemBtn;
+    [Header("インベントリーの子オブジェクト(テキスト)")] public Text itemPanel;
     public GameObject levelText;
     public GameObject levelImage;
     public GameObject commandPanel;
     public GameObject statusText;
     public GameObject itemText;
     public GameObject itemUsePanel;
-    public GameObject itemDescriptionPanel;
-    private Button statusButton;
-    private Button itemButton;
-    private Button closeButton;
-    public Text playerStatusPanel;
     public GameObject npcWindowImage;
     public GameObject npcImage;
     public GameObject choisePanel;
     public GameObject shopPanel;
     public GameObject shopItemListPanel;
     public GameObject shopSelectPanel;
+    public GameObject itemDescriptionPanel;
+    public Text playerStatusPanel;
     public Text npcMessageText;
     public Text npcNameText;
     public Text playerMoneyText;
-    [HideInInspector]public int level;
-    [Header("インベントリーに展開されるアイテムボタン")] public GameObject itemBtn;
+    private Button statusButton;
+    private Button itemButton;
+    private Button closeButton;
 
-
-    private List<Enemy> enemies;                            //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
-    private bool enemiesMoving;                                //enemyのターンかチェック
-    private bool doingSetup;
-    private bool loadFlg = false;
-    [HideInInspector] public bool isCloseCommand = true;
-    private bool spaceKey = false;
-    private GameObject itemObj;
-    public List<GameObject> itemList = new List<GameObject>();
-    private IEnumerator coroutine;
-    [Header("インベントリーの子オブジェクト(テキスト)")]public Text itemPanel;
-
+    //リスト
+    //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
+    private List<Enemy> enemies;                            
     //宝箱用のアイテムリスト
     public List<Item> treasureItemList = new List<Item>();
-
-    TreasureItem treasureLotteryList = new TreasureItem(new List<Item>(), new List<Item>());
-
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
     public List<List<GameObject>> lotteryitemList = new List<List<GameObject>>();
+    //インベントリー内のリスト
+    public List<GameObject> itemList = new List<GameObject>();
+    //ログ
+    [HideInInspector] public List<string> logMessage = new List<string>();
+
+    //その他
+    //enemyのターンかチェック
+    [HideInInspector] public bool isCloseCommand = true;
+    [HideInInspector] public int level;
+    [HideInInspector] public bool playersTurn = true;
+    [HideInInspector] public int enemyDefeatNum = -1;
+    //レベルを開始する前に待機する時間（秒単位）。
+    public float levelStartDelay = 2f;
+    //各プレイヤーのターン間の遅延。
+    public float turnDelay = 0.2f;
+    public static GManager instance = null;
+    public BoardManager boardScript;
+    public string weaponName = "なし";
+    public string shieldName = "なし";
+    private bool enemiesMoving;
+    private bool doingSetup;
+    private bool loadFlg = false;
+    private IEnumerator coroutine;
+    private bool isSwitchPlayerStatus;
 
     //Start is called before the first frame update
     void Awake()
@@ -133,7 +137,6 @@ public class GManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         levelText = GameObject.Find("LevelText");
         enemies = new List<Enemy>();
-        //itemList = new List<GameObject>();
         boardScript = GetComponent<BoardManager>();
         commandPanel = GameObject.Find("CommandPanel");
         statusText = GameObject.Find("StatusPanel");
@@ -142,7 +145,6 @@ public class GManager : MonoBehaviour
         statusButton.onClick.AddListener(()=> openStatus());
         itemButton = GameObject.Find("ItemButton").GetComponent<Button>();
         itemButton.onClick.AddListener(() => openItem());
-        //itemButton.onClick.AddListener(() => closeMenu());
         closeButton = GameObject.Find("CloseButton").GetComponent<Button>();
         closeButton.onClick.AddListener(() => closeMenu());
         itemUsePanel = GameObject.Find("ItemUseList");
@@ -268,7 +270,6 @@ public class GManager : MonoBehaviour
         {
             return;
         }
-        //spaceKey = Input.GetKeyDown("space");
         //コマンドパネル開閉
         if (Input.GetKeyDown("space"))
         {
@@ -304,6 +305,7 @@ public class GManager : MonoBehaviour
      */
     IEnumerator deploymentMyCommandPanel()
     {
+        isSwitchPlayerStatus = true;
         commandPanel.SetActive(true);
         yield return null;
         //閉じるボタンが押下されるか、スペースキーが押下された場合にメニューを閉じる
@@ -317,7 +319,10 @@ public class GManager : MonoBehaviour
         itemUsePanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
         itemPanel.enabled = false;
-        //playerObj.setPlayerState(player.playerState.Normal);
+        if (isSwitchPlayerStatus)
+        {
+            playerObj.setPlayerState(player.playerState.Normal);
+        }
     }
 
     //hpが0になった敵をリストから削除
@@ -591,7 +596,6 @@ public class GManager : MonoBehaviour
         item.useItem();
         isCloseCommand = true;
         GManager.instance.playersTurn = false;
-        playerObj.setPlayerState(player.playerState.Normal);
     }
 
     /**
@@ -601,7 +605,6 @@ public class GManager : MonoBehaviour
     {
         playerObj.putItemFloor(item);
         isCloseCommand = true;
-        playerObj.setPlayerState(player.playerState.Normal);
     }
 
     /**
@@ -610,6 +613,7 @@ public class GManager : MonoBehaviour
     public void addThrowItem(GameObject item)
     {
         playerObj.throwItem(item);
+        isSwitchPlayerStatus = false;
         isCloseCommand = true;
     }
 

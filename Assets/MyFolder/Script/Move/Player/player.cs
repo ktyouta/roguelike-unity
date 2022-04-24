@@ -210,20 +210,6 @@ public class player : MovingObject
             //レベルが終わったので、プレーヤーオブジェクトを無効にします。
             enabled = false;
         }
-
-        ////衝突したトリガーのタグがFoodであるか確認してください。
-        //else if (other.tag == "Food")
-        //{
-        //    //プレイヤーの現在のフードの合計にpointsPerFoodを追加します。
-        //    food += pointsPerFood;
-
-        //    //食べ物を拾った時に加算して表示
-        //    foodText.text = "+" + pointsPerFood + "Food:" + food;
-
-        //    //アイテム取得後、非表示
-        //    other.gameObject.SetActive(false);
-        //    GManager.instance.addItem(other.gameObject);
-        //}
     }
 
     //Restartは呼び出されたときにシーンをリロードします。

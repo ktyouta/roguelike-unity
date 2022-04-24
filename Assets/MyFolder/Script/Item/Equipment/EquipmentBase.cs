@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class EquipmentBase : Item
 {
+    [Header("衝突時のダメージ量")] public int damagePoint;
     public bool isEquip = false;
     // Start is called before the first frame update
     protected override void Start()
@@ -55,5 +56,14 @@ public class EquipmentBase : Item
                 }
             }
         }
+    }
+
+    /**
+     * アイテムが衝突した場合の処理
+     */
+    public override void collisionItem(Enemy enemy)
+    {
+        int point = damagePoint != 0 ? damagePoint :10;
+        enemy.enemyHp -= point;
     }
 }

@@ -22,13 +22,18 @@ public abstract class Item : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        //itemObj = this.gameObject;
+
     }
 
     /**
      * アイテムを使用
      */
     public abstract void useItem();
+
+    /**
+     * アイテムが衝突した場合の処理
+     */
+    public abstract void collisionItem(Enemy enemy);
 
     private void OnTriggerEnter2D(Collider2D other)
     {

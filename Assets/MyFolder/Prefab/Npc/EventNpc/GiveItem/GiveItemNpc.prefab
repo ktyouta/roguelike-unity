@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 825413119939302247}
   m_Layer: 7
   m_Name: GiveItemNpc
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
