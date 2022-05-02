@@ -124,6 +124,9 @@ public class BoardManager : MonoBehaviour
     [Header("武器")] public GameObject sword;
     [Header("盾")] public GameObject shield;
 
+    //アイテム(バッグ)
+    [Header("バッグ(所持数を増やす)")] public GameObject bag;
+
     //プレイヤー
     [Header("プレイヤー")] public GameObject player;
 
@@ -145,7 +148,7 @@ public class BoardManager : MonoBehaviour
 
     //NPC
     [Header("テスト用NPC")] public GameObject testNpc;
-    [Header("プレイヤーの満腹度を回復するテスト用NPC")] public GameObject testRecoveryFoodPointNpc;
+    [Header("プレイヤーのHPを回復するテスト用NPC")] public GameObject testRecoveryHpNpc;
     [Header("アイテムを渡すテスト用NPC(分岐あり)")] public GameObject testGiveItemNpcBranchMessage;
     [Header("会話分岐テスト用NPC")] public GameObject testBranchMessageNpc;
     [Header("道具屋テスト用NPC")] public GameObject testSalesNpc;
@@ -621,16 +624,18 @@ public class BoardManager : MonoBehaviour
         //第一区画
         if (settingObjRule == Define.FIRST_SETTING)
         {
-            //ランダム化された位置で、最小値と最大値に基づいてランダムな数の食品タイルをインスタンス化します。
+            //食べ物をインスタンス化。
             LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum);
             //ポーションをインスタンス化
             //LayoutObjectAtRandom(portion, portionCount.minmum, portionCount.maximum);
             //宝箱をインスタンス化
             LayoutObjectAtRandom(treasure, portionCount.minmum, portionCount.maximum);
+            //カバンをインスタンス化。
+            LayoutObjectAtRandom(bag, 1, 1);
             //NPCをインスタンス化
             LayoutObjectAtRandom(testNpc, 1, 1);
-            //NPC(プレイヤーの満腹度を回復する)をインスタンス化
-            LayoutObjectAtRandom(testRecoveryFoodPointNpc, 1,1);
+            //NPC(プレイヤーのHPを回復する)をインスタンス化
+            LayoutObjectAtRandom(testRecoveryHpNpc, 1,1);
             //NPC(分岐ありのアイテムの引き渡し)をインスタンス化
             LayoutObjectAtRandom(testGiveItemNpcBranchMessage,1,1);
             //NPC(会話分岐用)をインスタンス化

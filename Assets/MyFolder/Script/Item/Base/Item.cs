@@ -77,13 +77,4 @@ public abstract class Item : MonoBehaviour
             }
         }
     }
-
-    /**
-     * ƒAƒCƒeƒ€‚ÉID‚ğŠ„‚è“–‚Ä‚é
-     */
-    public void assignItemId()
-    {
-        int itemId = GManager.instance.itemList.Count == 0 ?0: GManager.instance.itemList[GManager.instance.itemList.Count - 1].GetComponent<Item>().id + 1;
-        id = itemId;
-    }
 }

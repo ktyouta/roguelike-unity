@@ -649,7 +649,9 @@ public class GManager : MonoBehaviour
         }
         else
         {
+            //インベントリーが空の状態なら0を割り当てる
             int itemId = GManager.instance.itemList.Count == 0 ? 0 : GManager.instance.itemList[GManager.instance.itemList.Count - 1].GetComponent<Item>().id + 1;
+            //IDの割り当て
             item.GetComponent<Item>().id = itemId;
             GManager.instance.itemList.Add(item);
             isAbleAdd = true;
