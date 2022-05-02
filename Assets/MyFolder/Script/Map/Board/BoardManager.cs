@@ -116,6 +116,9 @@ public class BoardManager : MonoBehaviour
     //アイテム(消費系)
     [Header("食べ物")] public GameObject food;
     [Header("ポーション")] public GameObject portion;
+    [Header("本(攻撃力上昇)")] public GameObject bookAttackUp;
+    [Header("本(防御力上昇)")] public GameObject bookDefenceUp;
+    [Header("本(全体攻撃)")] public GameObject bookDamageAllEnemy;
 
     //アイテム(装備系)
     [Header("武器")] public GameObject sword;
@@ -142,9 +145,11 @@ public class BoardManager : MonoBehaviour
 
     //NPC
     [Header("テスト用NPC")] public GameObject testNpc;
-    [Header("アイテムを渡すテスト用NPC")] public GameObject testGiveItemNpc;
+    [Header("プレイヤーの満腹度を回復するテスト用NPC")] public GameObject testRecoveryFoodPointNpc;
+    [Header("アイテムを渡すテスト用NPC(分岐あり)")] public GameObject testGiveItemNpcBranchMessage;
     [Header("会話分岐テスト用NPC")] public GameObject testBranchMessageNpc;
     [Header("道具屋テスト用NPC")] public GameObject testSalesNpc;
+    [Header("アイテムを渡すテスト用NPC(メッセージ表示中に自動で渡す)")] public GameObject autoGiveItem;
 
     //変換用
     private Transform boardHolder;
@@ -624,12 +629,18 @@ public class BoardManager : MonoBehaviour
             LayoutObjectAtRandom(treasure, portionCount.minmum, portionCount.maximum);
             //NPCをインスタンス化
             LayoutObjectAtRandom(testNpc, 1, 1);
-            //NPC(アイテムの引き渡し)をインスタンス化
-            LayoutObjectAtRandom(testGiveItemNpc, 1,1);
+            //NPC(プレイヤーの満腹度を回復する)をインスタンス化
+            LayoutObjectAtRandom(testRecoveryFoodPointNpc, 1,1);
+            //NPC(分岐ありのアイテムの引き渡し)をインスタンス化
+            LayoutObjectAtRandom(testGiveItemNpcBranchMessage,1,1);
             //NPC(会話分岐用)をインスタンス化
-            LayoutObjectAtRandom(testBranchMessageNpc,1,1);
+            //LayoutObjectAtRandom(testBranchMessageNpc,1,1);
             //NPC(道具屋)をインスタンス化
             LayoutObjectAtRandom(testSalesNpc,1,1);
+            //アイテムを渡すテスト用NPC(メッセージ表示中に自動で渡す)
+            LayoutObjectAtRandom(autoGiveItem,1,1);
+            //本をインスタンス化
+            LayoutObjectAtRandom(bookDamageAllEnemy, 3,3);
         }
         //第二区画
         else if(settingObjRule == Define.SECOND_SETTING)

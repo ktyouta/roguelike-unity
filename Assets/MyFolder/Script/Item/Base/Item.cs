@@ -1,23 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Common;
 
 public abstract class Item : MonoBehaviour
 {
+    [Header("アイテムのタイプ")] public ItemTypeEnum type;
     [HideInInspector]public int id;
     [Header("名前")]public string name;
-    [Header("アイテムのタイプ")]public string type;
     [Header("アイテムの説明")] public string itemDescription;
     [Header("ステージ難易度に応じたID")] public int diffId;
     [Header("買値")] public int buyPrice;
     [Header("売値")] public int sellPrice;
     [HideInInspector] public bool isUsedFlag = false;
+    [HideInInspector] public bool isEnter = false;
+    [HideInInspector] public bool isPut = false;
     public GameObject itemPanelObj;
     public GameObject itemPanel;
     public GameObject commandPanel;
     public GameObject itemDescriptionPanel;
-    [HideInInspector] public bool isEnter = false;
-    [HideInInspector] public bool isPut = false;
+    
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -53,26 +55,12 @@ public abstract class Item : MonoBehaviour
                 isPut = !isPut;
                 return;
             }
-            //アイテムの所持制限を超えている場合
-            if (GManager.instance.itemList.Count > GManager.instance.nowMaxPosession)
+            //所持制限のチェック
+            if (GManager.instance.addItem(this.gameObject))
             {
-                GManager.instance.wrightInventoryFullLog();
-                return;
+                this.gameObject.SetActive(false);
             }
-            //アイテム取得後、非表示
-            addItemInventory();
         }
-    }
-
-    /**
-     * プレイヤーのインベントリにアイテムを追加する
-     */
-    public void addItemInventory()
-    {
-        int itemId = GManager.instance.itemList.Count;
-        GetComponent<Item>().id = itemId;
-        GManager.instance.addItem(this.gameObject);
-        this.gameObject.SetActive(false);
     }
 
     /**
@@ -88,5 +76,14 @@ public abstract class Item : MonoBehaviour
                 this.gameObject.SetActive(false);
             }
         }
+    }
+
+    /**
+     * アイテムにIDを割り当てる
+     */
+    public void assignItemId()
+    {
+        int itemId = GManager.instance.itemList.Count == 0 ?0: GManager.instance.itemList[GManager.instance.itemList.Count - 1].GetComponent<Item>().id + 1;
+        id = itemId;
     }
 }

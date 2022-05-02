@@ -28,10 +28,6 @@ public class FoodItem : RecoveryItem
             foodText = GameObject.Find("Food").GetComponent<Text>();
         }
         foodText.text = "Food:" + GManager.instance.playerFoodPoints;
-        //Debug.Log(GManager.instance.playerFoodPoints);
-        //Debug.Log("‰ñ•œƒAƒCƒeƒ€" + id);
-        //GManager.instance.consumeItem(id-1);
-        //changeListPos(id);
         GManager.instance.wrightUseFoodLog(name,GManager.instance.playerName,foodPoint);
         base.useItem();
     }

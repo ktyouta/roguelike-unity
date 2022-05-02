@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 6228066633388429853}
   - component: {fileID: 825413119939302247}
   m_Layer: 7
-  m_Name: GiveItemNpc
+  m_Name: NpcRecoveryPlayerFoodPoint
   m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,14 +455,14 @@ MonoBehaviour:
   npcCanvas: {fileID: 0}
   messages:
   - "\u30C6\u30B9\u30C8\u3067\u3059\u3002"
-  - "\u30A2\u30A4\u30C6\u30E0\u3092\u6E21\u3057\u307E\u3059\u3002"
+  - "\u30D7\u30EC\u30A4\u30E4\u30FC\u306EHP\u3092\u56DE\u5FA9\u3057\u307E\u3059\u3002"
+  - "HP\u3092\u56DE\u5FA9\u3057\u307E\u3057\u305F\u3002"
   npcImage: {fileID: 0}
   npcPicture: {fileID: 21300000, guid: f01706f07204a39489f114142f00986c, type: 3}
-  npcName: "\u30A2\u30A4\u30C6\u30E0\u5F15\u304D\u6E21\u3057\u7528NPC"
+  npcName: "HP\u3092\u56DE\u5FA9\u3059\u308B\u7528NPC"
   afterMessage:
-  - "\u30A2\u30A4\u30C6\u30E0\u5F15\u304D\u6E21\u3057\u5F8C\u306E\u4F1A\u8A71\u3067\u3059\u3002"
+  - "HP\u3092\u56DE\u5FA9\u3057\u305F\u5F8C\u306E\u4F1A\u8A71\u3067\u3059\u3002"
   - "\u4F1A\u8A71\u3092\u7D42\u4E86\u3057\u307E\u3059\u3002"
-  giveItem: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
 --- !u!1 &999146924569989933
 GameObject:
   m_ObjectHideFlags: 0

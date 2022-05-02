@@ -44,7 +44,7 @@ public class EquipmentBase : Item
         GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
         for (int i = 0; i < itemBtns.Length; i++)
         {
-            if (GManager.instance.itemList[i].GetComponent<Item>().type == "Equipment" && GManager.instance.itemList[i].GetType().Name == this.gameObject.GetComponent<Item>().GetType().Name)
+            if (GManager.instance.itemList[i].GetComponent<Item>().type.ToString() == "Equipment" && GManager.instance.itemList[i].GetType().Name == this.gameObject.GetComponent<Item>().GetType().Name)
             {
                 if (((EquipmentBase)GManager.instance.itemList[i].GetComponent<Item>()).isEquip)
                 {

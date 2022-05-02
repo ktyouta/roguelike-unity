@@ -159,7 +159,7 @@ public abstract class NpcChoices : NpcBase
         tempMessageBlock.messageNodeNumber = -1;
         for (int i = 0; i < messagesBlock.Count; i++)
         {
-            //Œ»Ý‚Ìƒm[ƒh‚Éˆê’v‚·‚é‘I‘ðŽˆ‚ªŒ©‚Â‚©‚Á‚½ê‡
+            //Œ»Ý‚Ìƒm[ƒh‚Éˆê’v‚·‚é‰ï˜b‚ªŒ©‚Â‚©‚Á‚½ê‡
             if (messagesBlock[i].messageNodeNumber == nowNodeIndex)
             {
                 return messagesBlock[i];

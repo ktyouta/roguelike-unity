@@ -124,20 +124,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0147aceac1c48f04795157932a60a6d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
   id: 0
   name: "\u9244\u306E\u76FE"
-  type: Equipment
   itemDescription: "\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u9632\u5FA1\u529B\u3092\u4E0A\u6607\u3055\u305B\u308B"
   diffId: 0
   buyPrice: 0
   sellPrice: 0
   isUsedFlag: 0
+  isEnter: 0
+  isPut: 0
   itemPanelObj: {fileID: 0}
   itemPanel: {fileID: 0}
   commandPanel: {fileID: 0}
   itemDescriptionPanel: {fileID: 0}
-  isEnter: 0
-  isPut: 0
+  damagePoint: 0
   isEquip: 0
   defenceParam: 2
 --- !u!50 &4286057599071400328

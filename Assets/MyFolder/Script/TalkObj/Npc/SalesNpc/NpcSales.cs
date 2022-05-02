@@ -220,19 +220,24 @@ public class NpcSales : NpcBase
      */
     void decisionBuyItem(GameObject argItem)
     {
-        Item item = argItem.GetComponent<Item>();
+        GameObject buyItem = Instantiate(argItem) as GameObject;
+        Item item = buyItem.GetComponent<Item>();
         //所持金の判定
         if (GManager.instance.playerMoney < item.buyPrice)
         {
             showMessage("所持金が足りません。");
             return;
         }
+        //アイテムの所持制限の判定
+        if (!GManager.instance.addItem(buyItem))
+        {
+            showMessage("アイテムがいっぱいです。");
+            return;
+        }
         //所持金から差し引く
         GManager.instance.playerMoney -= item.buyPrice;
-        GManager.instance.addItem(argItem);
         //購入したアイテムにIDを割り当てる
-        int itemId = GManager.instance.itemList.Count;
-        item.id = itemId;
+        //item.assignItemId();
         GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
         hideTradePanel();
         showMessage("お買い上げありがとうございます。");

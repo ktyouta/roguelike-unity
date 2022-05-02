@@ -21,13 +21,19 @@ public class TalkDetection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        npcCanvasInDetection.SetActive(true);
-        isEnterTalkArea = collider.gameObject.tag.Equals("Player");
+        if (collider.tag == "Player")
+        {
+            npcCanvasInDetection.SetActive(true);
+            isEnterTalkArea = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        npcCanvasInDetection.SetActive(false);
-        isEnterTalkArea = !collider.gameObject.tag.Equals("Player");
+        if (collider.tag == "Player")
+        {
+            npcCanvasInDetection.SetActive(false);
+            isEnterTalkArea = false;
+        }
     }
 }

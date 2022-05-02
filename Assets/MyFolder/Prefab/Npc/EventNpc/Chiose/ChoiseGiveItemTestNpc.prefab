@@ -154,6 +154,9 @@ MonoBehaviour:
     - message: "\u30A2\u30A4\u30C6\u30E0\u3092\u6E21\u3057\u307E\u305B\u3093\u3067\u3057\u305F\u3002"
       isSelect: 0
       messageNodeNumber: 1
+    - message: "\u30A2\u30A4\u30C6\u30E0\u304C\u3044\u3063\u3071\u3044\u3067\u3059\u3002"
+      isSelect: 0
+      messageNodeNumber: 2
   message: []
   choiseMessageBlock:
   - choiseMessage:

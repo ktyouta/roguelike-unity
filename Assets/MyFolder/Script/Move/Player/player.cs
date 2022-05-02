@@ -265,8 +265,8 @@ public class player : MovingObject
         boxCollider.enabled = true;
         if (hit.transform)
         {
-            Debug.Log(hit.collider.gameObject.layer);
-            Debug.Log(hit.collider.gameObject.name);
+            //Debug.Log(hit.collider.gameObject.layer);
+            //Debug.Log(hit.collider.gameObject.name);
             GameObject hitObj = hit.transform.gameObject;
             if (hitObj.layer == Define.ENEMY_LAYER)
             {
@@ -278,11 +278,7 @@ public class player : MovingObject
             else if (hit.collider.gameObject.layer == Define.TREASURE_LAYER)
             {
                 treasureObject = hitObj.GetComponent<Treasure>();
-                if (!treasureObject.isOpen)
-                {
-                    Debug.Log("treasurehp"+treasureObject.treasureHp);
-                    treasureObject.treasureHp -= GManager.instance.playerAttack;
-                }
+                treasureObject.treasureHp -= GManager.instance.playerAttack;                
             }
         }
         GManager.instance.playersTurn = false;

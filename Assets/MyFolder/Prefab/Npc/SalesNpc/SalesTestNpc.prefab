@@ -639,6 +639,7 @@ MonoBehaviour:
   salesItemList:
   - {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
   - {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+  - {fileID: 1304713676364933543, guid: ce2cea0a542074541a6272b9cab67d24, type: 3}
   shopMenu:
   - menu: "\u8CB7\u3044\u306B\u304D\u305F"
     funcNumber: 0

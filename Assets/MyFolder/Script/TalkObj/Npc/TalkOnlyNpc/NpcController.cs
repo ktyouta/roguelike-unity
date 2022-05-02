@@ -11,7 +11,7 @@ public class NpcController : NpcBase
         {
             GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
             //処理を待機
-            yield return new WaitForSeconds(0.07f);
+            yield return null;
             GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
             // 会話をwindowのtextフィールドに表示
             showMessage(messages[i]);

@@ -26,4 +26,11 @@ namespace Common
 		public const int ENEMY_LAYER = 7;
 		public const int TREASURE_LAYER = 8;
 	}
+
+	//アイテムのタイプ
+	public enum ItemTypeEnum
+	{
+		Consume,
+		Equipment
+	}
 }

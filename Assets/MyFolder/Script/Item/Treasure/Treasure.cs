@@ -5,27 +5,29 @@ using UnityEngine;
 public class Treasure : MonoBehaviour
 {
     [HideInInspector] public int treasureHp = 100;
-    [HideInInspector] public bool isOpen = false;
     [Header("アイテムの抽選に用いるID")] public int lotteryId;
 
     // Update is called once per frame
     void Update()
     {
-        if (treasureHp <= 0 && !isOpen)
+        if (treasureHp <= 0)
         {
             openTreasure();
-            isOpen = true;
         }
     }
 
+    //宝箱開封時の処理
     private void openTreasure()
     {
-        //Debug.Log("trasurelist"+ GManager.instance.treasureItemList[0]);
-        //Item getItem = GManager.instance.treasureItemList[0];
-        GameObject getItem = GManager.instance.lotteryitemList[lotteryId][Random.Range(0, GManager.instance.lotteryitemList[lotteryId].Count-1)];
-        int itemId = GManager.instance.itemList.Count;
-        getItem.GetComponent<Item>().id = itemId;
-        GManager.instance.addItem(getItem);
-        Destroy(this.gameObject);
+        GameObject getItem = Instantiate(GManager.instance.lotteryitemList[lotteryId][Random.Range(0, GManager.instance.lotteryitemList[lotteryId].Count - 1)]) as GameObject;
+        //アイテムの所持制限の判定
+        if (GManager.instance.addItem(getItem))
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            treasureHp = 1;
+        }
     }
 }

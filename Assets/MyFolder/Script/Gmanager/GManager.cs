@@ -61,7 +61,7 @@ public class GManager : MonoBehaviour
 
     //リスト
     //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
-    private List<Enemy> enemies;                            
+    public List<Enemy> enemies = new List<Enemy>();                            
     //宝箱用のアイテムリスト
     public List<Item> treasureItemList = new List<Item>();
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
@@ -80,7 +80,7 @@ public class GManager : MonoBehaviour
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
-    public float turnDelay = 0.2f;
+    public float turnDelay = 0.05f;
     public static GManager instance = null;
     public BoardManager boardScript;
     public string weaponName = "なし";
@@ -136,7 +136,6 @@ public class GManager : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         levelText = GameObject.Find("LevelText");
-        enemies = new List<Enemy>();
         boardScript = GetComponent<BoardManager>();
         commandPanel = GameObject.Find("CommandPanel");
         statusText = GameObject.Find("StatusPanel");
@@ -385,7 +384,6 @@ public class GManager : MonoBehaviour
         //Debug.Log("enemycount2:" + enemies.Count);
         for (int i = 0; i < enemies.Count; i++)
         {
-            
             //敵のmoveTimeを待ってから、次の敵を移動します。
             yield return new WaitForSeconds(turnDelay);
 
@@ -462,6 +460,27 @@ public class GManager : MonoBehaviour
     public void closeMenu()
     {
         isCloseCommand = true;
+    }
+
+    /**
+     * 操作方法を開く
+     */
+    public void openManual()
+    {
+        itemText.SetActive(false);
+        //ステータスパネルを共有して使う
+        statusText.SetActive(true);
+        //マニュアルを表示
+        string manual;
+        manual = "移動 : 方向キー";
+        manual += "\n";
+        manual += "メニューを開く : スペースキー";
+        manual += "\n";
+        manual += "攻撃 : シフトキー";
+        manual += "\n";
+        manual += "NPCとの会話 : zボタン";
+        manual += "\n";
+        playerStatusPanel.text = manual;
     }
 
     /**
@@ -565,12 +584,12 @@ public class GManager : MonoBehaviour
         GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = true;
         GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = true;
         //消費系アイテム
-        if (item.type == "foodRecovery" || item.type == "portion")
+        if (item.type.ToString() == "Consume")
         {
             GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "つかう";
         }
         //装備系アイテム
-        else if (item.type == "Equipment")
+        else if (item.type.ToString() == "Equipment")
         {
             if (((EquipmentBase)item).isEquip)
             {
@@ -620,9 +639,22 @@ public class GManager : MonoBehaviour
     /**
      * 取得したアイテムをリストに追加する
      */
-    public void addItem(GameObject item)
+    public bool addItem(GameObject item)
     {
-        GManager.instance.itemList.Add(item);
+        bool isAbleAdd = false;
+        //アイテムの所持制限を超えている場合
+        if (GManager.instance.itemList.Count + 1 > GManager.instance.nowMaxPosession)
+        {
+            GManager.instance.wrightInventoryFullLog();
+        }
+        else
+        {
+            int itemId = GManager.instance.itemList.Count == 0 ? 0 : GManager.instance.itemList[GManager.instance.itemList.Count - 1].GetComponent<Item>().id + 1;
+            item.GetComponent<Item>().id = itemId;
+            GManager.instance.itemList.Add(item);
+            isAbleAdd = true;
+        }
+        return isAbleAdd;
     }
 
     /**

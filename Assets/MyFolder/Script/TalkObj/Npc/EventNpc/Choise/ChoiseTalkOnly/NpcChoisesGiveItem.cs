@@ -12,11 +12,9 @@ public class NpcChoisesGiveItem : NpcChoices
         switch (funcNumber)
         {
             case 0:
-                Debug.Log("funcnumber" + funcNumber);
                 giveItemToPlayer();
                 break;
             case 1:
-                Debug.Log("funcnumber" + funcNumber);
                 break;
             default:
                 break;
@@ -30,6 +28,9 @@ public class NpcChoisesGiveItem : NpcChoices
      */
     protected void giveItemToPlayer()
     {
-        GManager.instance.addItem(giveItem);
+        if (!GManager.instance.addItem(giveItem))
+        {
+            nowNodeIndex = 2;
+        }
     }
 }
