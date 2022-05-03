@@ -50,7 +50,6 @@ public class Enemy : MovingObject
     //基本的なAttemptMove関数の動作の詳細については、MovingObjectのコメントを参照してください。
     protected override void AttemptMove(int xDir, int yDir)
     {
-        //Debug.Log("skip" + skipMove);
         //skipMoveがtrueかどうかを確認し、trueの場合はfalseに設定して、このターンをスキップします。
         if (skipMove)
         {
@@ -68,8 +67,10 @@ public class Enemy : MovingObject
     public void MoveEnemy()
     {
         //画面内にいる場合のみ移動
-        if (!sr.isVisible) return;
-
+        if (!sr.isVisible)
+        {
+            return;
+        }
         // X軸とY軸の移動方向の変数を宣言します。これらの範囲は-1から1です。
         //これらの値により、基本的な方向（上、下、左、右）を選択できます。
         int xDir = 0;
@@ -118,20 +119,13 @@ public class Enemy : MovingObject
     {
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(x, y);
-        //Debug.Log("eStart" + start);
-        //Debug.Log("eEnd" + end);
         boxCollider.enabled = false;
         RaycastHit2D hit = Physics2D.Linecast(start, end, playerLayer);
         boxCollider.enabled = true;
         if (hit.transform)
         {
-            //Debug.Log("enemyattack");
             animator.Play("EnemyAttack");
-            //playerObj = hit.transform.gameObject.GetComponent<player>();
-            //int playerHp = playerObj.playerHp;
-            //Debug.Log("playerhp: " + playerHp);
             GManager.instance.playerHp -= enemyAttackValue;
-            //Debug.Log("EnemyAttack: " + GManager.instance.playerHp);
             GManager.instance.wrightAttackLog(enemyName,GManager.instance.playerName,enemyAttackValue);
         }
     }

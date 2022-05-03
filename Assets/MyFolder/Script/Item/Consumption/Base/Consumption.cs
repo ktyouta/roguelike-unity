@@ -13,7 +13,6 @@ public abstract class Consumption : Item
     public override void useItem()
     {
         deleteSelectedItem(id);
-        isUsedFlag = true;
         Destroy(this.gameObject);
         GManager.instance.playersTurn = false;
     }

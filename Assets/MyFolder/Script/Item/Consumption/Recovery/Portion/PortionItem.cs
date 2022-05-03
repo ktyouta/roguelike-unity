@@ -13,7 +13,13 @@ public class PortionItem : RecoveryItem
 
     public override void useItem()
     {
-        GManager.instance.playerHp += hpPoint;
+        //プレイヤーのHPが満タンの場合は回復しない
+        if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
+        {
+            GManager.instance.wrightLog("プレイヤーのHPが満タンです。");
+            return;
+        }
+        GManager.instance.recoveryHp(hpPoint);
         base.useItem();
     }
 }

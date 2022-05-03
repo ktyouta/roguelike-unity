@@ -22,13 +22,13 @@ public class FoodItem : RecoveryItem
    
     public override void useItem()
     {
-        GManager.instance.playerFoodPoints += foodPoint;
-        if(foodText == null)
+        //プレイヤーの満腹度が満タンの場合は回復しない
+        if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
         {
-            foodText = GameObject.Find("Food").GetComponent<Text>();
+            GManager.instance.wrightLog("プレイヤーの満腹度が満タンです。");
+            return;
         }
-        foodText.text = "Food:" + GManager.instance.playerFoodPoints;
-        GManager.instance.wrightUseFoodLog(name,GManager.instance.playerName,foodPoint);
+        GManager.instance.recoveryFoodPoint(foodPoint);
         base.useItem();
     }
 }

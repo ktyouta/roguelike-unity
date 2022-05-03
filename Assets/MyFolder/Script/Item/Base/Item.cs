@@ -12,7 +12,6 @@ public abstract class Item : MonoBehaviour
     [Header("ステージ難易度に応じたID")] public int diffId;
     [Header("買値")] public int buyPrice;
     [Header("売値")] public int sellPrice;
-    [HideInInspector] public bool isUsedFlag = false;
     [HideInInspector] public bool isEnter = false;
     [HideInInspector] public bool isPut = false;
     public GameObject itemPanelObj;

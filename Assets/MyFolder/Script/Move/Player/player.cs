@@ -42,18 +42,6 @@ public class player : MovingObject
     {
         //プレーヤーのアニメーターコンポーネントへのコンポーネント参照を取得する
         animator = GetComponent<Animator>();
-        //boxCollider = GetComponent<BoxCollider2D>();
-        //レベル間のGameManager.instanceに保存されている現在のフードポイントの合計を取得します。
-        food = GManager.instance.playerFoodPoints;
-        //Debug.Log(food);
-        foodText = GameObject.Find("Food").GetComponent<Text>();
-        foodText.text = "Food:" + GManager.instance.playerFoodPoints;
-        playerHpText = GameObject.Find("PlayerHp").GetComponent<Text>();
-        playerHpText.text = "HP:" + GManager.instance.playerHp;
-
-        //levelText = GameObject.Find("LevelText");
-        //Debug.Log("player" + levelText);
-
         //MovingObject基本クラスのStart関数を呼び出します。
         base.Start();
     }
@@ -165,10 +153,8 @@ public class player : MovingObject
         if (canMove)
         {
             //プレイヤーが移動するたびに、フードポイントの合計から減算します。
-            //food--;
-            //GManager.instance.playerFoodPoints = food;
-            GManager.instance.playerFoodPoints--;
-            foodText.text = "Food:" + GManager.instance.playerFoodPoints;
+            GManager.instance.playerFoodPoint--;
+            //foodText.text = "Food:" + GManager.instance.playerFoodPoints;
             //ヒットにより、Moveで行われたLinecastの結果を参照できます。
             RaycastHit2D hit;
 
@@ -228,12 +214,8 @@ public class player : MovingObject
     {
         //プレーヤーアニメーターのトリガーを設定して、playerHitアニメーションに遷移します。
         animator.SetTrigger("hit");
-
         //プレイヤーの合計から失われたフードポイントを差し引きます。
         food -= loss;
-
-        foodText.text = "-" + loss + "Food:" + food;
-
         //ゲームが終了したかどうかを確認します
         CheckIfGameOver();
     }
@@ -243,7 +225,7 @@ public class player : MovingObject
     private void CheckIfGameOver()
     {
         //フードポイントの残りが0より低い、または同じ場合
-        if (GManager.instance.playerFoodPoints <= 0 || GManager.instance.playerHp <= 0)
+        if (GManager.instance.playerFoodPoint <= 0 || GManager.instance.playerHp <= 0)
         {
             GManager.instance.wrightDeadLog(GManager.instance.playerName);
             //GameManagerのGameOver関数を呼び出します。
@@ -265,8 +247,6 @@ public class player : MovingObject
         boxCollider.enabled = true;
         if (hit.transform)
         {
-            //Debug.Log(hit.collider.gameObject.layer);
-            //Debug.Log(hit.collider.gameObject.name);
             GameObject hitObj = hit.transform.gameObject;
             if (hitObj.layer == Define.ENEMY_LAYER)
             {

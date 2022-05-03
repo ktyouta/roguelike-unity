@@ -27,7 +27,7 @@ public class StatusPanel : MonoBehaviour
         statusText += "\n";
         statusText += "–hŒä—Í : " + GManager.instance.playerDefence;
         statusText += "\n";
-        statusText += "–• “x : " + GManager.instance.playerFoodPoints;
+        statusText += "–• “x : " + GManager.instance.playerFoodPoint;
         statusText += "\n";
         statusText += "Š‹à : " + GManager.instance.playerMoney;
         statusText += "\n";

@@ -29,7 +29,8 @@ public class GManager : MonoBehaviour
     [Header("プレイヤーの魅力")] public int playerCharm = 0;
     [Header("次のレベルまでの経験値")] public int nowMaxExprience;
     [Header("アイテムの所持数制限")] public int nowMaxPosession;
-    [Header("プレイヤーの満腹度")] public int playerFoodPoints;
+    [Header("プレイヤーの満腹度")] public int playerFoodPoint;
+    [Header("プレイヤーの満腹度の上限値")] public int playerMaxFoodPoint = 100;
     [HideInInspector] public int mostRecentExperience;
     [HideInInspector] public int beforeLevelupExperience;
     [HideInInspector] public player playerObj;
@@ -72,7 +73,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public List<string> logMessage = new List<string>();
 
     //その他
-    //enemyのターンかチェック
+    [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
     [HideInInspector] public bool isCloseCommand = true;
     [HideInInspector] public int level;
     [HideInInspector] public bool playersTurn = true;
@@ -281,12 +282,11 @@ public class GManager : MonoBehaviour
         //playersTurnまたはenemiesMovingまたはdoingSetupが現在trueでないことを確認してください。
         if (playersTurn || enemiesMoving || doingSetup)
         {
-            //これらのいずれかがtrueの場合は戻り、MoveEnemiesを開始しないでください。
+            //これらのいずれかがtrueの場合は戻り、MoveEnemiesを開始しない。
             return;
         }
         else
         {
-            //Debug.Log("enemydefnum" + enemyDefeatNum);
             if (enemyDefeatNum != -1)
             {
                 removeEnemyToList(enemyDefeatNum);
@@ -367,33 +367,31 @@ public class GManager : MonoBehaviour
     //敵を順番に動かすコルーチン。
     IEnumerator MoveEnemies()
     {
-        //enemiesMovingはtrueですが、プレイヤーは移動できません。
+        //プレイヤーは移動できない。
         enemiesMoving = true;
 
         //turnDelay秒待機します。デフォルトは.1（100ミリ秒）です。
         yield return new WaitForSeconds(0.6f);
 
-        //スポーンされた敵がいない場合（第1レベルのIE）：
+        //スポーンされた敵がいない場合
         if (enemies.Count == 0)
         {
             //移動の間にturnDelay秒待機し、何もないときに移動する敵によって引き起こされる遅延を置き換えます。
             yield return new WaitForSeconds(turnDelay);
         }
-        //Debug.Log("enemies.Count" + enemies.Count);
-        //敵オブジェクトのリストをループします。
-        //Debug.Log("enemycount2:" + enemies.Count);
+        //敵オブジェクトのリストをループ
         for (int i = 0; i < enemies.Count; i++)
         {
-            //敵のmoveTimeを待ってから、次の敵を移動します。
+            //敵のmoveTimeを待ってから、次の敵を移動
             yield return new WaitForSeconds(turnDelay);
 
-            //敵リストのインデックスiにある敵のMoveEnemy関数を呼び出します。
+            //敵リストのインデックスiにある敵のMoveEnemy関数を呼び出す。
             enemies[i].MoveEnemy();
         }
-        //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにします。
+        //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする。
         playersTurn = true;
 
-        //敵の移動が完了したら、enemiesMovingをfalseに設定します。
+        //敵の移動が完了したら、enemiesMovingをfalseに設定
         enemiesMoving = false;
     }
 
@@ -502,7 +500,7 @@ public class GManager : MonoBehaviour
         status += "\n";
         status += "防御力 : " + GManager.instance.playerDefence;
         status += "\n";
-        status += "満腹度 : " + GManager.instance.playerFoodPoints;
+        status += "満腹度 : " + GManager.instance.playerFoodPoint;
         status += "\n";
         status += "所持金 : " + GManager.instance.playerMoney;
         status += "\n";
@@ -677,6 +675,8 @@ public class GManager : MonoBehaviour
     {
         GManager.instance.playerAttack += 2;
         GManager.instance.playerDefence += 2;
+        GManager.instance.playerHp += GManager.instance.riseValueHp == 0 ?10: GManager.instance.riseValueHp;
+        GManager.instance.nowPlayerMaxHp += GManager.instance.riseValueHp == 0 ? 10 : GManager.instance.riseValueHp;
     }
 
     /**
@@ -692,11 +692,23 @@ public class GManager : MonoBehaviour
     }
 
     /**
+     * 満腹度の回復処理
+     */
+    public void recoveryFoodPoint(int recoveryValue)
+    {
+        GManager.instance.playerFoodPoint += recoveryValue;
+        if (GManager.instance.playerFoodPoint >= playerMaxFoodPoint)
+        {
+            GManager.instance.playerFoodPoint = playerMaxFoodPoint;
+        }
+    }
+
+    /**
      * 満腹度を消費する
      */
     public void consumeFoodPoint(int consumeValue)
     {
-        GManager.instance.playerFoodPoints -= consumeValue;
+        GManager.instance.playerFoodPoint -= consumeValue;
     }
 
     /**

@@ -46,13 +46,6 @@ public abstract class MovingObject : MonoBehaviour
 
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
         hit = Physics2D.Linecast(start, end, blockingLayer | enemyLayer | playerLayer | treasureLayer);
-        //Debug.Log("start" + start);
-        //Debug.Log("end" + end);
-        //Debug.Log("hit" + hit);
-        if (hit.transform)
-        {
-            //Debug.Log("obj" + hit.transform.gameObject);
-        }
         
         //ラインキャスト後にboxColliderを再度有効にします
         boxCollider.enabled = true;

@@ -249,7 +249,6 @@ public class NpcSales : NpcBase
     void decisionSellItem(GameObject argItem)
     {
         Item item = argItem.GetComponent<Item>();
-        item.isUsedFlag = true;
         for (int i=0;i< GManager.instance.itemList.Count;i++)
         {
             if (GManager.instance.itemList[i].GetComponent<Item>().id == item.id)
