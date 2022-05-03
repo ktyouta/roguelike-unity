@@ -164,16 +164,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d213aa80134f1d49bd8eff32fe16506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  treasureLayer:
+    serializedVersion: 2
+    m_Bits: 0
   playerDamage: 0
   enemyNumber: 0
   enemyHp: 10

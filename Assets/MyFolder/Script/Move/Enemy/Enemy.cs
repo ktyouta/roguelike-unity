@@ -88,15 +88,37 @@ public class Enemy : MovingObject
             //ターゲットのx位置が敵のx位置より大きいかどうかを確認します。そうであれば、x方向を1（右に移動）に設定し、そうでなければ-1（左に移動）に設定します。
             xDir = target.position.x > transform.position.x ? 1 : -1;
         }
-
-        //Debug.Log("enemyMove");
-        //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
-        AttemptMove(xDir, yDir);
-        if (!canMove)
+        Vector2 start = transform.position;
+        Vector2 next = start + new Vector2(xDir, yDir);
+        RaycastHit2D hit = Physics2D.Linecast(start, next, playerLayer);
+        //プレイヤーにヒットした場合は攻撃する
+        if (hit.transform != null)
         {
             enemiesAttack(xDir, yDir);
+            return;
         }
-        
+        //移動点が他の敵と被っていなければ移動できる
+        if (checkNextPosition(next))
+        {
+            GManager.instance.enemyNextPosition.Add(next);
+            //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
+            AttemptMove(xDir, yDir);
+        }
+    }
+
+    /**
+     * 敵が次の移動点に移動できるか判定(既に他の敵の先約がないかチェック)
+     */
+    protected bool checkNextPosition(Vector2 next)
+    {
+        for (int i=0;i<GManager.instance.enemyNextPosition.Count;i++)
+        {
+            if (GManager.instance.enemyNextPosition[i] == next)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -115,6 +137,9 @@ public class Enemy : MovingObject
 
     }
 
+    /**
+     * 敵の攻撃処理
+     */
     protected void enemiesAttack(int x,int y)
     {
         Vector2 start = transform.position;
@@ -130,6 +155,9 @@ public class Enemy : MovingObject
         }
     }
 
+    /**
+     * 敵が倒された時の処理
+     */
     protected void enemiesDefeat()
     {
         GManager.instance.enemyDefeatNum = enemyNumber;

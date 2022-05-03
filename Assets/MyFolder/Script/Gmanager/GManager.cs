@@ -74,6 +74,8 @@ public class GManager : MonoBehaviour
 
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
+    //敵が動く際に次の移動点を保持する
+    [HideInInspector] public List<Vector2> enemyNextPosition = new List<Vector2>();
     [HideInInspector] public bool isCloseCommand = true;
     [HideInInspector] public int level;
     [HideInInspector] public bool playersTurn = true;
@@ -369,7 +371,8 @@ public class GManager : MonoBehaviour
     {
         //プレイヤーは移動できない。
         enemiesMoving = true;
-
+        //移動点を空にする
+        enemyNextPosition.Clear();
         //turnDelay秒待機します。デフォルトは.1（100ミリ秒）です。
         yield return new WaitForSeconds(0.6f);
 

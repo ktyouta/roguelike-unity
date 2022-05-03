@@ -51,7 +51,7 @@ public abstract class MovingObject : MonoBehaviour
         boxCollider.enabled = true;
 
         //何かがヒットしたかどうかを確認します
-        if (!isMoving && (hit.transform == null || hit.collider.isTrigger))
+        if (!isMoving && hit.transform == null)
         {
             //何もヒットしなかった場合は、Vector2エンドを宛先として渡してSmoothMovementコルーチンを開始します。
             StartCoroutine(SmoothMovement(end));

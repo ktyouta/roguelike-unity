@@ -674,8 +674,8 @@ public class BoardManager : MonoBehaviour
         ////Debug.Log(enemyCount);
         enemyCount = 2;
         //ランダム化された位置で、最小値と最大値に基づいてランダムな数の敵をインスタンス化します。
-        //LayoutObjectAtRandom(enemy, enemyCount, enemyCount);
-        //LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1);
+        LayoutObjectAtRandom(enemy, enemyCount, enemyCount);
+        LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1);
 
         //ゲームボードの右上隅に出口タイルをインスタンス化します
         //Instantiate(exit, new Vector3(rows - 1, columns - 1, 0f), Quaternion.identity);
