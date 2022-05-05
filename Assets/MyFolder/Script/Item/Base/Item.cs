@@ -38,27 +38,27 @@ public abstract class Item : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //衝突したトリガーのタグがFoodであるか確認してください。
-        if (other.tag == "Player")
+        if (other.tag != "Player")
         {
-            //出入り時に2回実行される対策
+            return;
+        }
+        //出入り時に2回実行される対策
+        isEnter = !isEnter;
+        if (!isEnter)
+        {
+            return;
+        }
+        //アイテムを足元に置いたとき
+        if (isPut)
+        {
             isEnter = !isEnter;
-            if (!isEnter)
-            {
-                return;
-            }
-            //アイテムを足元に置いたとき
-            if (isPut)
-            {
-                isEnter = !isEnter;
-                isPut = !isPut;
-                return;
-            }
-            //所持制限のチェック
-            if (GManager.instance.addItem(this.gameObject))
-            {
-                this.gameObject.SetActive(false);
-            }
+            isPut = !isPut;
+            return;
+        }
+        //所持制限のチェック
+        if (GManager.instance.addItem(this.gameObject))
+        {
+            this.gameObject.SetActive(false);
         }
     }
 

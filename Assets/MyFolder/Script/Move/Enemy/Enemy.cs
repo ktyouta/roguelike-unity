@@ -17,6 +17,7 @@ public class Enemy : MovingObject
     [HideInInspector] public string enemyName;
     [Header("エネミーを倒した際の経験値")] public int experiencePoint;
     private SpriteRenderer sr = null;
+    [HideInInspector] public bool isAction;
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
     protected override void Start()
@@ -66,6 +67,7 @@ public class Enemy : MovingObject
     //MoveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void MoveEnemy()
     {
+        isAction = true;
         //画面内にいる場合のみ移動
         if (!sr.isVisible)
         {
@@ -90,20 +92,74 @@ public class Enemy : MovingObject
         }
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
-        RaycastHit2D hit = Physics2D.Linecast(start, next, playerLayer);
-        //プレイヤーにヒットした場合は攻撃する
-        if (hit.transform != null)
+        //RaycastHit2D hit = Physics2D.Linecast(start, next, playerLayer);
+        //移動先がプレイヤーの移動先と被った場合は攻撃
+        if (next == GManager.instance.enemyNextPosition[0])
         {
             enemiesAttack(xDir, yDir);
             return;
         }
-        //移動点が他の敵と被っていなければ移動できる
+        //移動点が他の敵と被れば移動できない
         if (checkNextPosition(next))
         {
-            GManager.instance.enemyNextPosition.Add(next);
-            //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
-            AttemptMove(xDir, yDir);
+            return;
         }
+        GManager.instance.enemyNextPosition.Add(next);
+        //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
+        AttemptMove(xDir, yDir);
+    }
+
+    protected override bool Move(int xDir, int yDir, out RaycastHit2D hit)
+    {
+        Enemy otherEnemy;
+        //現在位置
+        Vector2 start = transform.position;
+        //移動後の位置
+        Vector2 end = start + new Vector2(xDir, yDir);
+
+        //boxColliderを無効にして、ラインキャストがこのオブジェクト自身のコライダーに当たらないようにする。
+        boxCollider.enabled = false;
+
+        //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
+        hit = Physics2D.Linecast(start, end, blockingLayer | enemyLayer | playerLayer | treasureLayer);
+
+        //ラインキャスト後にboxColliderを再度有効にする
+        boxCollider.enabled = true;
+
+        //何かがヒットしたかどうかを確認します
+        if (hit.transform == null)
+        {
+            //何もヒットしなかった場合は、Vector2エンドを宛先として渡してSmoothMovementコルーチンを開始します。
+            StartCoroutine(SmoothMovement(end));
+            return true;
+        }
+        //自分以外の敵にヒットした場合
+        if ((otherEnemy = hit.collider.GetComponent<Enemy>()) != null)
+        {
+            //ヒットした先の敵が移動中の場合
+            if (otherEnemy.isMoving)
+            {
+                StartCoroutine(SmoothMovement(end));
+                return true;
+            }
+            else
+            {
+                //ヒットした敵を行動させる
+                otherEnemy.MoveEnemy();
+                boxCollider.enabled = false;
+                hit = Physics2D.Linecast(start, end,enemyLayer);
+                boxCollider.enabled = true;
+                otherEnemy = hit.collider.GetComponent<Enemy>();
+                //行動させた敵が移動した場合は自身も移動する
+                if (hit.transform == null || (otherEnemy != null && otherEnemy.isAction && otherEnemy.isMoving))
+                {
+                    StartCoroutine(SmoothMovement(end));
+                    return true;
+                }
+            }
+        }
+        //何かがヒットした場合は、falseを返し、行動はできない
+        return false;
     }
 
     /**
@@ -115,10 +171,10 @@ public class Enemy : MovingObject
         {
             if (GManager.instance.enemyNextPosition[i] == next)
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 

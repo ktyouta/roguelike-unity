@@ -10,12 +10,12 @@ public abstract class NotAddItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //衝突したトリガーのタグがFoodであるか確認してください。
-        if (other.tag == "Player")
+        if (other.tag != "Player")
         {
-            getItem();
-            Destroy(this.gameObject);
+            return;
         }
+        getItem();
+        Destroy(this.gameObject);
     }
 
     protected abstract void getItem();

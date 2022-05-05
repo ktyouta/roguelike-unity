@@ -72,7 +72,7 @@ public class ThrowObject : MonoBehaviour
             return;
         }
         //“G‚É‚Ô‚Â‚©‚Á‚½ê‡
-        if (other.tag == "Enemy")
+        if (other.tag == "Enemy" && isThrownObj)
         {
             Enemy enemy = other.GetComponent<Enemy>();
             //enemy.enemyHp -= 10;

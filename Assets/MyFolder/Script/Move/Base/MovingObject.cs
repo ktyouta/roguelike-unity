@@ -5,17 +5,17 @@ using UnityEngine;
 //abstractをつけると、抽象クラスの宣言になる
 public abstract class MovingObject : MonoBehaviour
 {
-    private float moveTime = 0.075f;            //オブジェクトの移動にかかる時間（秒単位）※最初の設定は0.1
     [Header("レイヤー設定")]public LayerMask blockingLayer;            //衝突がチェックされるレイヤー
     [Header("敵オブジェクト")] public LayerMask enemyLayer;
     [Header("プレイヤーオブジェクト")] public LayerMask playerLayer;
     [Header("チェストオブジェクト")] public LayerMask treasureLayer;
-
+    [HideInInspector] public bool isMoving;                    //動けるかどうか
     protected bool canMove;
     protected BoxCollider2D boxCollider;         //このオブジェクトにアタッチされた、BoxCollider2Dの入れ物を用意
     private Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
     private float inverseMoveTime;            //動きをより効率的にするために使用されます
-    private bool isMoving;                    //動けるかどうか
+    private float moveTime = 0.075f;            //オブジェクトの移動にかかる時間（秒単位）※最初の設定は0.1
+
 
     //保護された仮想関数は、クラスを継承することでオーバーライドできます。
     protected virtual void Start()
@@ -33,12 +33,12 @@ public abstract class MovingObject : MonoBehaviour
 
     //移動できる場合はtrueを、移動できない場合はfalseを返します。
     // Moveはx方向、y方向、およびRaycastHit2Dのパラメーターを取り、衝突をチェックします。
-    protected bool Move(int xDir, int yDir, out RaycastHit2D hit)
+    protected virtual bool Move(int xDir, int yDir, out RaycastHit2D hit)
     {
-        //オブジェクトの開始位置を保存します。(現在位置)
+        //現在位置
         Vector2 start = transform.position;
 
-        //Moveを呼び出すときに渡される方向パラメーターに基づいて終了位置を計算します。（移動後の位置）
+        //移動後の位置
         Vector2 end = start + new Vector2(xDir, yDir);
 
         //boxColliderを無効にして、ラインキャストがこのオブジェクト自身のコライダーに当たらないようにします。
@@ -51,7 +51,7 @@ public abstract class MovingObject : MonoBehaviour
         boxCollider.enabled = true;
 
         //何かがヒットしたかどうかを確認します
-        if (!isMoving && hit.transform == null)
+        if (hit.transform == null)
         {
             //何もヒットしなかった場合は、Vector2エンドを宛先として渡してSmoothMovementコルーチンを開始します。
             StartCoroutine(SmoothMovement(end));
@@ -61,7 +61,6 @@ public abstract class MovingObject : MonoBehaviour
         //何かがヒットした場合は、falseを返し、行動はできない
         return false;
     }
-
 
     //ユニットを今のスペースから次のスペースに移動するためのコルーチン。endを使用して移動先を指定します。
     protected IEnumerator SmoothMovement(Vector3 end)
@@ -97,7 +96,6 @@ public abstract class MovingObject : MonoBehaviour
     //仮想キーワードは、オーバーライドキーワードを使用してクラスを継承することでAttemptMoveをオーバーライドできることを意味します。
     //AttemptMoveは、ジェネリックパラメーターTを取り、ブロックされた場合(移動できない)にユニットが操作するコンポーネントのタイプを指定します。
     protected virtual void AttemptMove(int xDir, int yDir)
-        
     {
         //hitを宣言
         RaycastHit2D hit;
@@ -106,11 +104,11 @@ public abstract class MovingObject : MonoBehaviour
         canMove = Move(xDir, yDir, out hit);
 
         //ラインキャストの影響を受けていないか確認する
-        if (hit.transform == null)
-        {
-            //何もヒットしなかった場合、これ以上AttemptMove関数のコードを実行しません。
-            return;
-        }
+        //if (hit.transform == null)
+        //{
+        //    //何もヒットしなかった場合、これ以上AttemptMove関数のコードを実行しません。
+        //    return;
+        //}
 
 
         //ヒットしたオブジェクトに接続されているタイプTのコンポーネントへのコンポーネント参照を取得します

@@ -8,16 +8,7 @@ using Common;
 public class player : MovingObject
 {
     public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
-    public int pointsPerFood = 10;                //フードオブジェクトを拾うときにプレーヤーのフードポイントに追加するポイントの数。
-    public int wallDamage = 1;                    //プレイヤーが壁を割ったときに壁に与えるダメージ。
-    public Text foodText;
-    public Text playerHpText;
-    //[Header("敵オブジェクト")] public LayerMask enemyLayer;
-    //[Header("プレイヤーの攻撃力")] public int playerAttackValue;
-   
-    //private BoxCollider2D boxCollider;
     private Animator animator;                    //プレーヤーのアニメーターコンポーネントへの参照を格納するために使用されます。
-    private int food;                       //レベル中(このステージ中)にプレイヤーのフードポイントの合計を保存するために使用されます。
     private bool isAttack = false;
     private int nextHorizontalKey = 1;
     private int nextVerticalkey = 0;
@@ -27,6 +18,7 @@ public class player : MovingObject
     private bool isDefeat = false;
     private int nowPlayerState = 0;
     [HideInInspector] public playerState plState = playerState.Normal;
+    [HideInInspector] public bool isAttackEnemey = false;
     [Header("アイテムレイヤー")] public LayerMask itemLayer;
 
     public enum playerState
@@ -121,14 +113,11 @@ public class player : MovingObject
         //水平または垂直にゼロ以外の値があるかどうかを確認します
         if (horizontal != 0 || vertical != 0)
         {
-            //ジェネリックパラメーターWallを渡してAttemptMoveを呼び出します。
-            //これは、プレイヤーが壁に遭遇した場合プレイヤーがwallクラスを操作するためです。
             //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
             AttemptMove(horizontal, vertical);
         }
         else if (leftShift && !isAttack)
         {
-            //Debug.Log("leftshift"+leftShift);
             Attack();
             isAttack = true;
         }
@@ -139,6 +128,9 @@ public class player : MovingObject
         
     }
 
+    /**
+     * プレイヤーの状態を更新
+     */
     public void setPlayerState(playerState state)
     {
         plState = state;
@@ -154,29 +146,21 @@ public class player : MovingObject
         {
             //プレイヤーが移動するたびに、フードポイントの合計から減算します。
             GManager.instance.playerFoodPoint--;
-            //foodText.text = "Food:" + GManager.instance.playerFoodPoints;
-            //ヒットにより、Moveで行われたLinecastの結果を参照できます。
-            RaycastHit2D hit;
 
             //プレイヤーが移動してフードポイントを失ったので、ゲームが終了したかどうかを確認します。
             CheckIfGameOver();
-
+            Vector2 start = transform.position;
+            Vector2 end = start + new Vector2(xDir, yDir);
+            GManager.instance.enemyNextPosition.Add(end);
             //プレーヤーのターンが終わったので、GameManagerのplayersTurnブール値をfalseに設定します。
             GManager.instance.playersTurn = false;
         }
     }
 
-
     //OnCantMoveは、MovingObjectの抽象関数OnCantMoveをオーバーライドします。
     //これは、プレーヤーの場合はプレーヤーが攻撃して破壊できる壁である一般的なパラメーターTを取ります。
     protected override void OnCantMove<T>(T component)
     {
-        //hitWallを、パラメーターとして渡されたコンポーネントと等しくなるように設定します。
-        //Wall hitWall = component as Wall;
-
-        //攻撃している壁のDamageWall関数を呼び出します。
-        //hitWall.DamageWall(wallDamage);
-
         //プレーヤーの攻撃アニメーションを再生するには、プレーヤーのアニメーションコントローラーの攻撃トリガーを設定します。
         animator.SetTrigger("chop");
     }
@@ -214,8 +198,6 @@ public class player : MovingObject
     {
         //プレーヤーアニメーターのトリガーを設定して、playerHitアニメーションに遷移します。
         animator.SetTrigger("hit");
-        //プレイヤーの合計から失われたフードポイントを差し引きます。
-        food -= loss;
         //ゲームが終了したかどうかを確認します
         CheckIfGameOver();
     }

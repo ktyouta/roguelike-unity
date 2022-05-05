@@ -26,7 +26,7 @@ public class GManager : MonoBehaviour
     [Header("プレイヤーの攻撃力")] public int playerAttack;
     [Header("プレイヤーの防御力")] public int playerDefence;
     [Header("プレイヤーのレベル")] public int playerLevel = 1;
-    [Header("プレイヤーの魅力")] public int playerCharm = 0;
+    [Header("プレイヤーの魅力")] public int playerCharm = 10;
     [Header("次のレベルまでの経験値")] public int nowMaxExprience;
     [Header("アイテムの所持数制限")] public int nowMaxPosession;
     [Header("プレイヤーの満腹度")] public int playerFoodPoint;
@@ -61,8 +61,10 @@ public class GManager : MonoBehaviour
     private Button closeButton;
 
     //リスト
-    //移動コマンドを発行するために使用されるすべての敵ユニットのリスト。
-    public List<Enemy> enemies = new List<Enemy>();                            
+    //敵ユニットのリスト。
+    public List<Enemy> enemies = new List<Enemy>();
+    //NPC用のリスト
+    public List<NpcFellow> fellows = new List<NpcFellow>();
     //宝箱用のアイテムリスト
     public List<Item> treasureItemList = new List<Item>();
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
@@ -287,18 +289,15 @@ public class GManager : MonoBehaviour
             //これらのいずれかがtrueの場合は戻り、MoveEnemiesを開始しない。
             return;
         }
-        else
+  
+        if (enemyDefeatNum != -1)
         {
-            if (enemyDefeatNum != -1)
-            {
-                removeEnemyToList(enemyDefeatNum);
-                enemyDefeatNum = -1;
-            }
-            //Debug.Log("enemyTurn");
-            //エネミーの行動関数実行
-            StartCoroutine(MoveEnemies());
+            removeEnemyToList(enemyDefeatNum);
+            enemyDefeatNum = -1;
         }
-        
+        //エネミーの行動関数実行
+        //StartCoroutine(MoveEnemies());
+        StartCoroutine(moveEnemies());
     }
 
     /**
@@ -366,7 +365,9 @@ public class GManager : MonoBehaviour
         enabled = false;
     }
 
-    //敵を順番に動かすコルーチン。
+    /**
+     *敵を順番に動かすコルーチン 
+     */
     IEnumerator MoveEnemies()
     {
         //プレイヤーは移動できない。
@@ -399,6 +400,43 @@ public class GManager : MonoBehaviour
     }
 
     /**
+     * 敵を順番に動かすコルーチン(現在使用中)
+     */
+    IEnumerator moveEnemies()
+    {
+        //プレイヤーは移動できない
+        enemiesMoving = true;
+        //プレイヤーの移動が完了するもしくは移動以外の行動をした場合
+        yield return new WaitUntil(() => !playerObj.isMoving || enemyNextPosition.Count < 1);
+        //プレイヤーが移動以外の行動をした場合、プレイヤーの現在地点をリストに追加
+        if (enemyNextPosition.Count < 1)
+        {
+            enemyNextPosition.Add(playerObj.transform.position);
+        }
+        //敵オブジェクトのリストをループ
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            //isActionがtrueの場合は行動させない
+            if (enemies[i].isAction)
+            {
+                continue;
+            }
+            //敵リストのインデックスiにある敵のMoveEnemy関数を呼び出す
+            enemies[i].MoveEnemy();
+        }
+        for (int i=0;i<enemies.Count;i++)
+        {
+            enemies[i].isAction = false;
+        }
+        //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする
+        playersTurn = true;
+        //敵の移動が完了したら、enemiesMovingをfalseに設定
+        enemiesMoving = false;
+        //移動点を空にする
+        enemyNextPosition.Clear();
+    }
+
+    /**
      * 引数で指定したパネルの子オブジェクト(ボタン)をすべて削除する
      */
     public void deleteChildButton(Transform childButtons)
@@ -417,7 +455,7 @@ public class GManager : MonoBehaviour
     {
         string newMessage;
         newMessage = attackerName + "が" + enemyName + "に" + damage + "のダメージを与えた";
-        GManager.instance.logMessage.Add(newMessage);
+        logMessage.Add(newMessage);
     }
 
     public void wrightUseFoodLog(string foodName, string name,int foodPoint)
@@ -426,33 +464,33 @@ public class GManager : MonoBehaviour
         newMessage = foodName + "を使用した";
         newMessage += "\n";
         newMessage += name + "の満腹度が" + foodPoint + "回復した";
-        GManager.instance.logMessage.Add(newMessage);
+        logMessage.Add(newMessage);
     }
 
     public void wrightDeadLog(string name)
     {
         string newMessage;
         newMessage = name + "は倒れた";
-        GManager.instance.logMessage.Add(newMessage);
+        logMessage.Add(newMessage);
     }
 
     public void wrightLevelupLog(string name)
     {
         string newMessage;
-        newMessage = name + "のレベルが" + GManager.instance.playerLevel + "になった";
-        GManager.instance.logMessage.Add(newMessage);
+        newMessage = name + "のレベルが" + playerLevel + "になった";
+        logMessage.Add(newMessage);
     }
 
     public void wrightInventoryFullLog()
     {
         string newMessage;
         newMessage = "荷物がいっぱいです。";
-        GManager.instance.logMessage.Add(newMessage);
+        logMessage.Add(newMessage);
     }
 
     public void wrightLog(string message)
     {
-        GManager.instance.logMessage.Add(message);
+        logMessage.Add(message);
     }
 
     /**
@@ -493,23 +531,23 @@ public class GManager : MonoBehaviour
         statusText.SetActive(true);
         //プレイヤーのステータスを表示
         string status;
-        status = "プレイヤー名 : " + GManager.instance.playerName;
+        status = "プレイヤー名 : " + playerName;
         status += "\n";
-        status += "レベル : " + GManager.instance.playerLevel;
+        status += "レベル : " + playerLevel;
         status += "\n";
-        status += "HP : " + GManager.instance.playerHp;
+        status += "HP : " + playerHp;
         status += "\n";
-        status += "攻撃力 : " + GManager.instance.playerAttack;
+        status += "攻撃力 : " + playerAttack;
         status += "\n";
-        status += "防御力 : " + GManager.instance.playerDefence;
+        status += "防御力 : " + playerDefence;
         status += "\n";
-        status += "満腹度 : " + GManager.instance.playerFoodPoint;
+        status += "満腹度 : " + playerFoodPoint;
         status += "\n";
-        status += "所持金 : " + GManager.instance.playerMoney;
+        status += "所持金 : " + playerMoney;
         status += "\n";
-        status += "武器 : " + GManager.instance.weaponName;
+        status += "武器 : " + weaponName;
         status += "\n";
-        status += "盾 : " + GManager.instance.shieldName;
+        status += "盾 : " + shieldName;
         playerStatusPanel.text = status;
     }
 
@@ -578,34 +616,34 @@ public class GManager : MonoBehaviour
         description += "\n\n";
         description += item.itemDescription;
         itemDescriptionPanel.transform.Find("Text").GetComponent<Text>().text = description;
-        GManager.instance.itemUsePanel.SetActive(true);
-        GManager.instance.itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.RemoveAllListeners();
-        GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.RemoveAllListeners();
-        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.RemoveAllListeners();
-        GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = true;
-        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = true;
+        itemUsePanel.SetActive(true);
+        itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = true;
+        itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = true;
         //消費系アイテム
         if (item.type.ToString() == "Consume")
         {
-            GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "つかう";
+            itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "つかう";
         }
         //装備系アイテム
         else if (item.type.ToString() == "Equipment")
         {
             if (((EquipmentBase)item).isEquip)
             {
-                GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "はずす";
-                GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = false;
-                GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = false;
+                itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "はずす";
+                itemUsePanel.transform.Find("PutButton").GetComponent<Button>().interactable = false;
+                itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().interactable = false;
             }
             else
             {
-                GManager.instance.itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "そうび";
+                itemUsePanel.transform.Find("UseButton").transform.Find("Text").GetComponent<Text>().text = "そうび";
             }
         }
-        GManager.instance.itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.AddListener(() => { adduUseItemFunc(item, listButton); });
-        GManager.instance.itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.AddListener(() => { addPutItemFunc(argItem); });
-        GManager.instance.itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.AddListener(() => { addThrowItem(argItem); });
+        itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.AddListener(() => { adduUseItemFunc(item, listButton); });
+        itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.AddListener(() => { addPutItemFunc(argItem); });
+        itemUsePanel.transform.Find("ThrowButton").GetComponent<Button>().onClick.AddListener(() => { addThrowItem(argItem); });
     }
 
     /**
@@ -615,7 +653,7 @@ public class GManager : MonoBehaviour
     {
         item.useItem();
         isCloseCommand = true;
-        GManager.instance.playersTurn = false;
+        playersTurn = false;
     }
 
     /**
@@ -644,17 +682,17 @@ public class GManager : MonoBehaviour
     {
         bool isAbleAdd = false;
         //アイテムの所持制限を超えている場合
-        if (GManager.instance.itemList.Count + 1 > GManager.instance.nowMaxPosession)
+        if (itemList.Count + 1 > nowMaxPosession)
         {
-            GManager.instance.wrightInventoryFullLog();
+            wrightInventoryFullLog();
         }
         else
         {
             //インベントリーが空の状態なら0を割り当てる
-            int itemId = GManager.instance.itemList.Count == 0 ? 0 : GManager.instance.itemList[GManager.instance.itemList.Count - 1].GetComponent<Item>().id + 1;
+            int itemId = itemList.Count == 0 ? 0 : itemList[itemList.Count - 1].GetComponent<Item>().id + 1;
             //IDの割り当て
             item.GetComponent<Item>().id = itemId;
-            GManager.instance.itemList.Add(item);
+            itemList.Add(item);
             isAbleAdd = true;
         }
         return isAbleAdd;
@@ -665,10 +703,10 @@ public class GManager : MonoBehaviour
      */
     public void updateLevel()
     {
-        GManager.instance.nowExprience = GManager.instance.mostRecentExperience - (GManager.instance.nowMaxExprience - GManager.instance.beforeLevelupExperience);
-        GManager.instance.playerLevel++;
-        GManager.instance.nowMaxExprience = GManager.instance.nowMaxExprience + 10 * GManager.instance.playerLevel;
-        GManager.instance.wrightLevelupLog(GManager.instance.playerName);
+        nowExprience = mostRecentExperience - (nowMaxExprience - beforeLevelupExperience);
+        playerLevel++;
+        nowMaxExprience = nowMaxExprience + 10 * playerLevel;
+        wrightLevelupLog(playerName);
     }
 
     /**
@@ -676,10 +714,10 @@ public class GManager : MonoBehaviour
      */
     public void updateStatus()
     {
-        GManager.instance.playerAttack += 2;
-        GManager.instance.playerDefence += 2;
-        GManager.instance.playerHp += GManager.instance.riseValueHp == 0 ?10: GManager.instance.riseValueHp;
-        GManager.instance.nowPlayerMaxHp += GManager.instance.riseValueHp == 0 ? 10 : GManager.instance.riseValueHp;
+        playerAttack += 2;
+        playerDefence += 2;
+        playerHp += riseValueHp == 0 ?10: riseValueHp;
+        nowPlayerMaxHp += riseValueHp == 0 ? 10 : riseValueHp;
     }
 
     /**
@@ -687,10 +725,10 @@ public class GManager : MonoBehaviour
      */
     public void recoveryHp(int recoveryValue)
     {
-        GManager.instance.playerHp += recoveryValue;
-        if (GManager.instance.playerHp >= nowPlayerMaxHp)
+        playerHp += recoveryValue;
+        if (playerHp >= nowPlayerMaxHp)
         {
-            GManager.instance.playerHp = nowPlayerMaxHp;
+            playerHp = nowPlayerMaxHp;
         }
     }
 
@@ -699,10 +737,10 @@ public class GManager : MonoBehaviour
      */
     public void recoveryFoodPoint(int recoveryValue)
     {
-        GManager.instance.playerFoodPoint += recoveryValue;
-        if (GManager.instance.playerFoodPoint >= playerMaxFoodPoint)
+        playerFoodPoint += recoveryValue;
+        if (playerFoodPoint >= playerMaxFoodPoint)
         {
-            GManager.instance.playerFoodPoint = playerMaxFoodPoint;
+            playerFoodPoint = playerMaxFoodPoint;
         }
     }
 
@@ -711,7 +749,7 @@ public class GManager : MonoBehaviour
      */
     public void consumeFoodPoint(int consumeValue)
     {
-        GManager.instance.playerFoodPoint -= consumeValue;
+        playerFoodPoint -= consumeValue;
     }
 
     /**
@@ -719,6 +757,6 @@ public class GManager : MonoBehaviour
      */
     public void damagePlayerHp(int damagePoint)
     {
-        GManager.instance.playerHp -= damagePoint;
+        playerHp -= damagePoint;
     }
 }
