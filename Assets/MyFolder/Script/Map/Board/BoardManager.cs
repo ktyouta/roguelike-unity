@@ -153,6 +153,7 @@ public class BoardManager : MonoBehaviour
     [Header("会話分岐テスト用NPC")] public GameObject testBranchMessageNpc;
     [Header("道具屋テスト用NPC")] public GameObject testSalesNpc;
     [Header("アイテムを渡すテスト用NPC(メッセージ表示中に自動で渡す)")] public GameObject autoGiveItem;
+    [Header("仲間になるNPC")] public GameObject fellowTestNpc;
 
     //変換用
     private Transform boardHolder;
@@ -635,15 +636,17 @@ public class BoardManager : MonoBehaviour
             //NPCをインスタンス化
             LayoutObjectAtRandom(testNpc, 1, 1);
             //NPC(プレイヤーのHPを回復する)をインスタンス化
-            LayoutObjectAtRandom(testRecoveryHpNpc, 1,1);
+            //LayoutObjectAtRandom(testRecoveryHpNpc, 1,1);
             //NPC(分岐ありのアイテムの引き渡し)をインスタンス化
             LayoutObjectAtRandom(testGiveItemNpcBranchMessage,1,1);
             //NPC(会話分岐用)をインスタンス化
             //LayoutObjectAtRandom(testBranchMessageNpc,1,1);
             //NPC(道具屋)をインスタンス化
             LayoutObjectAtRandom(testSalesNpc,1,1);
+            //NPC(仲間)をインスタンス化
+            LayoutObjectAtRandom(fellowTestNpc, 1, 1);
             //アイテムを渡すテスト用NPC(メッセージ表示中に自動で渡す)
-            LayoutObjectAtRandom(autoGiveItem,1,1);
+            //LayoutObjectAtRandom(autoGiveItem,1,1);
             //本をインスタンス化
             LayoutObjectAtRandom(bookDamageAllEnemy, 3,3);
         }

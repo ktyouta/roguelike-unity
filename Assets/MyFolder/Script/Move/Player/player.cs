@@ -7,19 +7,19 @@ using Common;
 
 public class player : MovingObject
 {
-    public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
-    private Animator animator;                    //プレーヤーのアニメーターコンポーネントへの参照を格納するために使用されます。
-    private bool isAttack = false;
-    private int nextHorizontalKey = 1;
-    private int nextVerticalkey = 0;
-    private Enemy enemyObject;
-    private Treasure treasureObject;
-    public GameObject levelText;
-    private bool isDefeat = false;
-    private int nowPlayerState = 0;
+    [Header("アイテムレイヤー")] public LayerMask itemLayer;
+    [HideInInspector] public Vector2 playerBeforePosition;
     [HideInInspector] public playerState plState = playerState.Normal;
     [HideInInspector] public bool isAttackEnemey = false;
-    [Header("アイテムレイヤー")] public LayerMask itemLayer;
+    [HideInInspector] public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
+    [HideInInspector] public GameObject levelText;
+    [HideInInspector] public int nextHorizontalKey = 1;
+    [HideInInspector] public int nextVerticalkey = 0;
+    private Animator animator;                    //プレーヤーのアニメーターコンポーネントへの参照を格納するために使用されます。
+    private bool isAttack = false;
+    private Enemy enemyObject;
+    private Treasure treasureObject;
+    private bool isDefeat = false;
 
     public enum playerState
     {
@@ -29,7 +29,6 @@ public class player : MovingObject
         Wait
     }
 
-    //MovingObjectのStart関数をオーバーライドします
     protected override void Start()
     {
         //プレーヤーのアニメーターコンポーネントへのコンポーネント参照を取得する
@@ -93,21 +92,13 @@ public class player : MovingObject
         if (horizontal != 0)
         {
             vertical = 0;
-            nextHorizontalKey = 1;
-            if (horizontal < 0)
-            {
-                nextHorizontalKey *= (-1);
-            }
+            nextHorizontalKey = horizontal > 0 ?1:-1;
             nextVerticalkey = 0;
         }
         else if (vertical != 0)
         {
             horizontal = 0;
-            nextVerticalkey = 1;
-            if (vertical < 0)
-            {
-                nextVerticalkey *= (-1);
-            }
+            nextVerticalkey = vertical > 0 ?1:-1;
             nextHorizontalKey = 0;
         }
         //水平または垂直にゼロ以外の値があるかどうかを確認します
@@ -136,33 +127,50 @@ public class player : MovingObject
         plState = state;
     }
 
-    // AttemptMoveは、基本クラスMovingObjectのAttemptMove関数をオーバーライドします
-    // AttemptMoveはジェネリックパラメーターTを受け取ります。これは、プレーヤーの場合はWallタイプであり、xおよびy direcの整数も受け取ります
-    protected override void AttemptMove(int xDir, int yDir)
+    /**
+     * キャラクターの移動
+     */
+    protected override void moveChar(Vector2 end)
     {
-        //基本クラスのAttemptMoveメソッドを呼び出し、コンポーネントT（この場合はWall）と移動するxおよびy方向を渡します。
-        base.AttemptMove(xDir, yDir);
-        if (canMove)
-        {
-            //プレイヤーが移動するたびに、フードポイントの合計から減算します。
-            GManager.instance.playerFoodPoint--;
+        RaycastHit2D hit;
+        //boxColliderを無効にして、ラインキャストがこのオブジェクト自身のコライダーに当たらないようにします。
+        boxCollider.enabled = false;
 
-            //プレイヤーが移動してフードポイントを失ったので、ゲームが終了したかどうかを確認します。
-            CheckIfGameOver();
-            Vector2 start = transform.position;
-            Vector2 end = start + new Vector2(xDir, yDir);
-            GManager.instance.enemyNextPosition.Add(end);
-            //プレーヤーのターンが終わったので、GameManagerのplayersTurnブール値をfalseに設定します。
-            GManager.instance.playersTurn = false;
+        //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
+        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | treasureLayer);
+
+        //ラインキャスト後にboxColliderを再度有効にします
+        boxCollider.enabled = true;
+
+        //ヒットした場合は移動不可
+        if (hit.transform != null)
+        {
+            return;
         }
+        //SmoothMovementコルーチンを開始
+        StartCoroutine(SmoothMovement(end));
+        //移動後の処理
+        playerMoved(end);
     }
 
-    //OnCantMoveは、MovingObjectの抽象関数OnCantMoveをオーバーライドします。
-    //これは、プレーヤーの場合はプレーヤーが攻撃して破壊できる壁である一般的なパラメーターTを取ります。
-    protected override void OnCantMove<T>(T component)
+    /**
+     * 移動後の処理(満腹度の減算等)
+     */
+    private void playerMoved(Vector2 end)
     {
-        //プレーヤーの攻撃アニメーションを再生するには、プレーヤーのアニメーションコントローラーの攻撃トリガーを設定します。
-        animator.SetTrigger("chop");
+        //仲間のNPCが存在する場合はプレイヤーの移動前の位置を保存する
+        if (GManager.instance.fellows.Count > 0)
+        {
+            playerBeforePosition = transform.position;
+        }
+        //プレイヤーが移動するたびに、フードポイントの合計から減算
+        GManager.instance.playerFoodPoint--;
+
+        //プレイヤーが移動してフードポイントを失ったので、ゲームが終了したかどうかを確認。
+        CheckIfGameOver();
+        GManager.instance.enemyNextPosition.Add(end);
+        //プレーヤーのターンを終了させる
+        GManager.instance.playersTurn = false;
     }
 
     //Playerとトリガーがぶつかった時
@@ -233,7 +241,6 @@ public class player : MovingObject
             if (hitObj.layer == Define.ENEMY_LAYER)
             {
                 enemyObject = hitObj.GetComponent<Enemy>();
-                int enemyHp = enemyObject.enemyHp;
                 enemyObject.enemyHp -= GManager.instance.playerAttack;
                 GManager.instance.wrightAttackLog(GManager.instance.playerName, enemyObject.enemyName, GManager.instance.playerAttack);
             }
@@ -303,9 +310,12 @@ public class player : MovingObject
         Item throwItem = newThrownItemObj.GetComponent<Item>();
         //インベントリーから削除
         tempItem.deleteSelectedItem(tempItem.id);
-        StartCoroutine("movingItem",th);
+        StartCoroutine(movingItem(th));
     }
 
+    /**
+     * アイテムを投げた際のコルーチン
+     */
     IEnumerator movingItem(ThrowObject th)
     {
         yield return new WaitUntil(() => !th.isThrownObj);

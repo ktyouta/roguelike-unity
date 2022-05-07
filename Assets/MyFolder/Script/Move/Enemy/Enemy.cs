@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class Enemy : MovingObject
 {
-    public int playerDamage;                             //攻撃時にプレイヤーから差し引くフードポイントの量。
+    [Header("エネミーの攻撃力")] public int enemyAttackValue;
+    [Header("エネミーの所持金")] public int enemyMoney;
+    [Header("エネミーを倒した際の経験値")] public int experiencePoint;
+    [Header("エネミーのHP")] public int enemyHp = 10;
+    [Header("NPCレイヤー")] public LayerMask npcLayer;
+    [HideInInspector] public string enemyName;
+    [HideInInspector] public int enemyNumber;            //敵に付与される連番
+    [HideInInspector] public bool isAction = false;
     private Animator animator;                            //敵のAnimatorコンポーネントへの参照を格納するAnimator型の変数。
     private Transform target;                            //各ターンに移動しようとする目的object
-    private bool skipMove;                                //敵がターンをスキップするか、このターンを移動するかどうかを決定するブール値。
-    [HideInInspector] public int enemyNumber;            //敵に付与される連番
-    public int enemyHp = 10;
     private bool isDefeatEnemy = false;
-    private player playerObj;
-    [Header("エネミーの攻撃力")] public int enemyAttackValue;
-    [Header("エネミーの所持金")] public int enemyMoney; 
-    [HideInInspector] public string enemyName;
-    [Header("エネミーを倒した際の経験値")] public int experiencePoint;
     private SpriteRenderer sr = null;
-    [HideInInspector] public bool isAction;
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
     protected override void Start()
@@ -43,36 +41,19 @@ public class Enemy : MovingObject
     {
         if (enemyHp <= 0 && !isDefeatEnemy)
         {
-            enemiesDefeat();
+            enemyDefeat();
         }
     }
 
-    //Enemyがターンをスキップするために必要な機能を含めるには、MovingObjectのAttemptMove関数をオーバーライドします。
-    //基本的なAttemptMove関数の動作の詳細については、MovingObjectのコメントを参照してください。
-    protected override void AttemptMove(int xDir, int yDir)
-    {
-        //skipMoveがtrueかどうかを確認し、trueの場合はfalseに設定して、このターンをスキップします。
-        if (skipMove)
-        {
-            skipMove = false;
-            return;
-        }
-
-        //MovingObjectからAttemptMove関数を呼び出します。
-        base.AttemptMove(xDir, yDir);
-
-        //Enemyが移動したので、skipMoveをtrueに設定して次の移動をスキップします。
-        //skipMove = true;
-    }
     //MoveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void MoveEnemy()
     {
-        isAction = true;
         //画面内にいる場合のみ移動
         if (!sr.isVisible)
         {
             return;
         }
+        isAction = true;
         // X軸とY軸の移動方向の変数を宣言します。これらの範囲は-1から1です。
         //これらの値により、基本的な方向（上、下、左、右）を選択できます。
         int xDir = 0;
@@ -92,11 +73,10 @@ public class Enemy : MovingObject
         }
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
-        //RaycastHit2D hit = Physics2D.Linecast(start, next, playerLayer);
         //移動先がプレイヤーの移動先と被った場合は攻撃
         if (next == GManager.instance.enemyNextPosition[0])
         {
-            enemiesAttack(xDir, yDir);
+            enemyAttack(xDir, yDir);
             return;
         }
         //移動点が他の敵と被れば移動できない
@@ -105,23 +85,21 @@ public class Enemy : MovingObject
             return;
         }
         GManager.instance.enemyNextPosition.Add(next);
-        //エネミーは移動していて、プレーヤーに遭遇する可能性があるため、AttemptMove関数を呼び出してジェネリックパラメーターPlayerを渡します。
         AttemptMove(xDir, yDir);
     }
 
-    protected override bool Move(int xDir, int yDir, out RaycastHit2D hit)
+    /**
+     * キャラクターの移動
+     */
+    protected override void moveChar(Vector2 end)
     {
+        RaycastHit2D hit;
         Enemy otherEnemy;
-        //現在位置
-        Vector2 start = transform.position;
-        //移動後の位置
-        Vector2 end = start + new Vector2(xDir, yDir);
-
         //boxColliderを無効にして、ラインキャストがこのオブジェクト自身のコライダーに当たらないようにする。
         boxCollider.enabled = false;
 
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
-        hit = Physics2D.Linecast(start, end, blockingLayer | enemyLayer | playerLayer | treasureLayer);
+        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | playerLayer | treasureLayer | npcLayer);
 
         //ラインキャスト後にboxColliderを再度有効にする
         boxCollider.enabled = true;
@@ -131,7 +109,7 @@ public class Enemy : MovingObject
         {
             //何もヒットしなかった場合は、Vector2エンドを宛先として渡してSmoothMovementコルーチンを開始します。
             StartCoroutine(SmoothMovement(end));
-            return true;
+            return;
         }
         //自分以外の敵にヒットした場合
         if ((otherEnemy = hit.collider.GetComponent<Enemy>()) != null)
@@ -140,26 +118,26 @@ public class Enemy : MovingObject
             if (otherEnemy.isMoving)
             {
                 StartCoroutine(SmoothMovement(end));
-                return true;
             }
             else
             {
-                //ヒットした敵を行動させる
+                //ヒットした敵が既に行動している場合は行動させない
+                if (otherEnemy.isAction)
+                {
+                    return;
+                }
                 otherEnemy.MoveEnemy();
                 boxCollider.enabled = false;
-                hit = Physics2D.Linecast(start, end,enemyLayer);
+                hit = Physics2D.Linecast(transform.position, end,enemyLayer);
                 boxCollider.enabled = true;
                 otherEnemy = hit.collider.GetComponent<Enemy>();
                 //行動させた敵が移動した場合は自身も移動する
                 if (hit.transform == null || (otherEnemy != null && otherEnemy.isAction && otherEnemy.isMoving))
                 {
                     StartCoroutine(SmoothMovement(end));
-                    return true;
                 }
             }
         }
-        //何かがヒットした場合は、falseを返し、行動はできない
-        return false;
     }
 
     /**
@@ -177,26 +155,10 @@ public class Enemy : MovingObject
         return false;
     }
 
-
-    // OnCantMoveは、Enemyがプレーヤーが占有するスペースに移動しようとすると呼び出され、MovingObjectのOnCantMove関数をオーバーライドします
-    //また、遭遇すると予想されるコンポーネント、この場合はPlayerに渡すために使用する汎用パラメーターTを受け取ります
-    protected override void OnCantMove<T>(T component)
-    {
-        //hitPlayerを宣言し、遭遇したコンポーネントと等しくなるように設定します。
-        player hitPlayer = component as player;
-
-        //hitPlayerのLoseFood関数を呼び出して、減算するフードポイントの量であるplayerDamageを渡します。
-        hitPlayer.LoseFood(playerDamage);
-
-        //アニメータの攻撃トリガーを設定して、敵の攻撃アニメーションをトリガーします。
-        animator.SetTrigger("EnemyAttack");
-
-    }
-
     /**
      * 敵の攻撃処理
      */
-    protected void enemiesAttack(int x,int y)
+    protected void enemyAttack(int x,int y)
     {
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(x, y);
@@ -214,15 +176,15 @@ public class Enemy : MovingObject
     /**
      * 敵が倒された時の処理
      */
-    protected void enemiesDefeat()
+    protected void enemyDefeat()
     {
-        GManager.instance.enemyDefeatNum = enemyNumber;
         GManager.instance.wrightDeadLog(enemyName);
         isDefeatEnemy = true;
         GManager.instance.playerMoney += enemyMoney;
         GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
         GManager.instance.nowExprience += experiencePoint;
         GManager.instance.mostRecentExperience = experiencePoint;
+        GManager.instance.removeEnemyToList(enemyNumber);
         Destroy(gameObject, 0.5f);
     }
 }

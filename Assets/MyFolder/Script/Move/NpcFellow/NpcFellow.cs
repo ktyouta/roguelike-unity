@@ -2,46 +2,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NpcFellow : MonoBehaviour
+public class NpcFellow : MovingObject
 {
-    private float moveTime = 0.075f;
     protected player playerObj;
     protected Vector2 playerPosition;
-    private Rigidbody2D rb2D;
-    private float inverseMoveTime;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
         playerPosition = playerObj.transform.position;
-        rb2D = GetComponent<Rigidbody2D>();
-        inverseMoveTime = 1f / moveTime;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        setFirstPosition();
     }
 
     /**
      * NPCの行動
      */
-    protected void fellowAction()
+    public void fellowAction()
     {
         //移動
-        if (playerObj.isMoving)
+        //if (playerObj.isMoving)
+        //{
+        //    moveNpc();
+        //    return;
+        //}
+        ////攻撃
+        //if (playerObj.isAttackEnemey)
+        //{
+        //    attack();
+        //    return;
+        //}
+        moveNpc();
+    }
+
+    /**
+     * NPCを初期位置(プレイヤーの後ろ)にセットする
+     */
+    protected void setFirstPosition()
+    {
+        float nextXPosition = playerObj.transform.position.x;
+        float nextYPosition = playerObj.transform.position.y;
+        //プレイヤーの真後ろに移動する
+        if (playerObj.nextHorizontalKey > 0)
         {
-            moveNpc();
-            return;
+            nextXPosition = playerObj.transform.position.x - 1;
         }
-        //攻撃
-        if (playerObj.isAttackEnemey)
+        else if (playerObj.nextHorizontalKey < 0)
         {
-            attack();
-            return;
+            nextXPosition = playerObj.transform.position.x + 1;
         }
+        else if (playerObj.nextVerticalkey > 0)
+        {
+            nextYPosition = playerObj.transform.position.y - 1;
+        }
+        else if (playerObj.nextVerticalkey < 0)
+        {
+            nextYPosition = playerObj.transform.position.y + 1;
+        }
+        else
+        {
+            nextYPosition = playerObj.transform.position.y - 1;
+        }
+        Vector2 end = new Vector2(nextXPosition, nextYPosition);
+        transform.position = end;
     }
 
     /**
@@ -57,36 +81,22 @@ public class NpcFellow : MonoBehaviour
      */
     protected void moveNpc()
     {
-        Move(playerPosition);
+        moveChar(playerObj.playerBeforePosition);
     }
 
-    protected void Move(Vector2 next)
+    /**
+     * キャラクターの移動
+     */
+    protected override void moveChar(Vector2 end)
     {
-        StartCoroutine(SmoothMovement(next));
-    }
-
-    //ユニットを今のスペースから次のスペースに移動するためのコルーチン。endを使用して移動先を指定します。
-    protected IEnumerator SmoothMovement(Vector3 end)
-    {
-        //計算量が少ないため、等級の代わりに平方等級使用。(sqrMagnitudeは返り値をベクトルの二乗にする)
-        float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
-
-        //残りの移動距離がイプシロン(ほぼゼロ)より大きい間
-        while (sqrRemainingDistance > float.Epsilon)
+        RaycastHit2D hit;
+        boxCollider.enabled = false;
+        hit = Physics2D.Linecast(transform.position, end, blockingLayer | treasureLayer);
+        boxCollider.enabled = true;
+        if (hit.transform != null)
         {
-            //newPostionに、移動途中の位置を設定(現在位置、目的位置、呼び出されるごと(1フレーム)に移動する距離)
-            Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
-            //アタッチされたRigidbody2DでMovePositionを呼び出し、それを計算された位置に移動します。
-            rb2D.MovePosition(newPostion);
-
-            //移動後の残り距離を再計算します
-            sqrRemainingDistance = (transform.position - end).sqrMagnitude;
-
-            //ループを終了するためにsqrRemainingDistanceがゼロに近づくまで戻り、ループする
-            yield return null;
+            return;
         }
-        //移動距離がイプシロンより小さくなった時、終了地点まで移動する
-        rb2D.MovePosition(end);
-        playerPosition = playerObj.transform.position;
+        StartCoroutine(SmoothMovement(end));
     }
 }

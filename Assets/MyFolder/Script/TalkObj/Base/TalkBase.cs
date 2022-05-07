@@ -7,7 +7,6 @@ public abstract class TalkBase : MonoBehaviour
 {
 
     // 接触判定
-    private bool isContacted = false;
     private IEnumerator coroutine;
     [Header("会話エリア(上)")] public TalkDetection topArea;
     [Header("会話エリア(下)")] public TalkDetection bottomArea;

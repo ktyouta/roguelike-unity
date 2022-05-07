@@ -7,7 +7,7 @@ public abstract class Item : MonoBehaviour
 {
     [Header("アイテムのタイプ")] public ItemTypeEnum type;
     [HideInInspector]public int id;
-    [Header("名前")]public string name;
+    [Header("名前")]public new string name;
     [Header("アイテムの説明")] public string itemDescription;
     [Header("ステージ難易度に応じたID")] public int diffId;
     [Header("買値")] public int buyPrice;

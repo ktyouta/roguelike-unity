@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public abstract class NpcChoices : NpcBase
 {
+    [HideInInspector] protected bool isEndTalk;
     [System.Serializable]
     public class MessageClass
     {
@@ -54,6 +55,7 @@ public abstract class NpcChoices : NpcBase
     protected override IEnumerator TalkEvent()
     {
         nowNodeIndex = 0;
+        isEndTalk = false;
         //‚Ç‚Ì‘I‘ğˆ‚ğ•\¦‚·‚é‚©‚ğŠÇ—
         int choiseCount = 0;
         for (int i = 0; i < branchMessages.Count; i++)
@@ -122,6 +124,7 @@ public abstract class NpcChoices : NpcBase
                 }
             }
         }
+        isEndTalk = true;
     }
 
     /**

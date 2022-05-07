@@ -81,7 +81,6 @@ public class GManager : MonoBehaviour
     [HideInInspector] public bool isCloseCommand = true;
     [HideInInspector] public int level;
     [HideInInspector] public bool playersTurn = true;
-    [HideInInspector] public int enemyDefeatNum = -1;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
@@ -289,13 +288,16 @@ public class GManager : MonoBehaviour
             //これらのいずれかがtrueの場合は戻り、MoveEnemiesを開始しない。
             return;
         }
-  
-        if (enemyDefeatNum != -1)
+        //仲間のNPCが存在する場合
+        if (fellows.Count > 0)
         {
-            removeEnemyToList(enemyDefeatNum);
-            enemyDefeatNum = -1;
+            for (int i=0;i<fellows.Count;i++)
+            {
+                fellows[i].fellowAction();
+            }
+            
         }
-        //エネミーの行動関数実行
+        //敵を行動させる
         //StartCoroutine(MoveEnemies());
         StartCoroutine(moveEnemies());
     }
@@ -412,6 +414,11 @@ public class GManager : MonoBehaviour
         if (enemyNextPosition.Count < 1)
         {
             enemyNextPosition.Add(playerObj.transform.position);
+        }
+        //仲間のNPCがいる場合は行動が終わるまで待つ
+        for (int i = 0; i < fellows.Count; i++)
+        {
+            yield return new WaitUntil(() => !fellows[i].isMoving);
         }
         //敵オブジェクトのリストをループ
         for (int i = 0; i < enemies.Count; i++)

@@ -10,9 +10,9 @@ public class ItemPanel : MonoBehaviour
     [Header("アイテムボタン")] public GameObject itemBtn;
     [Header("アイテム使用項目パネル")] public GameObject itemUsePanel;
     [Header("アイテム説明用パネル")]public GameObject itemDescriptionPanel;
-    private int beforeCount = 0;
-    private int nowCount = 0;
-    private int buttonPos = 110;
+    //private int beforeCount = 0;
+    //private int nowCount = 0;
+    //private int buttonPos = 110;
     // Start is called before the first frame update
     void Start()
     {
