@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NpcFellow : MovingObject
 {
+    [Header("NPC‚Ì–¼‘O")] public string npcName;
+    [Header("NPC‚ÌUŒ‚—Í")] public int npcAttack;
     protected player playerObj;
     protected Vector2 playerPosition;
 
@@ -22,18 +24,17 @@ public class NpcFellow : MovingObject
     public void fellowAction()
     {
         //ˆÚ“®
-        //if (playerObj.isMoving)
-        //{
-        //    moveNpc();
-        //    return;
-        //}
-        ////UŒ‚
-        //if (playerObj.isAttackEnemey)
-        //{
-        //    attack();
-        //    return;
-        //}
-        moveNpc();
+        if (playerObj.isMoving)
+        {
+            moveNpc();
+            return;
+        }
+        //UŒ‚
+        if (playerObj.isAttack)
+        {
+            attack();
+            return;
+        }
     }
 
     /**
@@ -73,7 +74,15 @@ public class NpcFellow : MovingObject
      */
     protected void attack()
     {
-
+        Debug.Log("attack");
+        //ƒvƒŒƒCƒ„[‚ª“G‚ğ“|‚µ‚Ä‚¢‚é‚©A“GˆÈŠO‚É‘Î‚µ‚ÄUŒ‚‚µ‚½ê‡
+        if (playerObj.enemyObject == null)
+        {
+            return;
+        }
+        int tempNpcAttack = npcAttack == 0 ?10:npcAttack;
+        playerObj.enemyObject.enemyHp -= tempNpcAttack;
+        GManager.instance.wrightAttackLog(npcName, playerObj.enemyObject.enemyName, tempNpcAttack);
     }
 
     /**

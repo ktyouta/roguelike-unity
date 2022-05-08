@@ -28,8 +28,12 @@ public class NpcFellowTalk : NpcChoices
     protected IEnumerator becomeFellow()
     {
         yield return new WaitUntil(() => isEndTalk);
-        GManager.instance.fellows.Add(GetComponent<NpcFellow>());
-        GetComponent<NpcFellow>().enabled = true;
+        NpcFellowTalk npcFellowTalk = GetComponent<NpcFellowTalk>();
+        NpcFellow npcFellow = GetComponent<NpcFellow>();
+        //NPC(仲間になった後用)のコンポーネントを有効にする
+        npcFellow.enabled = true;
+        npcFellow.npcName = npcFellowTalk.npcName;
+        GManager.instance.fellows.Add(npcFellow);
         Transform gameTransform = this.gameObject.transform;
         //子オブジェクトのコライダーを破棄
         foreach (Transform child in gameTransform)
@@ -38,6 +42,6 @@ public class NpcFellowTalk : NpcChoices
         }
         //レイヤーを変更
         this.gameObject.layer = LayerMask.NameToLayer("NpcFellow");
-        GetComponent<NpcFellowTalk>().enabled = false;
+        npcFellowTalk.enabled = false;
     }
 }

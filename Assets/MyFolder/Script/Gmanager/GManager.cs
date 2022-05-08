@@ -409,16 +409,21 @@ public class GManager : MonoBehaviour
         //プレイヤーは移動できない
         enemiesMoving = true;
         //プレイヤーの移動が完了するもしくは移動以外の行動をした場合
-        yield return new WaitUntil(() => !playerObj.isMoving || enemyNextPosition.Count < 1);
+        yield return new WaitUntil(() => !playerObj.isMoving || playerObj.isAttack);
         //プレイヤーが移動以外の行動をした場合、プレイヤーの現在地点をリストに追加
-        if (enemyNextPosition.Count < 1)
+        if (playerObj.isAttack)
         {
+            //プレイヤーの位置情報は必ずリストの先頭になる
             enemyNextPosition.Add(playerObj.transform.position);
         }
-        //仲間のNPCがいる場合は行動が終わるまで待つ
-        for (int i = 0; i < fellows.Count; i++)
+        //プレイヤーが移動した場合はNPCも移動しているので移動の完了を待つ
+        else
         {
-            yield return new WaitUntil(() => !fellows[i].isMoving);
+            //仲間のNPCがいる場合は行動が終わるまで待つ
+            for (int i = 0; i < fellows.Count; i++)
+            {
+                yield return new WaitUntil(() => !fellows[i].isMoving);
+            }
         }
         //敵オブジェクトのリストをループ
         for (int i = 0; i < enemies.Count; i++)

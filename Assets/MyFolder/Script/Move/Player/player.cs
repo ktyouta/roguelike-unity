@@ -10,14 +10,13 @@ public class player : MovingObject
     [Header("アイテムレイヤー")] public LayerMask itemLayer;
     [HideInInspector] public Vector2 playerBeforePosition;
     [HideInInspector] public playerState plState = playerState.Normal;
-    [HideInInspector] public bool isAttackEnemey = false;
     [HideInInspector] public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
     [HideInInspector] public GameObject levelText;
     [HideInInspector] public int nextHorizontalKey = 1;
     [HideInInspector] public int nextVerticalkey = 0;
+    [HideInInspector] public bool isAttack = false;
+    [HideInInspector] public Enemy enemyObject;
     private Animator animator;                    //プレーヤーのアニメーターコンポーネントへの参照を格納するために使用されます。
-    private bool isAttack = false;
-    private Enemy enemyObject;
     private Treasure treasureObject;
     private bool isDefeat = false;
 
@@ -86,7 +85,7 @@ public class player : MovingObject
         vertical = (int)(Input.GetAxisRaw("Vertical"));
 
         //攻撃
-        leftShift = Input.GetKey("left shift");
+        leftShift = Input.GetKeyDown("left shift");
 
         //水平に移動するかどうかを確認し、移動する場合は垂直にゼロに設定します。(ズレ防止)
         if (horizontal != 0)
@@ -104,19 +103,16 @@ public class player : MovingObject
         //水平または垂直にゼロ以外の値があるかどうかを確認します
         if (horizontal != 0 || vertical != 0)
         {
+            isAttack = false;
             //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
             AttemptMove(horizontal, vertical);
         }
-        else if (leftShift && !isAttack)
+        //攻撃
+        if (leftShift)
         {
             Attack();
             isAttack = true;
         }
-        else if (!leftShift)
-        {
-            isAttack = false;
-        }
-        
     }
 
     /**
@@ -168,6 +164,7 @@ public class player : MovingObject
 
         //プレイヤーが移動してフードポイントを失ったので、ゲームが終了したかどうかを確認。
         CheckIfGameOver();
+        //プレイヤーの位置情報は必ずリストの先頭になる
         GManager.instance.enemyNextPosition.Add(end);
         //プレーヤーのターンを終了させる
         GManager.instance.playersTurn = false;
@@ -235,12 +232,16 @@ public class player : MovingObject
         boxCollider.enabled = false;
         RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer);
         boxCollider.enabled = true;
-        if (hit.transform)
+        if (hit.transform != null)
         {
             GameObject hitObj = hit.transform.gameObject;
             if (hitObj.layer == Define.ENEMY_LAYER)
             {
                 enemyObject = hitObj.GetComponent<Enemy>();
+                if (enemyObject == null)
+                {
+                    return;
+                }
                 enemyObject.enemyHp -= GManager.instance.playerAttack;
                 GManager.instance.wrightAttackLog(GManager.instance.playerName, enemyObject.enemyName, GManager.instance.playerAttack);
             }
