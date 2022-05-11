@@ -12,7 +12,6 @@ public class Enemy : MovingObject
     [HideInInspector] public string enemyName;
     [HideInInspector] public int enemyNumber;            //敵に付与される連番
     [HideInInspector] public bool isAction = false;
-    private Animator animator;                            //敵のAnimatorコンポーネントへの参照を格納するAnimator型の変数。
     private Transform target;                            //各ターンに移動しようとする目的object
     private bool isDefeatEnemy = false;
     private SpriteRenderer sr = null;
@@ -23,9 +22,6 @@ public class Enemy : MovingObject
         // Enemyオブジェクトのリストに追加して、この敵をGameManagerのインスタンスに登録します。
         //これにより、GameManagerが移動コマンドを発行できるようになります。
         //GManager.instance.AddEnemyToList(this);
-
-        //添付されたAnimatorコンポーネントへの参照を取得して保存します。
-        animator = GetComponent<Animator>();
 
         //タグを使用してPlayer GameObjectを見つけ、transformを保存します。
         target = GameObject.FindGameObjectWithTag("Player").transform;

@@ -12,6 +12,7 @@ public abstract class MovingObject : MonoBehaviour
     [HideInInspector] public bool isMoving;                    //動けるかどうか
     protected bool canMove;
     protected BoxCollider2D boxCollider;         //このオブジェクトにアタッチされた、BoxCollider2Dの入れ物を用意
+    protected Animator animator;
     private Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
     private float inverseMoveTime;            //動きをより効率的にするために使用されます
     private float moveTime = 0.075f;            //オブジェクトの移動にかかる時間（秒単位）※最初の設定は0.1
@@ -26,6 +27,7 @@ public abstract class MovingObject : MonoBehaviour
 
         //移動時間の逆数を保存することで、除算ではなく乗算で使用できるため、より効率的です。
         inverseMoveTime = 1f / moveTime;
+        animator = GetComponent<Animator>();
     }
 
     /**

@@ -291,9 +291,11 @@ public class GManager : MonoBehaviour
         //仲間のNPCが存在する場合
         if (fellows.Count > 0)
         {
-            for (int i=0;i<fellows.Count;i++)
+            for (int i=0;i< fellows.Count; i++)
             {
-                fellows[i].fellowAction();
+                //前方のキャラの位置を代入(先頭の場合はプレイヤーの位置)
+                Vector2 refPosition = i == 0 ? playerObj.playerBeforePosition : fellows[i-1].npcBeforePosition;
+                fellows[i].fellowAction(refPosition);
             }
             
         }

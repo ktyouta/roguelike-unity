@@ -16,7 +16,6 @@ public class player : MovingObject
     [HideInInspector] public int nextVerticalkey = 0;
     [HideInInspector] public bool isAttack = false;
     [HideInInspector] public Enemy enemyObject;
-    private Animator animator;                    //プレーヤーのアニメーターコンポーネントへの参照を格納するために使用されます。
     private Treasure treasureObject;
     private bool isDefeat = false;
 
@@ -27,15 +26,6 @@ public class player : MovingObject
         Command,
         Wait
     }
-
-    protected override void Start()
-    {
-        //プレーヤーのアニメーターコンポーネントへのコンポーネント参照を取得する
-        animator = GetComponent<Animator>();
-        //MovingObject基本クラスのStart関数を呼び出します。
-        base.Start();
-    }
-
 
     //この関数は、動作が無効または非アクティブになったときに呼び出されます。（エリア移動の時に呼び出される）
     private void OnDisable()
@@ -151,14 +141,12 @@ public class player : MovingObject
 
     /**
      * 移動後の処理(満腹度の減算等)
+     * ※SmoothMovementのコルーチンと同時に実行される
      */
     private void playerMoved(Vector2 end)
     {
-        //仲間のNPCが存在する場合はプレイヤーの移動前の位置を保存する
-        if (GManager.instance.fellows.Count > 0)
-        {
-            playerBeforePosition = transform.position;
-        }
+        //プレイヤーの移動前の位置を保存する
+        playerBeforePosition = transform.position;
         //プレイヤーが移動するたびに、フードポイントの合計から減算
         GManager.instance.playerFoodPoint--;
 
