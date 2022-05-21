@@ -9,7 +9,7 @@ public abstract class NpcChoices : NpcBase
     [System.Serializable]
     public class MessageClass
     {
-        [Header("画面上に表示されるメッセージ")]public string message;
+        [Multiline] [Header("画面上に表示されるメッセージ")]public string message;
         [Header("選択肢を表示するフラグ")]public bool isSelect;
         [Header("メッセージツリーのノード番号")]public int messageNodeNumber;
     }
@@ -32,6 +32,15 @@ public abstract class NpcChoices : NpcBase
         //選択肢を格納する
         [Header("画面に表示される全選択肢、選択時の分岐用の番号を一つのまとまりとしたリスト")] public List<choiseMessageFuncClass> choiseMessages = new List<choiseMessageFuncClass>();
         [Header("メッセージツリーのノード番号")] public int messageNodeNumber;
+        [Header("選択肢のタイプ")] public ChoiseMessageTypeList choiseType;
+    }
+
+    public enum ChoiseMessageTypeList
+    {
+        //最初に用意されている選択肢
+        staticChoise,
+        //動的に作成された選択肢
+        dynamicChoise
     }
 
     [System.Serializable]
@@ -56,11 +65,32 @@ public abstract class NpcChoices : NpcBase
     {
         nowNodeIndex = 0;
         isEndTalk = false;
+        List<int> deleteChoiseIndexArray = new List<int>();
+        //動的に生成されている選択肢を削除
+        for (int i=0;i< choiseMessageBlock.Count;i++)
+        {
+            for (int j=0;j<choiseMessageBlock[i].choiseMessage.Count;j++)
+            {
+                if (choiseMessageBlock[i].choiseMessage[j].choiseType == ChoiseMessageTypeList.dynamicChoise)
+                {
+                    //動的に生成された選択肢のインデックスをリストに追加
+                    deleteChoiseIndexArray.Add(i);
+                }
+            }
+        }
+        //削除する選択肢が存在する場合
+        if (deleteChoiseIndexArray.Count > 0)
+        {
+            for (int i=deleteChoiseIndexArray.Count-1;i>-1;i--)
+            {
+                choiseMessageBlock.RemoveAt(deleteChoiseIndexArray[i]);
+            }
+        }
         //どの選択肢を表示するかを管理
         int choiseCount = 0;
         for (int i = 0; i < branchMessages.Count; i++)
         {
-            //現在のノードからメッセージまたは選択肢を取得できなかった場合は、会話を終了する
+            //現在のノードから選択肢を取得できなかった場合は会話を終了する
             if (nowNodeIndex == -1)
             {
                 showMessage("会話を終了します。");
@@ -73,6 +103,11 @@ public abstract class NpcChoices : NpcBase
             yield return null;
             GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
             MessageClass displayMessageBlock = getNodeMessageBlock(branchMessages[i].branchMessageBlock);
+            //ノードに一致する会話が取得できなかった場合は、会話を終了する
+            if (displayMessageBlock.messageNodeNumber == -1)
+            {
+                break;
+            }
             // 会話をwindowのtextフィールドに表示
             showMessage(displayMessageBlock.message);
             //選択肢を表示するパターン
@@ -91,12 +126,12 @@ public abstract class NpcChoices : NpcBase
                 //ボタンの設置座標を設定するためにpivotを取得
                 float pivotY = choisePanelRect.pivot.y;
                 //現在の選択肢を表示する
-                for (int j=0;j< messageBlocks.Count; j++)
+                for (int j = 0; j < messageBlocks.Count; j++)
                 {
                     //選択肢ボタンの生成
-                    GameObject choiseButton = Instantiate(selectBtn, new Vector3(parentPosition.x-10, pivotY + panelHeight*0.5f - 30 - j*35, 0f), Quaternion.identity) as GameObject;
+                    GameObject choiseButton = Instantiate(selectBtn, new Vector3(parentPosition.x - 10, pivotY + panelHeight * 0.5f - 30 - j * 35, 0f), Quaternion.identity) as GameObject;
                     //choisePanelの子オブジェクトにする
-                    choiseButton.transform.SetParent(GManager.instance.choisePanel.transform,false);
+                    choiseButton.transform.SetParent(GManager.instance.choisePanel.transform, false);
                     choiseButton.transform.Find("Text").GetComponent<Text>().text = messageBlocks[j].message;
                     int funcIndex = messageBlocks[j].funcNumber;
                     //選択肢をクリックした際のメソッドを設定
@@ -110,19 +145,10 @@ public abstract class NpcChoices : NpcBase
                     Destroy(child.gameObject);
                 }
                 choiseCount++;
+                continue;
             }
-            //通常のメッセージ
-            else
-            {
-                // キー入力を待機
-                yield return new WaitUntil(() => Input.anyKeyDown);
-                //getNodeMessageBlock関数で現在のノードに一致したメッセージを取得できていない場合
-                if (displayMessageBlock.messageNodeNumber == -1)
-                {
-                    nowNodeIndex = -1;
-                    yield return null;
-                }
-            }
+            //通常のメッセージ(選択肢がない場合)
+            yield return new WaitUntil(() => Input.anyKeyDown);
         }
         isEndTalk = true;
     }
@@ -157,8 +183,8 @@ public abstract class NpcChoices : NpcBase
     MessageClass getNodeMessageBlock(List<MessageClass> messagesBlock)
     {
         MessageClass tempMessageBlock = new MessageClass();
-        tempMessageBlock.message = "ノードに一致する会話がありません。";
-        tempMessageBlock.isSelect = false;
+        //tempMessageBlock.message = "ノードに一致する会話がありません。";
+        //tempMessageBlock.isSelect = false;
         tempMessageBlock.messageNodeNumber = -1;
         for (int i = 0; i < messagesBlock.Count; i++)
         {

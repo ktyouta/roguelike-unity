@@ -1250,8 +1250,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -334.69, y: 90.727}
-  m_SizeDelta: {x: 276.61, y: 327.12}
+  m_AnchoredPosition: {x: -334.69, y: 87.66}
+  m_SizeDelta: {x: 276.61, y: 333.24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &447990940
 MonoBehaviour:
@@ -2793,7 +2793,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1403084276}
   m_HandleRect: {fileID: 1403084275}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3232,8 +3232,8 @@ MonoBehaviour:
   WaterPlace: {fileID: 1740982468777862845, guid: 9ad68efc52332fe4cbef6c0c104c2462, type: 3}
   OuterWall: {fileID: 3257124870060019616, guid: 8bf59510b8bedac4581e1083d038e669, type: 3}
   stoneTile: {fileID: 7583562011196030993, guid: 2f0796f8a1e4982459c13396bbd0b313, type: 3}
-  enemy: {fileID: 4632148215036305473, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-  enemy2: {fileID: 4786224463179674538, guid: a0a63a885479c8d488ef9cd51b2d951c, type: 3}
+  enemy: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+  enemy2: {fileID: 755405083974979417, guid: a0a63a885479c8d488ef9cd51b2d951c, type: 3}
   treasure: {fileID: 1462914090350629713, guid: 548a1130d183e2249aaca7c729b9f57f, type: 3}
   food: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
   portion: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
@@ -3243,7 +3243,7 @@ MonoBehaviour:
   sword: {fileID: 2504903374797934555, guid: 7c2b192dbb0fed4439916e376b94f156, type: 3}
   shield: {fileID: 536904824204777345, guid: 584707e07a348de47a1f47d14f36ae02, type: 3}
   bag: {fileID: 6060693476235400937, guid: e5b7e110ee5117948a50ddd50fb5b41b, type: 3}
-  player: {fileID: 1832148257335570541, guid: 809da2663c08c2d49b5dfb3c35f06e28, type: 3}
+  player: {fileID: 2846253646200167766, guid: f850c3c5570f80b488b689128409fcfa, type: 3}
   castleObj: {fileID: 7848795257983402512, guid: 456cc6311cd183a4ba760488c7c15afd, type: 3}
   buildingObj: {fileID: 8645085169757023432, guid: 6c7d78b9695670e4ab71fb835b8ec648, type: 3}
   denceParam: 4
@@ -3273,6 +3273,7 @@ MonoBehaviour:
   testSalesNpc: {fileID: 7955798343083259147, guid: 5e31b317c758e5a4589eca14c8a552af, type: 3}
   autoGiveItem: {fileID: 8528774167561996110, guid: 42d55a7a822ff4245bd41d6b938c7f20, type: 3}
   fellowTestNpc: {fileID: 6108409152175698848, guid: 23f5cbc3d8007d24095544a516dc4271, type: 3}
+  fellowTestNpc2: {fileID: 9159659462833868705, guid: 91813d6ac257e354abfa1b21c1c3dbdf, type: 3}
 --- !u!4 &1483692205
 Transform:
   m_ObjectHideFlags: 0
@@ -3306,7 +3307,7 @@ MonoBehaviour:
   playerAttack: 5
   playerDefence: 0
   playerLevel: 1
-  playerCharm: 0
+  playerCharm: 10
   nowMaxExprience: 100
   nowMaxPosession: 3
   playerFoodPoint: 100
@@ -3672,7 +3673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.269844}
+  m_AnchoredPosition: {x: 142.74, y: -116.27003}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

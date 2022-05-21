@@ -127,14 +127,17 @@ public class player : MovingObject
 
         //ラインキャスト後にboxColliderを再度有効にします
         boxCollider.enabled = true;
-
+        Debug.Log("beforemove");
         //ヒットした場合は移動不可
         if (hit.transform != null)
         {
+            Debug.Log("movefailed");
+            Debug.Log("hit.transform"+hit.transform.name);
             return;
         }
         //SmoothMovementコルーチンを開始
         StartCoroutine(SmoothMovement(end));
+        Debug.Log("aftermove");
         //移動後の処理
         playerMoved(end);
     }

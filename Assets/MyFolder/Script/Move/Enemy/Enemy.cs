@@ -69,8 +69,9 @@ public class Enemy : MovingObject
         }
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, next, playerLayer);
         //ˆÚ“®æ‚ªƒvƒŒƒCƒ„[‚ÌˆÚ“®æ‚Æ”í‚Á‚½ê‡‚ÍUŒ‚
-        if (next == GManager.instance.enemyNextPosition[0])
+        if (hit.transform != null)
         {
             enemyAttack(xDir, yDir);
             return;

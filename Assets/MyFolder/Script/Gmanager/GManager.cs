@@ -81,6 +81,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public bool isCloseCommand = true;
     [HideInInspector] public int level;
     [HideInInspector] public bool playersTurn = true;
+    [HideInInspector] public int latestNpcId = 0;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
@@ -558,6 +559,8 @@ public class GManager : MonoBehaviour
         status += "満腹度 : " + playerFoodPoint;
         status += "\n";
         status += "所持金 : " + playerMoney;
+        status += "\n";
+        status += "魅力度 : " + playerCharm;
         status += "\n";
         status += "武器 : " + weaponName;
         status += "\n";

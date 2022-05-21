@@ -25,6 +25,9 @@ namespace Common
 		//レイヤー設定
 		public const int ENEMY_LAYER = 7;
 		public const int TREASURE_LAYER = 8;
+
+		//仲間にできるNPCの上限数
+		public const int FELLOWS_MAXNUM = 0;
 	}
 
 	//アイテムのタイプ

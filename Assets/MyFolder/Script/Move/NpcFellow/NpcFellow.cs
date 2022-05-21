@@ -7,13 +7,23 @@ public class NpcFellow : MovingObject
     [Header("NPCの名前")] public string npcName;
     [Header("NPCの攻撃力")] public int npcAttack;
     [HideInInspector] public Vector2 npcBeforePosition;
+    [HideInInspector] public int npcId;
     protected player playerObj;
 
     // Start is called before the first frame update
-    protected override void Start()
+    //protected override void Start()
+    //{
+    //    base.Start();
+    //    playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
+    //}
+
+    protected void Awake()
     {
-        base.Start();
         playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
+    }
+
+    protected void OnEnable()
+    {
         setFirstPosition();
     }
 
@@ -41,13 +51,21 @@ public class NpcFellow : MovingObject
      */
     protected void setFirstPosition()
     {
-        if (GManager.instance.fellows.Count > 1)
+        //プレイヤーの位置を参照
+        if (GManager.instance.fellows.Count < 2)
         {
-            transform.position = GManager.instance.fellows[GManager.instance.fellows.Count - 1].npcBeforePosition;
-        }
-        else
-        {
+            Debug.Log("playerpositionref");
             transform.position = playerObj.playerBeforePosition;
+            return;
+        }
+        Debug.Log("fellowscount"+ GManager.instance.fellows.Count);
+        for (int i=0;i<GManager.instance.fellows.Count;i++)
+        {
+            if (GManager.instance.fellows[i].npcId == npcId)
+            {
+                transform.position = GManager.instance.fellows[i - 1].npcBeforePosition;
+                break;
+            }
         }
     }
 
