@@ -82,6 +82,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public int level;
     [HideInInspector] public bool playersTurn = true;
     [HideInInspector] public int latestNpcId = 0;
+    [HideInInspector] public int enemyActionEndCount;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
@@ -394,8 +395,8 @@ public class GManager : MonoBehaviour
             //敵のmoveTimeを待ってから、次の敵を移動
             yield return new WaitForSeconds(turnDelay);
 
-            //敵リストのインデックスiにある敵のMoveEnemy関数を呼び出す。
-            enemies[i].MoveEnemy();
+            //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す。
+            enemies[i].moveEnemy();
         }
         //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする。
         playersTurn = true;
@@ -409,6 +410,7 @@ public class GManager : MonoBehaviour
      */
     IEnumerator moveEnemies()
     {
+        enemyActionEndCount = 0;
         //プレイヤーは移動できない
         enemiesMoving = true;
         //プレイヤーの移動が完了するもしくは移動以外の行動をした場合
@@ -431,14 +433,16 @@ public class GManager : MonoBehaviour
         //敵オブジェクトのリストをループ
         for (int i = 0; i < enemies.Count; i++)
         {
-            //isActionがtrueの場合は行動させない
+            //isActionがtrue(既に行動している)の場合は行動させない
             if (enemies[i].isAction)
             {
                 continue;
             }
-            //敵リストのインデックスiにある敵のMoveEnemy関数を呼び出す
-            enemies[i].MoveEnemy();
+            //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す
+            enemies[i].moveEnemy();
         }
+        //全ての敵が行動を終えるまで待つ
+        yield return new WaitUntil(() => enemyActionEndCount == enemies.Count);
         for (int i=0;i<enemies.Count;i++)
         {
             enemies[i].isAction = false;

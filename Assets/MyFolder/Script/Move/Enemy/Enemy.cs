@@ -12,9 +12,9 @@ public class Enemy : MovingObject
     [HideInInspector] public string enemyName;
     [HideInInspector] public int enemyNumber;            //敵に付与される連番
     [HideInInspector] public bool isAction = false;
+    [HideInInspector] public SpriteRenderer sr = null;
     private Transform target;                            //各ターンに移動しようとする目的object
     private bool isDefeatEnemy = false;
-    private SpriteRenderer sr = null;
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
     protected override void Start()
@@ -41,12 +41,13 @@ public class Enemy : MovingObject
         }
     }
 
-    //MoveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
-    public void MoveEnemy()
+    //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
+    public void moveEnemy()
     {
         //画面内にいる場合のみ移動
         if (!sr.isVisible)
         {
+            GManager.instance.enemyActionEndCount++;
             return;
         }
         isAction = true;
@@ -101,40 +102,47 @@ public class Enemy : MovingObject
         //ラインキャスト後にboxColliderを再度有効にする
         boxCollider.enabled = true;
 
-        //何かがヒットしたかどうかを確認します
+        //何かがヒットしたかどうかを確認
         if (hit.transform == null)
         {
-            //何もヒットしなかった場合は、Vector2エンドを宛先として渡してSmoothMovementコルーチンを開始します。
-            StartCoroutine(SmoothMovement(end));
+            //何もヒットしなかった場合は行動開始
+            StartCoroutine(enemySmoothMovement(end));
             return;
         }
-        //自分以外の敵にヒットした場合
-        if ((otherEnemy = hit.collider.GetComponent<Enemy>()) != null)
+        //自分以外の敵を除くもの(障害物)にヒットした場合は行動できない
+        if ((otherEnemy = hit.collider.GetComponent<Enemy>()) == null)
         {
-            //ヒットした先の敵が移動中の場合
-            if (otherEnemy.isMoving)
-            {
-                StartCoroutine(SmoothMovement(end));
-            }
-            else
-            {
-                //ヒットした敵が既に行動している場合は行動させない
-                if (otherEnemy.isAction)
-                {
-                    return;
-                }
-                otherEnemy.MoveEnemy();
-                boxCollider.enabled = false;
-                hit = Physics2D.Linecast(transform.position, end,enemyLayer);
-                boxCollider.enabled = true;
-                otherEnemy = hit.collider.GetComponent<Enemy>();
-                //行動させた敵が移動した場合は自身も移動する
-                if (hit.transform == null || (otherEnemy != null && otherEnemy.isAction && otherEnemy.isMoving))
-                {
-                    StartCoroutine(SmoothMovement(end));
-                }
-            }
+            GManager.instance.enemyActionEndCount++;
+            return;
         }
+        //ヒットした先の敵が移動中の場合は自身も移動する
+        if (otherEnemy.isMoving)
+        {
+            StartCoroutine(enemySmoothMovement(end));
+            return;
+        }
+        //ヒットした敵が既に行動を終えている場合は自身も行動させない(障害物に当たって移動できない扱い)
+        if (otherEnemy.isAction)
+        {
+            GManager.instance.enemyActionEndCount++;
+            return;
+        }
+        //ヒットした敵が行動していない場合は自身より先に行動させる
+        otherEnemy.moveEnemy();
+        //行動させた敵が移動しなかった場合は自身も行動できない
+        if (!otherEnemy.isMoving)
+        {
+            GManager.instance.enemyActionEndCount++;
+            return;
+        }
+        //行動させた敵が移動した場合は自身も移動する
+        StartCoroutine(enemySmoothMovement(end));
+    }
+
+    protected IEnumerator enemySmoothMovement(Vector3 end)
+    {
+        yield return SmoothMovement(end);
+        GManager.instance.enemyActionEndCount++;
     }
 
     /**
@@ -144,8 +152,10 @@ public class Enemy : MovingObject
     {
         for (int i=0;i<GManager.instance.enemyNextPosition.Count;i++)
         {
+            //移動点が被った場合
             if (GManager.instance.enemyNextPosition[i] == next)
             {
+                GManager.instance.enemyActionEndCount++;
                 return true;
             }
         }
@@ -168,6 +178,7 @@ public class Enemy : MovingObject
             GManager.instance.playerHp -= enemyAttackValue;
             GManager.instance.wrightAttackLog(enemyName,GManager.instance.playerName,enemyAttackValue);
         }
+        GManager.instance.enemyActionEndCount++;
     }
 
     /**
