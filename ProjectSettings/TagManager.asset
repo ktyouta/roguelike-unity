@@ -19,6 +19,8 @@ TagManager:
   - Floor
   - Npc
   - OuterWall
+  - GrayImageTag
+  - LoadingTextTag
   layers:
   - Default
   - TransparentFX

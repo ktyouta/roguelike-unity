@@ -52,10 +52,12 @@ public class GManager : MonoBehaviour
     public GameObject shopItemListPanel;
     public GameObject shopSelectPanel;
     public GameObject itemDescriptionPanel;
+    public GameObject grayImage;
     public Text playerStatusPanel;
     public Text npcMessageText;
     public Text npcNameText;
     public Text playerMoneyText;
+    public Text loadingText;
     private Button statusButton;
     private Button itemButton;
     private Button closeButton;
@@ -160,6 +162,7 @@ public class GManager : MonoBehaviour
         shopPanel = GameObject.FindWithTag("ShopPanelTag");
         shopItemListPanel = GameObject.FindWithTag("ShopItemPanelTag");
         shopSelectPanel = GameObject.FindWithTag("ShopSelectPanelTag");
+        grayImage = GameObject.FindWithTag("GrayImageTag");
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -208,6 +211,11 @@ public class GManager : MonoBehaviour
         if (shopSelectPanel != null)
         {
             shopSelectPanel.SetActive(false);
+        }
+        if (grayImage != null)
+        {
+            grayImage.SetActive(false);
+            loadingText = grayImage.transform.Find("LoadingText").gameObject.GetComponent<Text>();
         }
         //GManager.instance.level++;
         //Debug.Log("level" + level);
@@ -441,8 +449,10 @@ public class GManager : MonoBehaviour
             //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す
             enemies[i].moveEnemy();
         }
+        Invoke("forciblyAdvanceTurn",1.5f);
         //全ての敵が行動を終えるまで待つ
-        yield return new WaitUntil(() => enemyActionEndCount == enemies.Count);
+        yield return new WaitUntil(() => enemyActionEndCount >= enemies.Count);
+        CancelInvoke();
         for (int i=0;i<enemies.Count;i++)
         {
             enemies[i].isAction = false;
@@ -453,6 +463,27 @@ public class GManager : MonoBehaviour
         enemiesMoving = false;
         //移動点を空にする
         enemyNextPosition.Clear();
+    }
+
+    /*
+     * 何らかの問題で敵のターンが終了しなかった場合に強制的にターンを進める
+     */
+    private void forciblyAdvanceTurn()
+    {
+        StartCoroutine(waitTurnFinish());
+    }
+
+    private IEnumerator waitTurnFinish()
+    {
+        grayImage.SetActive(true);
+        loadingText.text = "待機中...";
+        yield return new WaitForSeconds(1.0f);
+        //全ての敵の行動が完了していない場合は強制的にターンを進める
+        if (enemyActionEndCount < enemies.Count)
+        {
+            enemyActionEndCount = enemies.Count;
+        }
+        grayImage.SetActive(false);
     }
 
     /**

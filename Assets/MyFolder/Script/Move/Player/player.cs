@@ -57,12 +57,12 @@ public class player : MovingObject
             GManager.instance.updateStatus();
         }
 
-        //Debug.Log(GManager.instance.playersTurn);
         //プレイヤーの番でない場合、関数を終了します。
         if (!GManager.instance.playersTurn)
         {
             return;
         }
+        isAttack = false;
 
         int horizontal = 0;      //水平移動方向を格納するために使用されます
         int vertical = 0;        //垂直移動方向を格納するために使用されます。
@@ -93,7 +93,6 @@ public class player : MovingObject
         //水平または垂直にゼロ以外の値があるかどうかを確認します
         if (horizontal != 0 || vertical != 0)
         {
-            isAttack = false;
             //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
             AttemptMove(horizontal, vertical);
         }
@@ -127,17 +126,13 @@ public class player : MovingObject
 
         //ラインキャスト後にboxColliderを再度有効にします
         boxCollider.enabled = true;
-        Debug.Log("beforemove");
         //ヒットした場合は移動不可
         if (hit.transform != null)
         {
-            Debug.Log("movefailed");
-            Debug.Log("hit.transform"+hit.transform.name);
             return;
         }
         //SmoothMovementコルーチンを開始
         StartCoroutine(SmoothMovement(end));
-        Debug.Log("aftermove");
         //移動後の処理
         playerMoved(end);
     }
@@ -279,12 +274,10 @@ public class player : MovingObject
     {
         if (item.GetComponent<ThrowObject>() == null)
         {
-            Debug.Log("オブジェクトにThrowObjectがついていません");
             return;
         }
         if (item.GetComponent<Rigidbody2D>() == null)
         {
-            Debug.Log("オブジェクトにRigidbody2Dがついていません");
             return;
         }
         setPlayerState(playerState.Wait);

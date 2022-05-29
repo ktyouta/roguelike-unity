@@ -36,13 +36,11 @@ public class NpcFellow : MovingObject
         if (playerObj.isMoving)
         {
             moveChar(frontCharPosition);
-            return;
         }
         //çUåÇ
-        if (playerObj.isAttack)
+        else if (playerObj.isAttack)
         {
             attack();
-            return;
         }
     }
 

@@ -51,8 +51,6 @@ public class Enemy : MovingObject
             return;
         }
         isAction = true;
-        // X軸とY軸の移動方向の変数を宣言します。これらの範囲は-1から1です。
-        //これらの値により、基本的な方向（上、下、左、右）を選択できます。
         int xDir = 0;
         int yDir = 0;
 
@@ -74,7 +72,7 @@ public class Enemy : MovingObject
         //移動先がプレイヤーの移動先と被った場合は攻撃
         if (hit.transform != null)
         {
-            enemyAttack(xDir, yDir);
+            enemyAttack();
             return;
         }
         //移動点が他の敵と被れば移動できない
@@ -115,27 +113,30 @@ public class Enemy : MovingObject
             GManager.instance.enemyActionEndCount++;
             return;
         }
-        //ヒットした先の敵が移動中の場合は自身も移動する
-        if (otherEnemy.isMoving)
-        {
-            StartCoroutine(enemySmoothMovement(end));
-            return;
-        }
+        bool isAbleToMove = false;
         //ヒットした敵が既に行動を終えている場合は自身も行動させない(障害物に当たって移動できない扱い)
         if (otherEnemy.isAction)
         {
-            GManager.instance.enemyActionEndCount++;
-            return;
+            if (otherEnemy.isMoving)
+            {
+                isAbleToMove = true;
+            }
         }
-        //ヒットした敵が行動していない場合は自身より先に行動させる
-        otherEnemy.moveEnemy();
-        //行動させた敵が移動しなかった場合は自身も行動できない
-        if (!otherEnemy.isMoving)
+        else
+        {
+            //ヒットした敵が行動していない場合は自身より先に行動させる
+            otherEnemy.moveEnemy();
+            //行動させた敵が移動しなかった場合は自身も行動できない
+            if (otherEnemy.isMoving)
+            {
+                isAbleToMove = true;
+            }
+        }
+        if (!isAbleToMove)
         {
             GManager.instance.enemyActionEndCount++;
             return;
         }
-        //行動させた敵が移動した場合は自身も移動する
         StartCoroutine(enemySmoothMovement(end));
     }
 
@@ -165,19 +166,11 @@ public class Enemy : MovingObject
     /**
      * 敵の攻撃処理
      */
-    protected void enemyAttack(int x,int y)
+    protected void enemyAttack()
     {
-        Vector2 start = transform.position;
-        Vector2 end = start + new Vector2(x, y);
-        boxCollider.enabled = false;
-        RaycastHit2D hit = Physics2D.Linecast(start, end, playerLayer);
-        boxCollider.enabled = true;
-        if (hit.transform)
-        {
-            animator.Play("EnemyAttack");
-            GManager.instance.playerHp -= enemyAttackValue;
-            GManager.instance.wrightAttackLog(enemyName,GManager.instance.playerName,enemyAttackValue);
-        }
+        animator.Play("EnemyAttack");
+        GManager.instance.playerHp -= enemyAttackValue;
+        GManager.instance.wrightAttackLog(enemyName, GManager.instance.playerName, enemyAttackValue);
         GManager.instance.enemyActionEndCount++;
     }
 

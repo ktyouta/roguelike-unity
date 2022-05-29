@@ -145,10 +145,13 @@ public abstract class NpcChoices : NpcBase
                     Destroy(child.gameObject);
                 }
                 choiseCount++;
-                continue;
             }
             //通常のメッセージ(選択肢がない場合)
-            yield return new WaitUntil(() => Input.anyKeyDown);
+            else
+            {
+                yield return new WaitUntil(() => Input.anyKeyDown);
+            }
+            
         }
         isEndTalk = true;
     }
