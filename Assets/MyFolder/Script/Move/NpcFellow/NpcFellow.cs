@@ -72,6 +72,7 @@ public class NpcFellow : MovingObject
      */
     protected void attack()
     {
+        GManager.instance.enemyNextPosition.Add(transform.position);
         //ƒvƒŒƒCƒ„[‚ª“G‚ğ“|‚µ‚Ä‚¢‚é‚©A“GˆÈŠO‚É‘Î‚µ‚ÄUŒ‚‚µ‚½ê‡
         if (playerObj.enemyObject == null)
         {
@@ -92,14 +93,13 @@ public class NpcFellow : MovingObject
     protected override void moveChar(Vector2 end)
     {
         RaycastHit2D hit;
-        boxCollider.enabled = false;
         hit = Physics2D.Linecast(transform.position, end, blockingLayer | treasureLayer);
-        boxCollider.enabled = true;
         if (hit.transform != null)
         {
             return;
         }
         npcBeforePosition = transform.position;
+        GManager.instance.enemyNextPosition.Add(end);
         StartCoroutine(SmoothMovement(end));
     }
 }

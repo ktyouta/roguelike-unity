@@ -14,6 +14,7 @@ public class Enemy : MovingObject
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
     private Transform target;                            //各ターンに移動しようとする目的object
+    player pl;
     private bool isDefeatEnemy = false;
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
@@ -25,6 +26,7 @@ public class Enemy : MovingObject
 
         //タグを使用してPlayer GameObjectを見つけ、transformを保存します。
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        pl = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
 
         enemyName = "エネミー" + (enemyNumber + 1);
         sr = GetComponent<SpriteRenderer>();
@@ -44,6 +46,10 @@ public class Enemy : MovingObject
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void moveEnemy()
     {
+        if (enemyHp <= 0)
+        {
+            return;
+        }
         //画面内にいる場合のみ移動
         if (!sr.isVisible)
         {
@@ -55,24 +61,24 @@ public class Enemy : MovingObject
         int yDir = 0;
 
         //x軸がイプシロン(ほぼ)の方が大きい場合
-        if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
+        if (Mathf.Abs(GManager.instance.enemyNextPosition[0].x - transform.position.x) < float.Epsilon)
         {
             //ターゲット（プレーヤー）の位置のy座標がこの敵の位置のy座標より大きい場合は、y方向1（上に移動）を設定します。 そうでない場合は、-1に設定します（下に移動します）。
-            yDir = target.position.y > transform.position.y ? 1 : -1;
+            yDir = GManager.instance.enemyNextPosition[0].y > transform.position.y ? 1 : -1;
         }
         //y軸が同じ場合
         else
         {
             //ターゲットのx位置が敵のx位置より大きいかどうかを確認します。そうであれば、x方向を1（右に移動）に設定し、そうでなければ-1（左に移動）に設定します。
-            xDir = target.position.x > transform.position.x ? 1 : -1;
+            xDir = GManager.instance.enemyNextPosition[0].x > transform.position.x ? 1 : -1;
         }
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
         RaycastHit2D hit = Physics2D.Linecast(transform.position, next, playerLayer);
         //移動先がプレイヤーの移動先と被った場合は攻撃
-        if (hit.transform != null)
+        if (next == GManager.instance.enemyNextPosition[0])
         {
-            enemyAttack();
+            StartCoroutine(enemyAttack());
             return;
         }
         //移動点が他の敵と被れば移動できない
@@ -95,7 +101,7 @@ public class Enemy : MovingObject
         boxCollider.enabled = false;
 
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
-        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | playerLayer | treasureLayer | npcLayer);
+        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | treasureLayer);
 
         //ラインキャスト後にboxColliderを再度有効にする
         boxCollider.enabled = true;
@@ -114,9 +120,10 @@ public class Enemy : MovingObject
             return;
         }
         bool isAbleToMove = false;
-        //ヒットした敵が既に行動を終えている場合は自身も行動させない(障害物に当たって移動できない扱い)
+        //ヒットした敵が既に行動を終えている場合
         if (otherEnemy.isAction)
         {
+            //移動している場合は自身も移動可能
             if (otherEnemy.isMoving)
             {
                 isAbleToMove = true;
@@ -126,12 +133,13 @@ public class Enemy : MovingObject
         {
             //ヒットした敵が行動していない場合は自身より先に行動させる
             otherEnemy.moveEnemy();
-            //行動させた敵が移動しなかった場合は自身も行動できない
+            //行動させた敵が移動した場合は自身も移動可能
             if (otherEnemy.isMoving)
             {
                 isAbleToMove = true;
             }
         }
+        //行動不可
         if (!isAbleToMove)
         {
             GManager.instance.enemyActionEndCount++;
@@ -142,7 +150,7 @@ public class Enemy : MovingObject
 
     protected IEnumerator enemySmoothMovement(Vector3 end)
     {
-        yield return SmoothMovement(end);
+        yield return StartCoroutine(SmoothMovement(end));
         GManager.instance.enemyActionEndCount++;
     }
 
@@ -151,7 +159,7 @@ public class Enemy : MovingObject
      */
     protected bool checkNextPosition(Vector2 next)
     {
-        for (int i=0;i<GManager.instance.enemyNextPosition.Count;i++)
+        for (int i = 1; i < GManager.instance.enemyNextPosition.Count; i++)
         {
             //移動点が被った場合
             if (GManager.instance.enemyNextPosition[i] == next)
@@ -166,8 +174,10 @@ public class Enemy : MovingObject
     /**
      * 敵の攻撃処理
      */
-    protected void enemyAttack()
+    protected IEnumerator enemyAttack()
     {
+        //攻撃の場合はプレイヤーの行動完了を待つ
+        yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
         animator.Play("EnemyAttack");
         GManager.instance.playerHp -= enemyAttackValue;
         GManager.instance.wrightAttackLog(enemyName, GManager.instance.playerName, enemyAttackValue);

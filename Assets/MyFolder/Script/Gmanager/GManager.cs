@@ -85,6 +85,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public bool playersTurn = true;
     [HideInInspector] public int latestNpcId = 0;
     [HideInInspector] public int enemyActionEndCount;
+    [HideInInspector] public bool isEndPlayerAction = false;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
@@ -119,11 +120,11 @@ public class GManager : MonoBehaviour
         if (!instance.loadFlg)
         {
             //シーンをリロードするときにこれが破棄されないように設定します
-            
+
             InitGame();
             instance.loadFlg = true;
         }
-        
+
     }
     //これは1回だけ呼び出され、パラメータはシーンがロードされた後にのみ呼び出されるように指示します//（そうでない場合、Scene Loadコールバックは最初のロードと呼ばれ、必要ありません）
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -149,7 +150,7 @@ public class GManager : MonoBehaviour
         statusText = GameObject.Find("StatusPanel");
         itemText = GameObject.Find("ItemPanel");
         statusButton = GameObject.Find("StatusButton").GetComponent<Button>();
-        statusButton.onClick.AddListener(()=> openStatus());
+        statusButton.onClick.AddListener(() => openStatus());
         itemButton = GameObject.Find("ItemButton").GetComponent<Button>();
         itemButton.onClick.AddListener(() => openItem());
         closeButton = GameObject.Find("CloseButton").GetComponent<Button>();
@@ -231,9 +232,9 @@ public class GManager : MonoBehaviour
         //Debug.Log(levelText);
         if (levelText != null)
         {
-           levelText.SetActive(false);
+            levelText.SetActive(false);
         }
-        
+
 
         //levelTextのテキストを文字列「Day」に設定し、現在のレベル番号を追加します。
         //levelText.text = "Day " + level;
@@ -291,7 +292,7 @@ public class GManager : MonoBehaviour
             coroutine = deploymentMyCommandPanel();
             StartCoroutine(coroutine);
         }
-     
+
         //playersTurnまたはenemiesMovingまたはdoingSetupが現在trueでないことを確認してください。
         if (playersTurn || enemiesMoving || doingSetup)
         {
@@ -301,13 +302,13 @@ public class GManager : MonoBehaviour
         //仲間のNPCが存在する場合
         if (fellows.Count > 0)
         {
-            for (int i=0;i< fellows.Count; i++)
+            for (int i = 0; i < fellows.Count; i++)
             {
                 //前方のキャラの位置を代入(先頭の場合はプレイヤーの位置)
-                Vector2 refPosition = i == 0 ? playerObj.playerBeforePosition : fellows[i-1].npcBeforePosition;
+                Vector2 refPosition = i == 0 ? playerObj.playerBeforePosition : fellows[i - 1].npcBeforePosition;
                 fellows[i].fellowAction(refPosition);
             }
-            
+
         }
         //敵を行動させる
         //StartCoroutine(MoveEnemies());
@@ -343,7 +344,7 @@ public class GManager : MonoBehaviour
     public void removeEnemyToList(int index)
     {
         int listIndex = -1;
-        for (int i=0;i<enemies.Count;i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
             if (enemies[i].enemyNumber == index)
             {
@@ -421,23 +422,6 @@ public class GManager : MonoBehaviour
         enemyActionEndCount = 0;
         //プレイヤーは移動できない
         enemiesMoving = true;
-        //プレイヤーの移動が完了するもしくは移動以外の行動をした場合
-        yield return new WaitUntil(() => !playerObj.isMoving || playerObj.isAttack);
-        //プレイヤーが移動以外の行動をした場合、プレイヤーの現在地点をリストに追加
-        if (playerObj.isAttack)
-        {
-            //プレイヤーの位置情報は必ずリストの先頭になる
-            enemyNextPosition.Add(playerObj.transform.position);
-        }
-        //プレイヤーが移動した場合はNPCも移動しているので移動の完了を待つ
-        else
-        {
-            //仲間のNPCがいる場合は行動が終わるまで待つ
-            for (int i = 0; i < fellows.Count; i++)
-            {
-                yield return new WaitUntil(() => !fellows[i].isMoving);
-            }
-        }
         //敵オブジェクトのリストをループ
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -449,16 +433,18 @@ public class GManager : MonoBehaviour
             //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す
             enemies[i].moveEnemy();
         }
-        Invoke("forciblyAdvanceTurn",1.5f);
+        Invoke("forciblyAdvanceTurn", 1.5f);
         //全ての敵が行動を終えるまで待つ
         yield return new WaitUntil(() => enemyActionEndCount >= enemies.Count);
         CancelInvoke();
-        for (int i=0;i<enemies.Count;i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
             enemies[i].isAction = false;
         }
         //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする
         playersTurn = true;
+        //プレイヤーの攻撃フラグをオフにする
+        playerObj.isAttack = false;
         //敵の移動が完了したら、enemiesMovingをfalseに設定
         enemiesMoving = false;
         //移動点を空にする
@@ -501,14 +487,14 @@ public class GManager : MonoBehaviour
         }
     }
 
-    public void wrightAttackLog(string attackerName,string enemyName,int damage)
+    public void wrightAttackLog(string attackerName, string enemyName, int damage)
     {
         string newMessage;
         newMessage = attackerName + "が" + enemyName + "に" + damage + "のダメージを与えた";
         logMessage.Add(newMessage);
     }
 
-    public void wrightUseFoodLog(string foodName, string name,int foodPoint)
+    public void wrightUseFoodLog(string foodName, string name, int foodPoint)
     {
         string newMessage;
         newMessage = foodName + "を使用した";
@@ -635,7 +621,7 @@ public class GManager : MonoBehaviour
         for (var i = 0; i < itemList.Count; i++)
         {
             //メニューボタンの生成
-            GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x -10, parentPosition.y + 80 - i * 35, 0f), Quaternion.identity) as GameObject;
+            GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x - 10, parentPosition.y + 80 - i * 35, 0f), Quaternion.identity) as GameObject;
             listButton.transform.SetParent(itemText.transform, false);
             listButton.transform.Find("Text").GetComponent<Text>().text = itemList[i].GetComponent<Item>().name;
             int index = i;
@@ -768,7 +754,7 @@ public class GManager : MonoBehaviour
     {
         playerAttack += 2;
         playerDefence += 2;
-        playerHp += riseValueHp == 0 ?10: riseValueHp;
+        playerHp += riseValueHp == 0 ? 10 : riseValueHp;
         nowPlayerMaxHp += riseValueHp == 0 ? 10 : riseValueHp;
     }
 

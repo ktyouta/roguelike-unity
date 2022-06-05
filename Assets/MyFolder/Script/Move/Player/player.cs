@@ -42,7 +42,6 @@ public class player : MovingObject
         {
             return;
         }
-
         //ゲームオーバーまたはメニューオープン時
         if (isDefeat || !GManager.instance.isCloseCommand)
         {
@@ -57,23 +56,20 @@ public class player : MovingObject
             GManager.instance.updateStatus();
         }
 
-        //プレイヤーの番でない場合、関数を終了します。
-        if (!GManager.instance.playersTurn)
+        //プレイヤーのターンでない、移動中、攻撃中はコマンド入力を受け付けない
+        if (!GManager.instance.playersTurn || isMoving || isAttack)
         {
             return;
         }
-        isAttack = false;
-
+        GManager.instance.isEndPlayerAction = false;
         int horizontal = 0;      //水平移動方向を格納するために使用されます
         int vertical = 0;        //垂直移動方向を格納するために使用されます。
         bool leftShift = false;       //攻撃
 
         //入力マネージャーから入力を取得し、整数に丸め、水平に保存してx軸の移動方向を設定します
         horizontal = (int)(Input.GetAxisRaw("Horizontal"));
-
         //入力マネージャーから入力を取得し、整数に丸め、垂直に保存してy軸の移動方向を設定します
         vertical = (int)(Input.GetAxisRaw("Vertical"));
-
         //攻撃
         leftShift = Input.GetKeyDown("left shift");
 
@@ -81,13 +77,13 @@ public class player : MovingObject
         if (horizontal != 0)
         {
             vertical = 0;
-            nextHorizontalKey = horizontal > 0 ?1:-1;
+            nextHorizontalKey = horizontal > 0 ? 1 : -1;
             nextVerticalkey = 0;
         }
         else if (vertical != 0)
         {
             horizontal = 0;
-            nextVerticalkey = vertical > 0 ?1:-1;
+            nextVerticalkey = vertical > 0 ? 1 : -1;
             nextHorizontalKey = 0;
         }
         //水平または垂直にゼロ以外の値があるかどうかを確認します
@@ -97,10 +93,9 @@ public class player : MovingObject
             AttemptMove(horizontal, vertical);
         }
         //攻撃
-        if (leftShift)
+        else if (leftShift)
         {
             Attack();
-            isAttack = true;
         }
     }
 
@@ -118,28 +113,29 @@ public class player : MovingObject
     protected override void moveChar(Vector2 end)
     {
         RaycastHit2D hit;
-        //boxColliderを無効にして、ラインキャストがこのオブジェクト自身のコライダーに当たらないようにします。
-        boxCollider.enabled = false;
-
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
         hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | treasureLayer);
-
-        //ラインキャスト後にboxColliderを再度有効にします
-        boxCollider.enabled = true;
         //ヒットした場合は移動不可
         if (hit.transform != null)
         {
             return;
         }
         //SmoothMovementコルーチンを開始
-        StartCoroutine(SmoothMovement(end));
+        StartCoroutine(playerSmoothMovement(end));
         //移動後の処理
         playerMoved(end);
     }
 
+    private IEnumerator playerSmoothMovement(Vector2 end)
+    {
+        yield return StartCoroutine(SmoothMovement(end));
+        //移動完了後にフラグをオンにする
+        GManager.instance.isEndPlayerAction = true;
+    }
+
     /**
      * 移動後の処理(満腹度の減算等)
-     * ※SmoothMovementのコルーチンと同時に実行される
+     * ※playerSmoothMovementのコルーチンと同時に実行される
      */
     private void playerMoved(Vector2 end)
     {
@@ -208,35 +204,56 @@ public class player : MovingObject
     }
 
     /**
-     * 攻撃
+     * プレイヤーの攻撃
      */
     protected void Attack()
     {
         animator.Play("PlayerAttack");
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(nextHorizontalKey, nextVerticalkey);
-        boxCollider.enabled = false;
         RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer);
-        boxCollider.enabled = true;
-        if (hit.transform != null)
+        //攻撃の場合は現在地を追加
+        GManager.instance.enemyNextPosition.Add(transform.position);
+        //時間差で実行されるフラグをオンにする処理
+        StartCoroutine(waitAttackEnemy());
+        isAttack = true;
+        //ヒットしていない場合
+        if (hit.transform == null)
         {
-            GameObject hitObj = hit.transform.gameObject;
-            if (hitObj.layer == Define.ENEMY_LAYER)
-            {
-                enemyObject = hitObj.GetComponent<Enemy>();
-                if (enemyObject == null)
-                {
-                    return;
-                }
-                enemyObject.enemyHp -= GManager.instance.playerAttack;
-                GManager.instance.wrightAttackLog(GManager.instance.playerName, enemyObject.enemyName, GManager.instance.playerAttack);
-            }
-            else if (hit.collider.gameObject.layer == Define.TREASURE_LAYER)
-            {
-                treasureObject = hitObj.GetComponent<Treasure>();
-                treasureObject.treasureHp -= GManager.instance.playerAttack;                
-            }
+            return;
         }
+        GameObject hitObj = hit.transform.gameObject;
+        //敵にヒット
+        if (hitObj.layer == Define.ENEMY_LAYER)
+        {
+            enemyObject = hitObj.GetComponent<Enemy>();
+            if (enemyObject == null)
+            {
+                return;
+            }
+            enemyObject.enemyHp -= GManager.instance.playerAttack;
+            GManager.instance.wrightAttackLog(GManager.instance.playerName, enemyObject.enemyName, GManager.instance.playerAttack);
+        }
+        //宝箱にヒット
+        else if (hitObj.layer == Define.TREASURE_LAYER)
+        {
+            treasureObject = hitObj.GetComponent<Treasure>();
+            if (treasureObject == null)
+            {
+                return;
+            }
+            treasureObject.treasureHp -= GManager.instance.playerAttack;
+        }
+    }
+
+    /*
+     * 攻撃コマンド入力後に一定時間待ってターンを終了する
+     */
+    private IEnumerator waitAttackEnemy()
+    {
+        //攻撃に関しては攻撃後にターンを終了する
+        yield return new WaitForSeconds(0.3f);
+        GManager.instance.isEndPlayerAction = true;
         GManager.instance.playersTurn = false;
     }
 
@@ -260,7 +277,7 @@ public class player : MovingObject
             return;
         }
         Item tempItem = item.GetComponent<Item>();
-        GameObject newPutItem = Instantiate(item, new Vector3(transform.position.x,transform.position.y, 0.0f), Quaternion.identity) as GameObject;
+        GameObject newPutItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, 0.0f), Quaternion.identity) as GameObject;
         newPutItem.SetActive(true);
         newPutItem.GetComponent<Item>().isEnter = true;
         newPutItem.GetComponent<Item>().isPut = true;
