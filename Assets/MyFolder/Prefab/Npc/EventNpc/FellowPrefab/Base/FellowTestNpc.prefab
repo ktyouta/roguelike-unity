@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 7740922106619907618}
   - component: {fileID: 5342599332754962486}
   - component: {fileID: 4104292343003113867}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: FellowTestNpc
   m_TagString: Npc
   m_Icon: {fileID: 0}
@@ -362,6 +362,7 @@ MonoBehaviour:
       - message: "\u4EF2\u9593\u306B\u3057\u306A\u3044\u3002"
         funcNumber: 1
       messageNodeNumber: 0
+      choiseType: 0
   - choiseMessage:
     - choiseMessages:
       - message: "\u30E1\u30F3\u30D0\u30FC\u3092\u5165\u308C\u66FF\u3048\u308B\u3002"
@@ -369,6 +370,7 @@ MonoBehaviour:
       - message: "\u30E1\u30F3\u30D0\u30FC\u3092\u5165\u308C\u66FF\u3048\u306A\u3044\u3002"
         funcNumber: -101
       messageNodeNumber: -100
+      choiseType: 0
   selectBtn: {fileID: 8902715597154352145, guid: 09909cee08d777e4b91a34b0ea381c1e, type: 3}
   requiredCharm: 0
 --- !u!114 &7740922106619907618
@@ -395,6 +397,9 @@ MonoBehaviour:
   treasureLayer:
     serializedVersion: 2
     m_Bits: 256
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   isMoving: 0
   npcName: 
   npcAttack: 0

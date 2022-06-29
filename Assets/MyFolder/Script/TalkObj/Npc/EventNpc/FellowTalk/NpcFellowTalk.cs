@@ -132,7 +132,7 @@ public class NpcFellowTalk : NpcChoices
                         col.enabled = true;
                     }
                 }
-                GManager.instance.fellows[i].gameObject.layer = LayerMask.NameToLayer("Enemy");
+                GManager.instance.fellows[i].gameObject.layer = LayerMask.NameToLayer("Npc");
                 GManager.instance.fellows[i].enabled = false;
                 //位置の入れ替え
                 GManager.instance.fellows[i].transform.position = npcFellowTalk.transform.position;
@@ -144,6 +144,15 @@ public class NpcFellowTalk : NpcChoices
                 break;
             }
         }
+        //移動不可地点リストにNPCの座標が存在する場合は、該当の座標を削除する
+        for (int nodeIndex = 0; nodeIndex < GManager.instance.unmovableList.Count; nodeIndex++)
+        {
+            if ((Vector2)transform.position == GManager.instance.unmovableList[nodeIndex])
+            {
+                break;
+            }
+        }
+        GManager.instance.unmovableList.RemoveAt(nowNodeIndex);
     }
 
     /**

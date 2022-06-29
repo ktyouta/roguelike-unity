@@ -75,6 +75,8 @@ public class GManager : MonoBehaviour
     public List<GameObject> itemList = new List<GameObject>();
     //ログ
     [HideInInspector] public List<string> logMessage = new List<string>();
+    //移動不可オブジェクトの座標を格納するリスト
+    [HideInInspector] public List<Vector2> unmovableList = new List<Vector2>();
 
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
@@ -490,6 +492,7 @@ public class GManager : MonoBehaviour
     public void wrightAttackLog(string attackerName, string enemyName, int damage)
     {
         string newMessage;
+        deleteLog();
         newMessage = attackerName + "が" + enemyName + "に" + damage + "のダメージを与えた";
         logMessage.Add(newMessage);
     }
@@ -497,6 +500,7 @@ public class GManager : MonoBehaviour
     public void wrightUseFoodLog(string foodName, string name, int foodPoint)
     {
         string newMessage;
+        deleteLog();
         newMessage = foodName + "を使用した";
         newMessage += "\n";
         newMessage += name + "の満腹度が" + foodPoint + "回復した";
@@ -506,6 +510,7 @@ public class GManager : MonoBehaviour
     public void wrightDeadLog(string name)
     {
         string newMessage;
+        deleteLog();
         newMessage = name + "は倒れた";
         logMessage.Add(newMessage);
     }
@@ -513,6 +518,7 @@ public class GManager : MonoBehaviour
     public void wrightLevelupLog(string name)
     {
         string newMessage;
+        deleteLog();
         newMessage = name + "のレベルが" + playerLevel + "になった";
         logMessage.Add(newMessage);
     }
@@ -520,13 +526,23 @@ public class GManager : MonoBehaviour
     public void wrightInventoryFullLog()
     {
         string newMessage;
+        deleteLog();
         newMessage = "荷物がいっぱいです。";
         logMessage.Add(newMessage);
     }
 
     public void wrightLog(string message)
     {
+        deleteLog();
         logMessage.Add(message);
+    }
+
+    private void deleteLog()
+    {
+        if (logMessage.Count > 5)
+        {
+            logMessage.Clear();
+        }
     }
 
     /**

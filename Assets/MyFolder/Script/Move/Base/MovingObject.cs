@@ -9,6 +9,7 @@ public abstract class MovingObject : MonoBehaviour
     [Header("敵レイヤー")] public LayerMask enemyLayer;
     [Header("プレイヤーレイヤー")] public LayerMask playerLayer;
     [Header("チェストレイヤー")] public LayerMask treasureLayer;
+    [Header("NPCレイヤー")] public LayerMask npcLayer;
     [HideInInspector] public bool isMoving;                    //動けるかどうか
     protected bool canMove;
     protected BoxCollider2D boxCollider;         //このオブジェクトにアタッチされた、BoxCollider2Dの入れ物を用意

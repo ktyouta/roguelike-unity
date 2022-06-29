@@ -484,7 +484,7 @@ GameObject:
   - component: {fileID: 284585142911802694}
   - component: {fileID: 284585142911802695}
   - component: {fileID: 284585142911802689}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: TestTalkNpc
   m_TagString: Npc
   m_Icon: {fileID: 0}

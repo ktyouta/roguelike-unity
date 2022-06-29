@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 7025407589506891417}
   - component: {fileID: 7025407589506891416}
   - component: {fileID: 7025407589506891422}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: TestNpcBase
   m_TagString: Npc
   m_Icon: {fileID: 0}

@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 8778876527837260819}
   - component: {fileID: 1096584022223864638}
   - component: {fileID: 5963479344652640801}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: ChoiseTestNpc
   m_TagString: Npc
   m_Icon: {fileID: 0}
@@ -270,6 +270,7 @@ MonoBehaviour:
       - message: "\u9078\u629E\u80A21\u3067\u3059\u3002"
         funcNumber: 1
       messageNodeNumber: 0
+      choiseType: 0
   selectBtn: {fileID: 8902715597154352145, guid: 09909cee08d777e4b91a34b0ea381c1e, type: 3}
 --- !u!1 &6090271961235735054
 GameObject:

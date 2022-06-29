@@ -176,6 +176,9 @@ MonoBehaviour:
   treasureLayer:
     serializedVersion: 2
     m_Bits: 256
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   isMoving: 0
   itemLayer:
     serializedVersion: 2

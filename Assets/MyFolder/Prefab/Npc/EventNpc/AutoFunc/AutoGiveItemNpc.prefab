@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 3146075976361584209}
   - component: {fileID: 3146075976361584208}
   - component: {fileID: 8200619466779344311}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: AutoGiveItemNpc
   m_TagString: Npc
   m_Icon: {fileID: 0}

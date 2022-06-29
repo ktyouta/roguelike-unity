@@ -114,7 +114,7 @@ public class player : MovingObject
     {
         RaycastHit2D hit;
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
-        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | treasureLayer);
+        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | treasureLayer | npcLayer);
         //ヒットした場合は移動不可
         if (hit.transform != null)
         {

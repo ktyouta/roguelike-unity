@@ -166,7 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 8
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -176,14 +176,15 @@ MonoBehaviour:
   treasureLayer:
     serializedVersion: 2
     m_Bits: 256
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 3072
   isMoving: 0
   enemyAttackValue: 3
   enemyMoney: 150
   experiencePoint: 50
   enemyHp: 10
-  npcLayer:
-    serializedVersion: 2
-    m_Bits: 1024
   enemyName: 
   enemyNumber: 0
   isAction: 0
+  sr: {fileID: 0}

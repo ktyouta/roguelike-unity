@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 6228066633388429852}
   - component: {fileID: 6228066633388429853}
   - component: {fileID: 825413119939302247}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: NpcRecoveryPlayerFoodPoint
   m_TagString: Npc
   m_Icon: {fileID: 0}

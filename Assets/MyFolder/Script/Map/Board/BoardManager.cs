@@ -485,6 +485,10 @@ public class BoardManager : MonoBehaviour
         {
             for (int x = startLine;x< endLine -1; x++)
             {
+                if (x == 1 && y == 1)
+                {
+                    continue;
+                }
                 //gridPositions‚Éx,y‚Ì’l‚ð‚¢‚ê‚é
                 gridPositons.Add(new Vector3(x, y, 0));
             }
