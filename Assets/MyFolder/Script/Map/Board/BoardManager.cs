@@ -226,11 +226,12 @@ public class BoardManager : MonoBehaviour
                 if (x == -1 || x == columns || y == -1 || y == rows)
                 {
                     toInsutantiate = OuterWall;
+                    //移動不可地点リストに座標を追加
+                    GManager.instance.unmovableList.Add(new Vector2(x,y));
                 }
 
                 //toInsutantiateに設定されたものをインスタンス化
-                GameObject instance =
-                    Instantiate(toInsutantiate, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+                GameObject instance = Instantiate(toInsutantiate, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
 
                 //インスタンス化された床or外壁の親要素をboardHolderに設定
                 instance.transform.SetParent(boardHolder);
@@ -515,7 +516,7 @@ public class BoardManager : MonoBehaviour
     }
 
     //Mapにランダムで引数のものを配置する(敵、壁、アイテム)
-    void LayoutObjectAtRandom(GameObject tile, int minimum, int maximum)
+    void LayoutObjectAtRandom(GameObject tile, int minimum, int maximum, bool isUnmovable)
     {
         //tileがセットされていない場合はreturn
         if (tile == null)
@@ -535,6 +536,11 @@ public class BoardManager : MonoBehaviour
 
                 //生成
                 Instantiate(tile, randomPosition, Quaternion.identity);
+                //移動不可の場合は移動不可地点リストに座標を追加
+                if (isUnmovable)
+                {
+                    GManager.instance.unmovableList.Add((Vector2)randomPosition);
+                }
             }
         }
     }
@@ -631,37 +637,37 @@ public class BoardManager : MonoBehaviour
         if (settingObjRule == Define.FIRST_SETTING)
         {
             //食べ物をインスタンス化。
-            LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum);
+            LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum,false);
             //ポーションをインスタンス化
             //LayoutObjectAtRandom(portion, portionCount.minmum, portionCount.maximum);
             //宝箱をインスタンス化
-            LayoutObjectAtRandom(treasure, portionCount.minmum, portionCount.maximum);
+            LayoutObjectAtRandom(treasure, portionCount.minmum, portionCount.maximum, true);
             //カバンをインスタンス化。
-            LayoutObjectAtRandom(bag, 1, 1);
+            LayoutObjectAtRandom(bag, 1, 1, false);
             //NPCをインスタンス化
-            LayoutObjectAtRandom(testNpc, 1, 1);
+            LayoutObjectAtRandom(testNpc, 1, 1, true);
             //NPC(プレイヤーのHPを回復する)をインスタンス化
             //LayoutObjectAtRandom(testRecoveryHpNpc, 1,1);
             //NPC(分岐ありのアイテムの引き渡し)をインスタンス化
-            LayoutObjectAtRandom(testGiveItemNpcBranchMessage,1,1);
+            LayoutObjectAtRandom(testGiveItemNpcBranchMessage,1,1, true);
             //NPC(会話分岐用)をインスタンス化
-            LayoutObjectAtRandom(testBranchMessageNpc,1,1);
+            LayoutObjectAtRandom(testBranchMessageNpc,1,1, true);
             //NPC(道具屋)をインスタンス化
-            LayoutObjectAtRandom(testSalesNpc,1,1);
+            LayoutObjectAtRandom(testSalesNpc,1,1, true);
             //NPC(仲間)をインスタンス化
-            LayoutObjectAtRandom(fellowTestNpc, 2, 2);
+            LayoutObjectAtRandom(fellowTestNpc, 2, 2, true);
             //NPC2(仲間)をインスタンス化
-            LayoutObjectAtRandom(fellowTestNpc2, 1, 1);
+            LayoutObjectAtRandom(fellowTestNpc2, 1, 1, true);
             //アイテムを渡すテスト用NPC(メッセージ表示中に自動で渡す)
             //LayoutObjectAtRandom(autoGiveItem,1,1);
             //本をインスタンス化
-            LayoutObjectAtRandom(bookDamageAllEnemy, 3,3);
+            LayoutObjectAtRandom(bookDamageAllEnemy, 3,3, false);
         }
         //第二区画
         else if(settingObjRule == Define.SECOND_SETTING)
         {
             //剣をインスタンス化
-            LayoutObjectAtRandom(sword, swordCount.minmum, swordCount.maximum);
+            LayoutObjectAtRandom(sword, swordCount.minmum, swordCount.maximum, false);
         }
 
         //ランダム化された位置で、最小値と最大値に基づいてランダムな数の壁タイルをインスタンス化します。
@@ -684,8 +690,8 @@ public class BoardManager : MonoBehaviour
         ////Debug.Log(enemyCount);
         enemyCount = 2;
         //ランダム化された位置で、最小値と最大値に基づいてランダムな数の敵をインスタンス化します。
-        LayoutObjectAtRandom(enemy, enemyCount, enemyCount);
-        LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1);
+        LayoutObjectAtRandom(enemy, enemyCount, enemyCount, false);
+        LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1, false);
 
         //ゲームボードの右上隅に出口タイルをインスタンス化します
         //Instantiate(exit, new Vector3(rows - 1, columns - 1, 0f), Quaternion.identity);

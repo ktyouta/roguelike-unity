@@ -78,6 +78,10 @@ public class GManager : MonoBehaviour
     //移動不可オブジェクトの座標を格納するリスト
     [HideInInspector] public List<Vector2> unmovableList = new List<Vector2>();
 
+    //ゲーム内イベント用
+    [HideInInspector] public bool enemyAppearanceFlg = false;
+    [HideInInspector] public int enemyAppearanceEventTurnNum = 0;
+
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
     //敵が動く際に次の移動点を保持する
@@ -451,6 +455,11 @@ public class GManager : MonoBehaviour
         enemiesMoving = false;
         //移動点を空にする
         enemyNextPosition.Clear();
+        //ゲーム内イベント制御
+        if (enemyAppearanceFlg)
+        {
+            enemyAppearanceEventTurnNum++;
+        }
     }
 
     /*

@@ -196,14 +196,14 @@ public class Enemy : MovingObject
                 {
                     continue;
                 }
-                RaycastHit2D hit = Physics2D.Linecast(start, next, blockingLayer | treasureLayer | npcLayer);
-                //他のオブジェクトに当たる場合
-                if (hit.transform != null)
-                {
-                    //linecastを複数回行わないようにリストに追加する
-                    GManager.instance.unmovableList.Add(next);
-                    continue;
-                }
+                //RaycastHit2D hit = Physics2D.Linecast(start, next, blockingLayer | treasureLayer | npcLayer);
+                ////他のオブジェクトに当たる場合
+                //if (hit.transform != null)
+                //{
+                //    //linecastを複数回行わないようにリストに追加する
+                //    GManager.instance.unmovableList.Add(next);
+                //    continue;
+                //}
                 //オープンリストに追加するための設定
                 PositionNodeClass positionNode = new PositionNodeClass();
                 positionNode.position = next;
