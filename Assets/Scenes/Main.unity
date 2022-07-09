@@ -2949,7 +2949,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1403084276}
   m_HandleRect: {fileID: 1403084275}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3354,6 +3354,7 @@ GameObject:
   - component: {fileID: 1483692205}
   - component: {fileID: 1483692204}
   - component: {fileID: 1483692206}
+  - component: {fileID: 1483692207}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3375,6 +3376,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rows: 14
   columns: 26
+  denceParam: 4
+  borderParam: 0.25
+  borderDivision: 3
+  secondBorder: 8
   exit: {fileID: 1294181143595528965, guid: b5af32280c47e8846a1db90cf3191d0d, type: 3}
   grassFloor: {fileID: 718685824497624441, guid: 4fd7b588c47763a46b784bfa95450bbc, type: 3}
   soilFloor: {fileID: 5572711644078057074, guid: 58da53041ca4dca4b812cc92179cff7c, type: 3}
@@ -3402,10 +3407,6 @@ MonoBehaviour:
   player: {fileID: 2846253646200167766, guid: f850c3c5570f80b488b689128409fcfa, type: 3}
   castleObj: {fileID: 7848795257983402512, guid: 456cc6311cd183a4ba760488c7c15afd, type: 3}
   buildingObj: {fileID: 8645085169757023432, guid: 6c7d78b9695670e4ab71fb835b8ec648, type: 3}
-  denceParam: 4
-  borderParam: 0.25
-  borderDivision: 3
-  secondBorder: 8
   grassDivisionAttribute:
     floorObj: {fileID: 718685824497624441, guid: 4fd7b588c47763a46b784bfa95450bbc, type: 3}
     settingMapObjRule: 1
@@ -3423,13 +3424,15 @@ MonoBehaviour:
     settingMapObjRule: 4
     difficultyID: 1
   testNpc: {fileID: 6775205117751671897, guid: 6738c7efdaa3a31479e2761bc19a6e7e, type: 3}
-  testRecoveryHpNpc: {fileID: 0}
+  testRecoveryHpNpc: {fileID: 836499785425302275, guid: 402d0aa49180eb44e8df10d0565d6b4d, type: 3}
   testGiveItemNpcBranchMessage: {fileID: 2308650552444531995, guid: ec62a5e76815d344e8da6a69ee03109b, type: 3}
   testBranchMessageNpc: {fileID: 5963479344652640800, guid: 457ad14b5573c774cadc54b975dd96f5, type: 3}
   testSalesNpc: {fileID: 7955798343083259147, guid: 5e31b317c758e5a4589eca14c8a552af, type: 3}
   autoGiveItem: {fileID: 8528774167561996110, guid: 42d55a7a822ff4245bd41d6b938c7f20, type: 3}
   fellowTestNpc: {fileID: 6108409152175698848, guid: 23f5cbc3d8007d24095544a516dc4271, type: 3}
   fellowTestNpc2: {fileID: 9159659462833868705, guid: 91813d6ac257e354abfa1b21c1c3dbdf, type: 3}
+  eventNpcAppearanceSkelton: {fileID: 56335149253562012, guid: c7758778adce57a4ba205b6d2d4099c2, type: 3}
+  eventNpcAppearanceGhost: {fileID: 4074978532397710152, guid: 1838991b0efc94947b5611c664b6ade8, type: 3}
 --- !u!4 &1483692205
 Transform:
   m_ObjectHideFlags: 0
@@ -3498,6 +3501,10 @@ MonoBehaviour:
   treasureItemList: []
   itemList: []
   logMessage: []
+  unmovableList: []
+  enemyAppearanceFlg: 0
+  enemyAppearanceEventTurnNum: 0
+  appearanceEnemyType: 0
   riseValueHp: 0
   enemyNextPosition: []
   isCloseCommand: 1
@@ -3506,11 +3513,26 @@ MonoBehaviour:
   latestNpcId: 0
   enemyActionEndCount: 0
   isEndPlayerAction: 0
+  latestEnemyNumber: 0
   levelStartDelay: 2
   turnDelay: 0.1
   boardScript: {fileID: 0}
   weaponName: "\u306A\u3057"
   shieldName: "\u306A\u3057"
+--- !u!114 &1483692207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483692203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7be739fd25b0d2438bac54671f172c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appearanceEnemySkelton: {fileID: 4407590455812475554, guid: d655e6166a86d544884596c45edeba45, type: 3}
+  appearanceEnemyGhost: {fileID: 1217277624917997197, guid: 24e6adf1a29aa22468205dbd737db382, type: 3}
 --- !u!1 &1530178040
 GameObject:
   m_ObjectHideFlags: 0
@@ -3834,7 +3856,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26999}
+  m_AnchoredPosition: {x: 142.74, y: -116.27001}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

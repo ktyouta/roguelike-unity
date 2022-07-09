@@ -18,6 +18,12 @@ public class GManager : MonoBehaviour
         }
     }
 
+    public enum EnemyType
+    {
+        Skelton1,
+        Ghost1
+    }
+
     //プレイヤーのステータス系
     [Header("プレイヤーのHP")] public int playerHp;
     [Header("プレイヤーの現在の上限HP")] public int nowPlayerMaxHp = 100;
@@ -79,8 +85,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public List<Vector2> unmovableList = new List<Vector2>();
 
     //ゲーム内イベント用
-    [HideInInspector] public bool enemyAppearanceFlg = false;
-    [HideInInspector] public int enemyAppearanceEventTurnNum = 0;
+    EventManager eManager;
 
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
@@ -92,6 +97,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public int latestNpcId = 0;
     [HideInInspector] public int enemyActionEndCount;
     [HideInInspector] public bool isEndPlayerAction = false;
+    [HideInInspector] public int latestEnemyNumber = 0;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
@@ -170,6 +176,7 @@ public class GManager : MonoBehaviour
         shopItemListPanel = GameObject.FindWithTag("ShopItemPanelTag");
         shopSelectPanel = GameObject.FindWithTag("ShopSelectPanelTag");
         grayImage = GameObject.FindWithTag("GrayImageTag");
+        eManager = GetComponent<EventManager>();
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -265,11 +272,11 @@ public class GManager : MonoBehaviour
         //作成したエネミーにidを割り振り、リストに格納する
         for (var i = 0; i < enemyObjects.Length; i++)
         {
-            Enemy enemyObj = enemyObjects[i].GetComponent<Enemy>();
-            enemyObj.enemyNumber = i;
+            //Enemy enemyObj = enemyObjects[i].GetComponent<Enemy>();
+            //enemyObj.enemyNumber = i;
             //Debug.Log(enemyObj.enemyNumber);
             //Debug.Log("add" + i);
-            AddEnemyToList(enemyObj);
+            AddEnemyToList(enemyObjects[i],i);
         }
     }
 
@@ -364,10 +371,14 @@ public class GManager : MonoBehaviour
     }
 
     //これを呼び出して、渡された敵を敵オブジェクトのリストに追加します。
-    public void AddEnemyToList(Enemy script)
+    public void AddEnemyToList(GameObject enemy,int enemyNumber)
     {
+        Enemy enemyObj = enemy.GetComponent<Enemy>();
+        enemyObj.enemyNumber = enemyNumber;
+        enemyObj.enemyName = "エネミー" + (enemyNumber + 1);
         //Listにエネミーを追加する
-        enemies.Add(script);
+        enemies.Add(enemyObj);
+        latestEnemyNumber++;
     }
 
 
@@ -456,9 +467,13 @@ public class GManager : MonoBehaviour
         //移動点を空にする
         enemyNextPosition.Clear();
         //ゲーム内イベント制御
-        if (enemyAppearanceFlg)
+        if (eManager.skeltonAppearanceFlg)
         {
-            enemyAppearanceEventTurnNum++;
+            eManager.skeltonAppearanceEventTurnNum++;
+        }
+        if (eManager.ghostAppearanceFlg)
+        {
+            eManager.ghostAppearanceEventTurnNum++;
         }
     }
 

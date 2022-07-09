@@ -64,9 +64,13 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    //Mapの縦横
+    //MAP作成用のパラメータ
     [Header("マップの行数")]public int rows;
     [Header("マップの列数")]public int columns;
+    [Header("オブジェクトの密集具合のパラメータ")] public int denceParam = 4;
+    [Header("フロア区切りパラメータ")] public float borderParam = 0.25f;
+    [Header("マップの分割数")] public int borderDivision = 3;
+    [Header("境界線")] public int secondBorder = 8;
 
     //生成するアイテムの個数
     public Count Wallcount = new Count(3, 9);
@@ -134,12 +138,6 @@ public class BoardManager : MonoBehaviour
     [Header("城(固定オブジェクト)")] public GameObject castleObj;
     [Header("建物1")] public GameObject buildingObj;
 
-    //MAp作成用のパラメータ
-    [Header("オブジェクトの密集具合のパラメータ")] public int denceParam = 4;
-    [Header("フロア区切りパラメータ")] public float borderParam = 0.25f;
-    [Header("マップの分割数")] public int borderDivision = 3;
-    [Header("境界線")] public int secondBorder = 8;
-
     //区画ごとの属性
     [Header("草原区画の属性")] public floorAttribute grassDivisionAttribute;
     [Header("土区画の属性")] public floorAttribute soilDivisionAttribute;
@@ -155,6 +153,8 @@ public class BoardManager : MonoBehaviour
     [Header("アイテムを渡すテスト用NPC(メッセージ表示中に自動で渡す)")] public GameObject autoGiveItem;
     [Header("仲間になるNPC")] public GameObject fellowTestNpc;
     [Header("仲間になるNPC2")] public GameObject fellowTestNpc2;
+    [Header("イベント用NPC(骸骨が出現)")] public GameObject eventNpcAppearanceSkelton;
+    [Header("イベント用NPC(ゴーストが出現)")] public GameObject eventNpcAppearanceGhost;
 
     //変換用
     private Transform boardHolder;
@@ -226,8 +226,6 @@ public class BoardManager : MonoBehaviour
                 if (x == -1 || x == columns || y == -1 || y == rows)
                 {
                     toInsutantiate = OuterWall;
-                    //移動不可地点リストに座標を追加
-                    GManager.instance.unmovableList.Add(new Vector2(x,y));
                 }
 
                 //toInsutantiateに設定されたものをインスタンス化
@@ -382,6 +380,8 @@ public class BoardManager : MonoBehaviour
                         }
                         if (y == -1 || y == rows)
                         {
+                            //移動不可地点リストに座標を追加
+                            GManager.instance.unmovableList.Add(new Vector2(x, y));
                             toInsutantiate = OuterWall;
                         }
                         //Debug.Log("randomsettingobj" + toInsutantiate);
@@ -404,6 +404,8 @@ public class BoardManager : MonoBehaviour
                     //8×8マス外は外壁を設置してインスタンス化の準備
                     if (x == -1 || x == columns || y == -1 || y == rows)
                     {
+                        //移動不可地点リストに座標を追加
+                        GManager.instance.unmovableList.Add(new Vector2(x, y));
                         toInsutantiate = OuterWall;
                     }
                     //toInsutantiateに設定されたものをインスタンス化
@@ -631,6 +633,10 @@ public class BoardManager : MonoBehaviour
 
         //使用したリストを削除する
         deleteRandomPoinst();
+        //対数進行に基づいて、現在のレベル数に基づいて敵の数を決定します
+        int enemyCount = (int)Mathf.Log(2, 2f);
+        ////Debug.Log(enemyCount);
+        enemyCount = 2;
 
         //オブジェクト設置ルールを基にオブジェクトを設置
         //第一区画
@@ -647,7 +653,7 @@ public class BoardManager : MonoBehaviour
             //NPCをインスタンス化
             LayoutObjectAtRandom(testNpc, 1, 1, true);
             //NPC(プレイヤーのHPを回復する)をインスタンス化
-            //LayoutObjectAtRandom(testRecoveryHpNpc, 1,1);
+            //LayoutObjectAtRandom(testRecoveryHpNpc, 1,1,true);
             //NPC(分岐ありのアイテムの引き渡し)をインスタンス化
             LayoutObjectAtRandom(testGiveItemNpcBranchMessage,1,1, true);
             //NPC(会話分岐用)をインスタンス化
@@ -662,12 +668,18 @@ public class BoardManager : MonoBehaviour
             //LayoutObjectAtRandom(autoGiveItem,1,1);
             //本をインスタンス化
             LayoutObjectAtRandom(bookDamageAllEnemy, 3,3, false);
+            //イベント用NPC(骸骨が出現)
+            LayoutObjectAtRandom(eventNpcAppearanceSkelton, 1,1,true);
+            //イベント用NPC(ゴーストが出現)
+            LayoutObjectAtRandom(eventNpcAppearanceGhost, 1, 1, true);
+            LayoutObjectAtRandom(enemy, enemyCount, enemyCount, false);
         }
         //第二区画
         else if(settingObjRule == Define.SECOND_SETTING)
         {
             //剣をインスタンス化
             LayoutObjectAtRandom(sword, swordCount.minmum, swordCount.maximum, false);
+            LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1, false);
         }
 
         //ランダム化された位置で、最小値と最大値に基づいてランダムな数の壁タイルをインスタンス化します。
@@ -686,12 +698,12 @@ public class BoardManager : MonoBehaviour
         //LayoutObjectAtRandom(shield, swordCount.minmum, swordCount.maximum);
 
         //対数進行に基づいて、現在のレベル数に基づいて敵の数を決定します
-        int enemyCount = (int)Mathf.Log(2, 2f);
+        //int enemyCount = (int)Mathf.Log(2, 2f);
         ////Debug.Log(enemyCount);
         enemyCount = 2;
         //ランダム化された位置で、最小値と最大値に基づいてランダムな数の敵をインスタンス化します。
-        LayoutObjectAtRandom(enemy, enemyCount, enemyCount, false);
-        LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1, false);
+        //LayoutObjectAtRandom(enemy, enemyCount, enemyCount, false);
+        //LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1, false);
 
         //ゲームボードの右上隅に出口タイルをインスタンス化します
         //Instantiate(exit, new Vector3(rows - 1, columns - 1, 0f), Quaternion.identity);

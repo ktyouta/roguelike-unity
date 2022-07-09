@@ -43,7 +43,6 @@ public class Enemy : MovingObject
         //タグを使用してPlayer GameObjectを見つけ、transformを保存します。
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        enemyName = "エネミー" + (enemyNumber + 1);
         sr = GetComponent<SpriteRenderer>();
         
         //スタート関数を抽象クラスから呼ぶ
@@ -74,7 +73,6 @@ public class Enemy : MovingObject
         isAction = true;
         int xDir = 0;
         int yDir = 0;
-
         //移動先のリストが空の場合はA-starで経路探索する
         if (trackingNodeList.Count < 1 && GManager.instance.enemyNextPosition.Count > 0)
         {
@@ -123,6 +121,7 @@ public class Enemy : MovingObject
         //移動点が他の敵と被れば移動できない
         if (checkNextPosition(next))
         {
+            GManager.instance.enemyActionEndCount++;
             return;
         }
         GManager.instance.enemyNextPosition.Add(next);
