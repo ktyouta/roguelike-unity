@@ -593,7 +593,7 @@ public class GManager : MonoBehaviour
         manual += "\n";
         manual += "攻撃 : シフトキー";
         manual += "\n";
-        manual += "NPCとの会話 : zボタン";
+        manual += "NPCとの会話 : 左クリック";
         manual += "\n";
         playerStatusPanel.text = manual;
     }

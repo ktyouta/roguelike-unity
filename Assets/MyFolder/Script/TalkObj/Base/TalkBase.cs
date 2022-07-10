@@ -16,6 +16,7 @@ public abstract class TalkBase : MonoBehaviour
     [HideInInspector]public player playerObj;
     [Header("会話開始用UI")] public GameObject talkAreaObj;
     [HideInInspector] public GameObject npcCanvas;
+    [Header("会話用NPCレイヤー")] public LayerMask npcLayer;
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -34,12 +35,26 @@ public abstract class TalkBase : MonoBehaviour
 
     private void Update()
     {
-        if ((topArea.isEnterTalkArea || bottomArea.isEnterTalkArea || rightArea.isEnterTalkArea || leftArea.isEnterTalkArea) && coroutine == null && Input.GetKeyDown(KeyCode.Z))
+        if ((topArea.isEnterTalkArea || bottomArea.isEnterTalkArea || rightArea.isEnterTalkArea || leftArea.isEnterTalkArea) && coroutine == null)
         {
-            playerObj.setPlayerState(player.playerState.Talk);
-            coroutine = CreateCoroutine();
-            // コルーチンの起動
-            StartCoroutine(coroutine);
+            if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D touchObj = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, npcLayer);
+                
+                if (touchObj.transform == null)
+                {
+                    return;
+                }
+                //クリックしたNPCと一致した場合に会話開始
+                if (this.gameObject.name == touchObj.transform.gameObject.name)
+                {
+                    playerObj.setPlayerState(player.playerState.Talk);
+                    coroutine = CreateCoroutine();
+                    // コルーチンの起動
+                    StartCoroutine(coroutine);
+                }
+            }
         }
     }
 
@@ -48,7 +63,6 @@ public abstract class TalkBase : MonoBehaviour
      */
     private IEnumerator CreateCoroutine()
     {
-        Debug.Log("talkstart");
         // window起動
         GManager.instance.npcWindowImage.SetActive(true);
 

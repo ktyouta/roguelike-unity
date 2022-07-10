@@ -21,6 +21,11 @@ public class TalkDetection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        //NPC‚ÆˆÊ’u‚ª”í‚éê‡‚Í”ñ•\¦‚É‚·‚é
+        if (collider.tag == "Npc")
+        {
+            this.gameObject.SetActive(false);
+        }
         if (collider.tag == "Player")
         {
             npcCanvasInDetection.SetActive(true);

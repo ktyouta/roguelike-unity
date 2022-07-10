@@ -178,7 +178,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "z:\u8A71\u3059"
+  m_Text: "\u8A71\u3059"
 --- !u!1 &8528774167561996110
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 3146075976361584209}
   - component: {fileID: 3146075976361584208}
   - component: {fileID: 8200619466779344311}
+  - component: {fileID: 7458165862103811267}
   m_Layer: 11
   m_Name: AutoGiveItemNpc
   m_TagString: Npc
@@ -340,6 +341,9 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   talkAreaObj: {fileID: 0}
   npcCanvas: {fileID: 0}
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   messages: []
   npcImage: {fileID: 0}
   npcPicture: {fileID: 21300000, guid: f01706f07204a39489f114142f00986c, type: 3}
@@ -379,6 +383,27 @@ MonoBehaviour:
         nodeNumber: 0
     blockNodeNumber: 1
   giveItem: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+--- !u!50 &7458165862103811267
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8528774167561996110}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &8948548052721346324
 GameObject:
   m_ObjectHideFlags: 0

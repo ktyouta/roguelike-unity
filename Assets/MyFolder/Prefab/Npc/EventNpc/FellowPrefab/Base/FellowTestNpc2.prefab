@@ -470,7 +470,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "z:\u8A71\u3059"
+  m_Text: "\u8A71\u3059"
 --- !u!1 &9159659462833868705
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +608,9 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   talkAreaObj: {fileID: 0}
   npcCanvas: {fileID: 0}
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   messages: []
   npcImage: {fileID: 0}
   npcPicture: {fileID: 21300000, guid: d08a2ce06e60429438952294a5de0ab7, type: 3}

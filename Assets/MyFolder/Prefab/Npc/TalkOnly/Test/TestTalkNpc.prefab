@@ -470,7 +470,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "z:\u8A71\u3059"
+  m_Text: "\u8A71\u3059"
 --- !u!1 &6775205117751671897
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,6 +484,7 @@ GameObject:
   - component: {fileID: 284585142911802694}
   - component: {fileID: 284585142911802695}
   - component: {fileID: 284585142911802689}
+  - component: {fileID: -6215577794795830418}
   m_Layer: 11
   m_Name: TestTalkNpc
   m_TagString: Npc
@@ -632,9 +633,33 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   talkAreaObj: {fileID: 0}
   npcCanvas: {fileID: 0}
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   messages:
   - "\u4F1A\u8A71\u30C6\u30B9\u30C8\u3067\u3059\u3002"
   - "\u4F1A\u8A71\u30C6\u30B9\u30C82\u3067\u3059\u3002"
   npcImage: {fileID: 0}
   npcPicture: {fileID: 21300000, guid: fae7a0aa5163bb14ea9ca8c622980ece, type: 3}
   npcName: "\u4F1A\u8A71\u306E\u307FNPC"
+--- !u!50 &-6215577794795830418
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6775205117751671897}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
