@@ -11,15 +11,28 @@ public class FollowCamera : MonoBehaviour
     Vector2 cameraMinPos = new Vector2(7.5f, 3.5f); // カメラの左下限界点
     [Header("マップ生成用オブジェクト")] public BoardManager boardObj;
     private float cameraMaxPointX;
+    private Camera camObj;
     void Start()
     {
         playerObj = GameObject.FindGameObjectWithTag("Player");
+        camObj = GetComponent<Camera>();
         if (playerObj != null)
         {
             pl = playerObj.GetComponent<player>();
             playerTransform = playerObj.transform;
-            cameraMaxPointX = boardObj.columns - 8.5f;
-            cameraMaxPos = new Vector2(cameraMaxPointX, boardObj.rows - 4.5f);
+            //横スクロールマップモード
+            if (boardObj.createMapMode == 1)
+            {
+                cameraMaxPointX = boardObj.columns - 8.5f;
+                cameraMaxPos = new Vector2(cameraMaxPointX, boardObj.rows - 4.5f);
+            }
+            //不思議のダンジョン系マップモード
+            else
+            {
+                cameraMaxPointX = boardObj.randomMapWidth - 7.5f;
+                cameraMaxPos = new Vector2(cameraMaxPointX, boardObj.randomMapHeight - 2.0f);
+                camObj.orthographicSize = camObj.orthographicSize - 0.5f;
+            }
         }
     }
     void LateUpdate()

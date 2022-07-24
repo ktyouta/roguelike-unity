@@ -2949,7 +2949,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1403084276}
   m_HandleRect: {fileID: 1403084275}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3404,6 +3404,7 @@ MonoBehaviour:
   sword: {fileID: 2504903374797934555, guid: 7c2b192dbb0fed4439916e376b94f156, type: 3}
   shield: {fileID: 536904824204777345, guid: 584707e07a348de47a1f47d14f36ae02, type: 3}
   bag: {fileID: 6060693476235400937, guid: e5b7e110ee5117948a50ddd50fb5b41b, type: 3}
+  eventTestItem: {fileID: 1851555864639135366, guid: 2927f2334d42cb54d8b06af754862b90, type: 3}
   player: {fileID: 2846253646200167766, guid: f850c3c5570f80b488b689128409fcfa, type: 3}
   castleObj: {fileID: 7848795257983402512, guid: 456cc6311cd183a4ba760488c7c15afd, type: 3}
   buildingObj: {fileID: 8645085169757023432, guid: 6c7d78b9695670e4ab71fb835b8ec648, type: 3}
@@ -3433,6 +3434,9 @@ MonoBehaviour:
   fellowTestNpc2: {fileID: 9159659462833868705, guid: 91813d6ac257e354abfa1b21c1c3dbdf, type: 3}
   eventNpcAppearanceSkelton: {fileID: 56335149253562012, guid: c7758778adce57a4ba205b6d2d4099c2, type: 3}
   eventNpcAppearanceGhost: {fileID: 4074978532397710152, guid: 1838991b0efc94947b5611c664b6ade8, type: 3}
+  labyrinthOuterWall: {fileID: 2819589318910859625, guid: 8a09991a364a9c94a87407cde582611b, type: 3}
+  labyrinthGrassFloor: {fileID: 7877200778571232546, guid: fdd83b8aeb956d347a41d69e645e579b, type: 3}
+  labyrinthStoneFloor: {fileID: 2693386319470781834, guid: 774082060bd6d15409362cb1509e29f4, type: 3}
 --- !u!4 &1483692205
 Transform:
   m_ObjectHideFlags: 0
@@ -3502,9 +3506,6 @@ MonoBehaviour:
   itemList: []
   logMessage: []
   unmovableList: []
-  enemyAppearanceFlg: 0
-  enemyAppearanceEventTurnNum: 0
-  appearanceEnemyType: 0
   riseValueHp: 0
   enemyNextPosition: []
   isCloseCommand: 1
@@ -3533,6 +3534,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appearanceEnemySkelton: {fileID: 4407590455812475554, guid: d655e6166a86d544884596c45edeba45, type: 3}
   appearanceEnemyGhost: {fileID: 1217277624917997197, guid: 24e6adf1a29aa22468205dbd737db382, type: 3}
+  appearanceEnemyNomal: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+  skeltonAppearanceFlg: 0
+  skeltonAppearanceEventTurnNum: 0
+  ghostAppearanceFlg: 0
+  ghostAppearanceEventTurnNum: 0
+  nomalEnemyAppearanceTurnNum: 0
 --- !u!1 &1530178040
 GameObject:
   m_ObjectHideFlags: 0
@@ -3856,7 +3863,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.27001}
+  m_AnchoredPosition: {x: 142.74, y: -116.26998}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

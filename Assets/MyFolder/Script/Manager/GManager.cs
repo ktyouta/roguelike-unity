@@ -475,6 +475,7 @@ public class GManager : MonoBehaviour
         {
             eManager.ghostAppearanceEventTurnNum++;
         }
+        eManager.nomalEnemyAppearanceTurnNum++;
     }
 
     /*
@@ -758,22 +759,20 @@ public class GManager : MonoBehaviour
      */
     public bool addItem(GameObject item)
     {
-        bool isAbleAdd = false;
         //アイテムの所持制限を超えている場合
         if (itemList.Count + 1 > nowMaxPosession)
         {
             wrightInventoryFullLog();
+            return false;
         }
-        else
-        {
-            //インベントリーが空の状態なら0を割り当てる
-            int itemId = itemList.Count == 0 ? 0 : itemList[itemList.Count - 1].GetComponent<Item>().id + 1;
-            //IDの割り当て
-            item.GetComponent<Item>().id = itemId;
-            itemList.Add(item);
-            isAbleAdd = true;
-        }
-        return isAbleAdd;
+        //インベントリーが空の状態なら0を割り当てる
+        int itemId = itemList.Count == 0 ? 0 : itemList[itemList.Count - 1].GetComponent<Item>().id + 1;
+        //IDの割り当て
+        item.GetComponent<Item>().id = itemId;
+        //イベントフラグのチェック
+
+        itemList.Add(item);
+        return true;
     }
 
     /**

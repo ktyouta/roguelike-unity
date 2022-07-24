@@ -18,6 +18,7 @@ public class player : MovingObject
     [HideInInspector] public Enemy enemyObject;
     private Treasure treasureObject;
     private bool isDefeat = false;
+    private int reduceFoodCounter = 0;
 
     public enum playerState
     {
@@ -141,8 +142,13 @@ public class player : MovingObject
     {
         //プレイヤーの移動前の位置を保存する
         playerBeforePosition = transform.position;
+        reduceFoodCounter++;
         //プレイヤーが移動するたびに、フードポイントの合計から減算
-        GManager.instance.playerFoodPoint--;
+        if (reduceFoodCounter == 5)
+        {
+            GManager.instance.playerFoodPoint--;
+            reduceFoodCounter = 0;
+        }
 
         //プレイヤーが移動してフードポイントを失ったので、ゲームが終了したかどうかを確認。
         CheckIfGameOver();

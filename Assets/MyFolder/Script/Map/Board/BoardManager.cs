@@ -64,6 +64,34 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    //不思議のダンジョン系マップ用の分割エリアのクラス
+    public class DivisionAreaClass
+    {
+        public int areaValue;
+        public Vector2 startPoint;
+        public Vector2 endPoint;
+        public Vector2 innerStartPoint;
+        public Vector2 innerEndPoint;
+    }
+
+    //境界線に対して伸びている通路のクラス
+    public class AisleClass
+    {
+        //通路の座標を保持するリスト
+        public List<Vector2> aisleList;
+        //通路の終点を保持するリスト
+        public List<Vector2> aisleEndPointList;
+    }
+
+    //通路同士をつなぐ通路作成用のクラス
+    public class HookAisleInfo
+    {
+        //通路同士をつなぐ通路を保持するリスト
+        public List<Vector2> hookAisleList;
+        //他の通路を接続されなかった通路の終点を保持するリスト
+        public List<Vector2> remainingAisleList;
+    }
+
     //MAP作成用のパラメータ
     [Header("マップの行数")]public int rows;
     [Header("マップの列数")]public int columns;
@@ -131,6 +159,9 @@ public class BoardManager : MonoBehaviour
     //アイテム(バッグ)
     [Header("バッグ(所持数を増やす)")] public GameObject bag;
 
+    //アイテム(イベント用)
+    [Header("テストイベントアイテム")] public GameObject eventTestItem;
+
     //プレイヤー
     [Header("プレイヤー")] public GameObject player;
 
@@ -190,6 +221,23 @@ public class BoardManager : MonoBehaviour
     //抽選用のアイテムリスト
     List<GameObject> lotteryList = new List<GameObject>();
     List<GameObject> lotteryList2 = new List<GameObject>();
+
+    //マップの生成モード
+    [HideInInspector] public int createMapMode = 2;
+
+    //不思議のダンジョン系マップの作成用のパラメータ
+    [HideInInspector] public int randomMapWidth = 30;
+    [HideInInspector] public int randomMapHeight = 25;
+
+    //不思議のダンジョン系マップ用フロア
+    //外壁
+    [Header("外壁(不思議のダンジョン系)")] public GameObject labyrinthOuterWall;
+    //フロア
+    //草原
+    [Header("草原フロア(不思議のダンジョン系)")] public GameObject labyrinthGrassFloor;
+    //岩
+    [Header("石フロア")] public GameObject labyrinthStoneFloor;
+
 
     //フィールド生成
     /**
@@ -586,17 +634,553 @@ public class BoardManager : MonoBehaviour
     public void SetupScene(int level)
     {
         createTreasureItemList();
-        createFloorTileList();
-        createBorderLineList();
-        //外壁と床を作成します
-        boardSetUp2Remodel();
-        ////プレイヤーを配置
-        ////gridPositons.RemoveAt(0);
-        //mapListIndex.Add(0);
-        Instantiate(player, new Vector3(1, 1, 0f), Quaternion.identity);
-        //区画ごとにオブジェクト(アイテム、敵など)を設置する
-        settingGameObjectToDivisionArea();
+        //横スクロールマップモード
+        if (createMapMode == 1)
+        {
+            createFloorTileList();
+            createBorderLineList();
+            //外壁と床を作成します
+            boardSetUp2Remodel();
+            ////プレイヤーを配置
+            ////gridPositons.RemoveAt(0);
+            //mapListIndex.Add(0);
+            Instantiate(player, new Vector3(1, 1, 0f), Quaternion.identity);
+            //区画ごとにオブジェクト(アイテム、敵など)を設置する
+            settingGameObjectToDivisionArea();
+        }
+        //不思議のダンジョン系マップモード
+        else
+        {
+            //マップオブジェクト設置用の配列
+            int[,] createMapArray = new int[randomMapHeight+1, randomMapWidth + 1];
+            //マップを分割してリストに格納する
+            List<DivisionAreaClass> divAreaList = splitMap();
+            Debug.Log("divarealistcount:" + divAreaList.Count);
+            //分割された区画を縮小する
+            reduceDivisionArea(divAreaList);
+            Debug.Log("----------------------------------------------------------------");
+            for (int i=0;i<divAreaList.Count;i++)
+            {
+                Debug.Log("startpoint"+ divAreaList[i].startPoint);
+                Debug.Log("endpoint" + divAreaList[i].endPoint);
+                Debug.Log("innerstartpoint" + divAreaList[i].innerStartPoint);
+                Debug.Log("innerendpoint" + divAreaList[i].innerEndPoint);
+                Debug.Log("area" + divAreaList[i].areaValue);
+            }
+            //境界線に対して通路を伸ばす
+            AisleClass aisleInfo = extendAisle(divAreaList);
+            //配列にマップ情報(移動可能エリア、外壁)を格納する
+            pushMapInfo(divAreaList, createMapArray);
+            //配列にマップ情報(通路)を格納する
+            pushMapInfoAisle(aisleInfo.aisleList, createMapArray);
+            //通路と通路をつなぐ
+            HookAisleInfo hookAisleInfo = hookAisle(divAreaList, aisleInfo.aisleEndPointList);
+            //配列にマップ情報(接続用の通路)を格納する
+            pushMapInfoAisle(hookAisleInfo.hookAisleList, createMapArray);
+            //Instantiate(player, new Vector3(1, 1, 0f), Quaternion.identity);
+            //マップ情報を元にオブジェクトをセットする
+            createLabyrinthMap(createMapArray);
+            //ゲームオブジェクトをマップに配置する
+            layoutObject();
+        }
     }
+
+    /**
+     * マップ分割
+     */
+    private List<DivisionAreaClass> splitMap()
+    {
+        int maxArea = randomMapWidth * randomMapHeight;
+        int startXPoint = 0;
+        int endXPoint = randomMapWidth;
+        int startYPoint = 0;
+        int endYPoint = randomMapHeight;
+        List<DivisionAreaClass> divAreaList = new List<DivisionAreaClass>();
+        bool splitAreaFlg = false;
+        int splitResetCounter = 0;
+        //エリア分割数を取得
+        int splitAreaNum = Random.Range(Define.AREA_MIN_NUM,Define.AREA_MAX_NUM+1);
+        while (divAreaList.Count < splitAreaNum)
+        {
+            //面積が最大のエリアをリストから削除する
+            if (splitAreaFlg)
+            {
+                divAreaList.RemoveAt(0);
+            }
+            int xDirectionPoint = endXPoint;
+            int yDirectionPoint = endYPoint;
+            int secondStartXPoint;
+            int secondStartYPoint;
+            int firstLength;
+            int secondLength;
+            //y軸方向に分割
+            if (endXPoint > endYPoint)
+            {
+                xDirectionPoint = Random.Range(startXPoint,endXPoint);
+                secondStartXPoint = xDirectionPoint + 1;
+                secondStartYPoint = endYPoint - yDirectionPoint;
+                firstLength = endXPoint - xDirectionPoint;
+                secondLength = xDirectionPoint - startXPoint;
+            }
+            //x軸方向に分割
+            else
+            {
+                yDirectionPoint = Random.Range(startYPoint,endYPoint);
+                secondStartXPoint = endXPoint - xDirectionPoint;
+                secondStartYPoint = yDirectionPoint + 1;
+                firstLength = endYPoint - yDirectionPoint;
+                secondLength = yDirectionPoint - startYPoint;
+            }
+
+            //エリア分割をやり直す
+            if (firstLength <= 3 || secondLength <= 3)
+            {
+                splitAreaFlg = false;
+                splitResetCounter++;
+                //分割のやり直しが一定回数を超えた場合はエリア情報をリセットして分割を最初からやり直す
+                if (splitResetCounter > Define.AREA_SPLIT_MAXNUM)
+                {
+                    //分割したエリアをリセットして初期値を設定
+                    divAreaList.Clear();
+                    maxArea = randomMapWidth * randomMapHeight;
+                    startXPoint = 0;
+                    endXPoint = randomMapWidth;
+                    startYPoint = 0;
+                    endYPoint = randomMapHeight;
+                    //分割数を減らす
+                    splitAreaNum--;
+                    Debug.Log("resetsplit");
+                }
+                continue;
+            }
+
+            //分割したエリアの情報をセット(一つ目)
+            int firstArea = (xDirectionPoint-startXPoint) * (yDirectionPoint-startYPoint);
+            DivisionAreaClass firstDivArea = new DivisionAreaClass();
+            //面積
+            firstDivArea.areaValue = firstArea;
+            //端点
+            firstDivArea.startPoint = new Vector2(startXPoint,startYPoint);
+            firstDivArea.endPoint = new Vector2(xDirectionPoint, yDirectionPoint);
+            //分割したエリアの情報をセット(二つ目)
+            DivisionAreaClass secondDivArea = new DivisionAreaClass();
+            //面積
+            secondDivArea.areaValue = maxArea - firstArea;
+            //端点
+            secondDivArea.startPoint = new Vector2(secondStartXPoint, secondStartYPoint);
+            secondDivArea.endPoint = new Vector2(endXPoint,endYPoint);
+            divAreaList.Add(firstDivArea);
+            divAreaList.Add(secondDivArea);
+            //面積で降順に並び替える
+            divAreaList.Sort((a, b) => b.areaValue - a.areaValue);
+            //面積が最大のエリアを元に次のエリア分割を行う
+            maxArea = divAreaList[0].areaValue;
+            startXPoint = (int)divAreaList[0].startPoint.x;
+            startYPoint = (int)divAreaList[0].startPoint.y;
+            endXPoint = (int)divAreaList[0].endPoint.x;
+            endYPoint = (int)divAreaList[0].endPoint.y;
+            splitAreaFlg = true;
+            //最小の面積が一定値を下回った場合は分割を終了する
+            if (divAreaList[divAreaList.Count - 1].areaValue < Define.MIN_AREA)
+            {
+                break;
+            }
+        }
+        return divAreaList;
+    }
+
+    /**
+     * 分割した区画を縮小する
+     */
+    private void reduceDivisionArea(List<DivisionAreaClass> divAreaList)
+    {
+        for (int i=0;i<divAreaList.Count;i++)
+        {
+            int randomInnerXPoint = Random.Range((int)(1+divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 4,1+ (int)(divAreaList[i].endPoint.x-divAreaList[i].startPoint.x)/3);
+            int randomInnerYPoint = Random.Range((int)(1+divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 4,1+ (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y)/3);
+            divAreaList[i].innerStartPoint = new Vector2(divAreaList[i].startPoint.x + randomInnerXPoint, divAreaList[i].startPoint.y + randomInnerYPoint);
+            divAreaList[i].innerEndPoint = new Vector2(divAreaList[i].endPoint.x - randomInnerXPoint, divAreaList[i].endPoint.y - randomInnerYPoint);
+        }
+    }
+
+    /**
+     * 境界線に対して通路を伸ばす
+     */
+    private AisleClass extendAisle(List<DivisionAreaClass> divAreaList)
+    {
+        AisleClass aisle = new AisleClass();
+        List<Vector2> aisleList = new List<Vector2>();
+        List<Vector2> aisleEndList = new List<Vector2>();
+        for (int i=0;i<divAreaList.Count;i++)
+        {
+            int randomPoint;
+            List<int> randomPointList = new List<int>();
+            //左方向
+            if (divAreaList[i].startPoint.x != 0)
+            {
+                for (int j=0;j<2;j++)
+                {
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.y,divAreaList[i].innerEndPoint.y);
+                    if (randomPointList.Contains(randomPoint))
+                    {
+                        continue;
+                    }
+                    for (int k=(int)divAreaList[i].innerStartPoint.x ;k >= divAreaList[i].startPoint.x;k--)
+                    {
+                        aisleList.Add(new Vector2(k,randomPoint));
+                        //通路の終点をリストに追加
+                        if (k == divAreaList[i].startPoint.x)
+                        {
+                            aisleEndList.Add(new Vector2(k, randomPoint));
+                        }
+                    }
+                    randomPointList.Add(randomPoint);
+                }
+                randomPointList.Clear();
+            }
+
+            //下方向
+            if (divAreaList[i].startPoint.y != 0)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.x, divAreaList[i].innerEndPoint.x);
+                    if (randomPointList.Contains(randomPoint))
+                    {
+                        continue;
+                    }
+                    for (int k = (int)divAreaList[i].innerStartPoint.y; k >= divAreaList[i].startPoint.y; k--)
+                    {
+                        aisleList.Add(new Vector2(randomPoint,k));
+                        //通路の終点をリストに追加
+                        if (k == divAreaList[i].startPoint.y)
+                        {
+                            aisleEndList.Add(new Vector2(randomPoint,k));
+                        }
+                    }
+                    randomPointList.Add(randomPoint);
+                }
+                randomPointList.Clear();
+            }
+
+            //右方向
+            if (divAreaList[i].endPoint.x != randomMapWidth)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.y, divAreaList[i].innerEndPoint.y);
+                    if (randomPointList.Contains(randomPoint))
+                    {
+                        continue;
+                    }
+                    for (int k = (int)divAreaList[i].innerEndPoint.x; k <= divAreaList[i].endPoint.x; k++)
+                    {
+                        aisleList.Add(new Vector2(k, randomPoint));
+                        //通路の終点をリストに追加
+                        if (k == divAreaList[i].endPoint.x)
+                        {
+                            aisleEndList.Add(new Vector2(k, randomPoint));
+                        }
+                    }
+                    randomPointList.Add(randomPoint);
+                }
+                randomPointList.Clear();
+            }
+
+            //上方向
+            if (divAreaList[i].endPoint.y != randomMapHeight)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.x, divAreaList[i].innerEndPoint.x);
+                    if (randomPointList.Contains(randomPoint))
+                    {
+                        continue;
+                    }
+                    for (int k = (int)divAreaList[i].innerEndPoint.y; k <= divAreaList[i].endPoint.y; k++)
+                    {
+                        aisleList.Add(new Vector2(randomPoint, k));
+                        //通路の終点をリストに追加
+                        if (k == divAreaList[i].endPoint.y)
+                        {
+                            aisleEndList.Add(new Vector2(randomPoint, k));
+                        }
+                    }
+                    randomPointList.Add(randomPoint);
+                }
+                randomPointList.Clear();
+            }
+        }
+        aisle.aisleList = aisleList;
+        aisle.aisleEndPointList = aisleEndList;
+        return aisle;
+    }
+
+    /**
+     * 配列にマップ情報(移動可能エリア、外壁)を格納する
+     */
+    private void pushMapInfo(List<DivisionAreaClass> divAreaList,int[,] createMapArray)
+    {
+        for (int i=0;i<divAreaList.Count;i++)
+        {
+            for (int j=(int)divAreaList[i].startPoint.y ;j<=divAreaList[i].endPoint.y; j++)
+            {
+                for (int k=(int)divAreaList[i].startPoint.x; k<=divAreaList[i].endPoint.x; k++)
+                {
+                    //移動可能エリア
+                    if (j >= divAreaList[i].innerStartPoint.y && j <= divAreaList[i].innerEndPoint.y && k >= divAreaList[i].innerStartPoint.x && k <= divAreaList[i].innerEndPoint.x)
+                    {
+                        Debug.Log("j:" + j);
+                        Debug.Log("k:" + k);
+                        createMapArray[j,k] = Define.MOVABLE; 
+                    }
+                    //外壁
+                    else
+                    {
+                        Debug.Log("j:" + j);
+                        Debug.Log("k:" + k);
+                        createMapArray[j, k] = Define.WALL;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 配列にマップ情報(通路)を格納する
+     */
+    private void pushMapInfoAisle(List<Vector2> aisleList, int[,] createMapArray)
+    {
+        for (int i=0;i<aisleList.Count;i++)
+        {
+            Debug.Log("aisleList[i].x"+ aisleList[i].x);
+            Debug.Log("aisleList[i].y"+ aisleList[i].y);
+            createMapArray[(int)aisleList[i].y, (int)aisleList[i].x] = Define.AISLE;
+        }
+    }
+
+    /**
+     * 通路と通路をつなぐ
+     */
+    private HookAisleInfo hookAisle(List<DivisionAreaClass> divAreaList, List<Vector2> aisleEndPointList)
+    {
+        HookAisleInfo hookAisleInfo = new HookAisleInfo();
+        List<Vector2> copyAisleEndPointList = new List<Vector2>(aisleEndPointList);
+        List<Vector2> sameAxisList = new List<Vector2>();
+        List<Vector2> hookAisleList = new List<Vector2>();
+        for (int i=0;i<divAreaList.Count;i++)
+        {
+            int xLength = (int)(divAreaList[i].endPoint.x - divAreaList[i].startPoint.x);
+            int yLength = (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y);
+            //左辺
+            if (divAreaList[i].startPoint.x != 0)
+            {
+                for (int j=0;j< copyAisleEndPointList.Count;j++)
+                {
+                    //x軸の一致するポイントをリストに追加
+                    if (copyAisleEndPointList[j].x == divAreaList[i].startPoint.x || copyAisleEndPointList[j].x == divAreaList[i].startPoint.x -1)
+                    {
+                        sameAxisList.Add(copyAisleEndPointList[j]);
+                    }
+                }
+                //リストの中身が2以下の場合
+                if (sameAxisList.Count > 1)
+                {
+                    //リストをソートして最大と最小間を通路とする
+                    sameAxisList.Sort((a, b) => (int)a.y - (int)b.y);
+                    int minPoint = (int)sameAxisList[0].y;
+                    int maxPoint = (int)sameAxisList[sameAxisList.Count -1].y;
+                    for (int k=minPoint; k <= maxPoint ;k++)
+                    {
+                        //通路の座標を追加
+                        hookAisleList.Add(new Vector2(divAreaList[i].startPoint.x, k));
+                    }
+                    //通路を結び終えた点はリストから削除
+                    for (int l=0;l<sameAxisList.Count;l++)
+                    {
+                        copyAisleEndPointList.Remove(sameAxisList[l]);
+                    }
+                }
+            }
+            sameAxisList.Clear();
+            //下辺
+            if (divAreaList[i].startPoint.y != 0)
+            {
+                for (int j = 0; j < copyAisleEndPointList.Count; j++)
+                {
+                    //y軸の一致するポイントをリストに追加
+                    if (copyAisleEndPointList[j].y == divAreaList[i].startPoint.y || copyAisleEndPointList[j].y == divAreaList[i].startPoint.y - 1)
+                    {
+                        sameAxisList.Add(copyAisleEndPointList[j]);
+                    }
+                }
+                //リストの中身が2以下の場合
+                if (sameAxisList.Count > 1)
+                {
+                    //リストをソートして最大と最小間を通路とする
+                    sameAxisList.Sort((a, b) => (int)a.x - (int)b.x);
+                    int minPoint = (int)sameAxisList[0].x;
+                    int maxPoint = (int)sameAxisList[sameAxisList.Count - 1].x;
+                    for (int k = minPoint; k <= maxPoint; k++)
+                    {
+                        //通路の座標を追加
+                        hookAisleList.Add(new Vector2(k,divAreaList[i].startPoint.y));
+                    }
+                    //通路を結び終えた点はリストから削除
+                    for (int l = 0; l < sameAxisList.Count; l++)
+                    {
+                        copyAisleEndPointList.Remove(sameAxisList[l]);
+                    }
+                }
+            }
+            sameAxisList.Clear();
+            //右辺
+            if (divAreaList[i].endPoint.x != randomMapWidth)
+            {
+                for (int j = 0; j < copyAisleEndPointList.Count; j++)
+                {
+                    //x軸の一致するポイントをリストに追加
+                    if (copyAisleEndPointList[j].x == divAreaList[i].endPoint.x || copyAisleEndPointList[j].x == divAreaList[i].endPoint.x + 1)
+                    {
+                        sameAxisList.Add(copyAisleEndPointList[j]);
+                    }
+                }
+                //リストの中身が2以下の場合
+                if (sameAxisList.Count > 1)
+                {
+                    //リストをソートして最大と最小間を通路とする
+                    sameAxisList.Sort((a, b) => (int)a.y - (int)b.y);
+                    int minPoint = (int)sameAxisList[0].y;
+                    int maxPoint = (int)sameAxisList[sameAxisList.Count - 1].y;
+                    for (int k = minPoint; k <= maxPoint; k++)
+                    {
+                        //通路の座標を追加
+                        hookAisleList.Add(new Vector2(divAreaList[i].endPoint.x, k));
+                    }
+                    //通路を結び終えた点はリストから削除
+                    for (int l = 0; l < sameAxisList.Count; l++)
+                    {
+                        copyAisleEndPointList.Remove(sameAxisList[l]);
+                    }
+                }
+            }
+            sameAxisList.Clear();
+            //上辺
+            if (divAreaList[i].endPoint.y != randomMapHeight)
+            {
+                for (int j = 0; j < copyAisleEndPointList.Count; j++)
+                {
+                    //y軸の一致するポイントをリストに追加
+                    if (copyAisleEndPointList[j].y == divAreaList[i].endPoint.y || copyAisleEndPointList[j].y == divAreaList[i].endPoint.y + 1)
+                    {
+                        sameAxisList.Add(copyAisleEndPointList[j]);
+                    }
+                }
+                //リストの中身が2以下の場合
+                if (sameAxisList.Count > 1)
+                {
+                    //リストをソートして最大と最小間を通路とする
+                    sameAxisList.Sort((a, b) => (int)a.x - (int)b.x);
+                    int minPoint = (int)sameAxisList[0].x;
+                    int maxPoint = (int)sameAxisList[sameAxisList.Count - 1].x;
+                    for (int k = minPoint; k <= maxPoint; k++)
+                    {
+                        //通路の座標を追加
+                        hookAisleList.Add(new Vector2(k, divAreaList[i].endPoint.y));
+                    }
+                    //通路を結び終えた点はリストから削除
+                    for (int l = 0; l < sameAxisList.Count; l++)
+                    {
+                        copyAisleEndPointList.Remove(sameAxisList[l]);
+                    }
+                }
+            }
+            sameAxisList.Clear();
+        }
+        //接続した通路の座標リスト
+        hookAisleInfo.hookAisleList = hookAisleList;
+        //接続されずに残った座標のリスト
+        hookAisleInfo.remainingAisleList = copyAisleEndPointList;
+        Debug.Log("hookAisleInfo.remainingAisleList.Count"+hookAisleInfo.remainingAisleList.Count);
+        for (int i=0;i<hookAisleInfo.remainingAisleList.Count;i++)
+        {
+            Debug.Log(hookAisleInfo.remainingAisleList[i]);
+        }
+        return hookAisleInfo;
+    }
+
+    /**
+     * 配列のマップ情報からオブジェクトをセットする
+     */
+    private void createLabyrinthMap(int[,] createMapArray)
+    {
+        //Debug.Log("width" + createMapArray.GetLength(0));
+        //Debug.Log("height" + createMapArray.GetLength(1));
+        for (int i=0;i<createMapArray.GetLength(0);i++)
+        {
+            for (int j=0;j<createMapArray.GetLength(1);j++)
+            {
+                Debug.Log("Vector2"+i+"  "+j);
+                Debug.Log("createMapArray[i,j]:"+ createMapArray[i, j]);
+                GameObject tile;
+                switch (createMapArray[i,j])
+                {
+                    //外壁
+                    case Define.WALL:
+                        tile = labyrinthStoneFloor;
+                        break;
+                    //移動可能エリア
+                    case Define.MOVABLE:
+                        tile = labyrinthGrassFloor;
+                        //アイテムと敵の配置用に座標を保存する
+                        gridPositons.Add(new Vector3(j,i,0));
+                        break;
+                    //通路
+                    case Define.AISLE:
+                        tile = labyrinthGrassFloor;
+                        break;
+                    default:
+                        tile = labyrinthGrassFloor;
+                        break;
+                }
+                Instantiate(tile, new Vector3(j,i,0), Quaternion.identity);
+            }
+        }
+        //マップ端を外壁で埋める
+        //左端
+        for (int i=-1;i<=randomMapHeight;i++)
+        {
+            Instantiate(labyrinthStoneFloor, new Vector3(-1, i, 0), Quaternion.identity);
+        }
+        //下端
+        for (int i = -1; i <= randomMapWidth; i++)
+        {
+            Instantiate(labyrinthStoneFloor, new Vector3(i, -1, 0), Quaternion.identity);
+        }
+        //右端
+        for (int i = -1; i <= randomMapHeight; i++)
+        {
+            Instantiate(labyrinthStoneFloor, new Vector3(randomMapWidth + 1, i, 0), Quaternion.identity);
+        }
+        //上端
+        for (int i = -1; i <= randomMapWidth; i++)
+        {
+            Instantiate(labyrinthStoneFloor, new Vector3(i, randomMapHeight + 1, 0), Quaternion.identity);
+        }
+    }
+
+    /**
+     * マップ上にオブジェクトを配置
+     */
+    private void layoutObject()
+    {
+        //プレイヤーをインスタンス化
+        LayoutObjectAtRandom(player, 1, 1, false);
+
+        //食べ物をインスタンス化。
+        LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum, false);
+    }
+
 
     /**
      * マップの各区画にオブジェクトを設置する
@@ -672,14 +1256,16 @@ public class BoardManager : MonoBehaviour
             LayoutObjectAtRandom(eventNpcAppearanceSkelton, 1,1,true);
             //イベント用NPC(ゴーストが出現)
             LayoutObjectAtRandom(eventNpcAppearanceGhost, 1, 1, true);
-            LayoutObjectAtRandom(enemy, enemyCount, enemyCount, false);
+            //LayoutObjectAtRandom(enemy, enemyCount, enemyCount, false);
+            //イベント用アイテム
+            //LayoutObjectAtRandom(eventTestItem, 1, 1, true);
         }
         //第二区画
         else if(settingObjRule == Define.SECOND_SETTING)
         {
             //剣をインスタンス化
             LayoutObjectAtRandom(sword, swordCount.minmum, swordCount.maximum, false);
-            LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1, false);
+            //LayoutObjectAtRandom(enemy2, enemyCount - 1, enemyCount - 1, false);
         }
 
         //ランダム化された位置で、最小値と最大値に基づいてランダムな数の壁タイルをインスタンス化します。

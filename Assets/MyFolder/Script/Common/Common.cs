@@ -31,6 +31,25 @@ namespace Common
 
 		//A-starアルゴリズムの最大計算(ループ)回数
 		public const int ASTAR_LOOPNUM = 3;
+
+		//敵が出現するターン数
+		public const int NOMALENEMY_APPEARANCE_MINTURN = 10;
+		public const int NOMALENEMY_APPEARANCE_MAXTURN = 20;
+
+		//不思議のダンジョン系マップのタイル種別
+		public const int MOVABLE = 1;
+		public const int AISLE = 2;
+		public const int WALL = 3;
+
+		//不思議のダンジョン系マップのエリア分割数
+		public const int AREA_MIN_NUM = 5;
+		public const int AREA_MAX_NUM = 7;
+
+		//不思議のダンジョン系マップのエリア分割リセット回数
+		public const int AREA_SPLIT_MAXNUM = 10;
+
+		//不思議のダンジョン系マップの分割エリアの最小面積
+		public const int MIN_AREA = 9;
 	}
 
 	//アイテムのタイプ
