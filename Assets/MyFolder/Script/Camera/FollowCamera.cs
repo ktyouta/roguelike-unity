@@ -30,7 +30,7 @@ public class FollowCamera : MonoBehaviour
             else
             {
                 cameraMaxPointX = boardObj.randomMapWidth - 7.5f;
-                cameraMaxPos = new Vector2(cameraMaxPointX, boardObj.randomMapHeight - 2.0f);
+                cameraMaxPos = new Vector2(cameraMaxPointX, boardObj.randomMapHeight - 3.0f);
                 camObj.orthographicSize = camObj.orthographicSize - 0.5f;
             }
         }

@@ -16,6 +16,9 @@ public class player : MovingObject
     [HideInInspector] public int nextVerticalkey = 0;
     [HideInInspector] public bool isAttack = false;
     [HideInInspector] public Enemy enemyObject;
+    [HideInInspector] public int horizontal = 0;
+    [HideInInspector] public int vertical = 0;
+    [HideInInspector] public bool leftShift = false;
     private Treasure treasureObject;
     private bool isDefeat = false;
     private int reduceFoodCounter = 0;
@@ -63,9 +66,9 @@ public class player : MovingObject
             return;
         }
         GManager.instance.isEndPlayerAction = false;
-        int horizontal = 0;      //水平移動方向を格納するために使用されます
-        int vertical = 0;        //垂直移動方向を格納するために使用されます。
-        bool leftShift = false;       //攻撃
+        horizontal = 0;      //水平移動方向を格納するために使用されます
+        vertical = 0;        //垂直移動方向を格納するために使用されます。
+        leftShift = false;       //攻撃
 
         //入力マネージャーから入力を取得し、整数に丸め、水平に保存してx軸の移動方向を設定します
         horizontal = (int)(Input.GetAxisRaw("Horizontal"));
@@ -74,27 +77,32 @@ public class player : MovingObject
         //攻撃
         leftShift = Input.GetKeyDown("left shift");
 
+        playerMove(horizontal,vertical,leftShift);
+    }
+
+    public void playerMove(int inHorizontal,int inVertical,bool inLeftShift)
+    {
         //水平に移動するかどうかを確認し、移動する場合は垂直にゼロに設定します。(ズレ防止)
-        if (horizontal != 0)
+        if (inHorizontal != 0)
         {
             vertical = 0;
             nextHorizontalKey = horizontal > 0 ? 1 : -1;
             nextVerticalkey = 0;
         }
-        else if (vertical != 0)
+        else if (inVertical != 0)
         {
             horizontal = 0;
             nextVerticalkey = vertical > 0 ? 1 : -1;
             nextHorizontalKey = 0;
         }
         //水平または垂直にゼロ以外の値があるかどうかを確認します
-        if (horizontal != 0 || vertical != 0)
+        if (inHorizontal != 0 || inVertical != 0)
         {
             //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
-            AttemptMove(horizontal, vertical);
+            AttemptMove(inHorizontal, inVertical);
         }
         //攻撃
-        else if (leftShift)
+        else if (inLeftShift)
         {
             Attack();
         }
