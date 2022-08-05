@@ -83,15 +83,6 @@ public class BoardManager : MonoBehaviour
         public List<Vector2> aisleEndPointList;
     }
 
-    //通路同士をつなぐ通路作成用のクラス
-    public class HookAisleInfo
-    {
-        //通路同士をつなぐ通路を保持するリスト
-        public List<Vector2> hookAisleList;
-        //他の通路を接続されなかった通路の終点を保持するリスト
-        public List<Vector2> remainingAisleList;
-    }
-
     //MAP作成用のパラメータ
     [Header("マップの行数")]public int rows;
     [Header("マップの列数")]public int columns;
@@ -226,18 +217,29 @@ public class BoardManager : MonoBehaviour
     [HideInInspector] public int createMapMode = 2;
 
     //不思議のダンジョン系マップの作成用のパラメータ
-    [HideInInspector] public int randomMapWidth = 30;
-    [HideInInspector] public int randomMapHeight = 25;
+    private int randomMapWidth = Define.MYSTERYMAP_WHITH;
+    private int randomMapHeight = Define.MYSTERYMAP_HEIGHT;
 
     //不思議のダンジョン系マップ用フロア
     //外壁
     [Header("外壁(不思議のダンジョン系)")] public GameObject labyrinthOuterWall;
+    [Header("外壁2(不思議のダンジョン系)")] public GameObject labyrinthOuterWall2;
+    [Header("外壁3(不思議のダンジョン系)")] public GameObject labyrinthOuterWall3;
+    [Header("外壁5(不思議のダンジョン系)")] public GameObject labyrinthOuterWall5;
     //フロア
     //草原
     [Header("草原フロア(不思議のダンジョン系)")] public GameObject labyrinthGrassFloor;
     //岩
     [Header("石フロア")] public GameObject labyrinthStoneFloor;
 
+    //マップ作成用
+    enum Direction:int
+    {
+        Top,
+        Right,
+        Left,
+        Bottom
+    }
 
     //フィールド生成
     /**
@@ -674,9 +676,9 @@ public class BoardManager : MonoBehaviour
             //配列にマップ情報(通路)を格納する
             pushMapInfoAisle(aisleInfo.aisleList, createMapArray);
             //通路と通路をつなぐ
-            HookAisleInfo hookAisleInfo = hookAisle(divAreaList, aisleInfo.aisleEndPointList);
+            List<Vector2> hookAisleInfo = hookAisle(divAreaList, aisleInfo.aisleEndPointList);
             //配列にマップ情報(接続用の通路)を格納する
-            pushMapInfoAisle(hookAisleInfo.hookAisleList, createMapArray);
+            pushMapInfoAisle(hookAisleInfo, createMapArray);
             //Instantiate(player, new Vector3(1, 1, 0f), Quaternion.identity);
             //マップ情報を元にオブジェクトをセットする
             createLabyrinthMap(createMapArray);
@@ -699,7 +701,7 @@ public class BoardManager : MonoBehaviour
         bool splitAreaFlg = false;
         int splitResetCounter = 0;
         //エリア分割数を取得
-        int splitAreaNum = Random.Range(Define.AREA_MIN_NUM,Define.AREA_MAX_NUM+1);
+        int splitAreaNum = Random.Range(Define.AREA_MIN_NUM,Define.AREA_MAX_NUM + 1);
         while (divAreaList.Count < splitAreaNum)
         {
             //面積が最大のエリアをリストから削除する
@@ -732,14 +734,18 @@ public class BoardManager : MonoBehaviour
                 secondLength = yDirectionPoint - startYPoint;
             }
 
+            Debug.Log("xDirectionPoint:"+ xDirectionPoint);
+            Debug.Log("yDirectionPoint:" + yDirectionPoint);
+
             //エリア分割をやり直す
-            if (firstLength <= 3 || secondLength <= 3)
+            if (firstLength < 5 || secondLength < 5)
             {
                 splitAreaFlg = false;
                 splitResetCounter++;
                 //分割のやり直しが一定回数を超えた場合はエリア情報をリセットして分割を最初からやり直す
                 if (splitResetCounter > Define.AREA_SPLIT_MAXNUM)
                 {
+                    splitResetCounter = 0;
                     //分割したエリアをリセットして初期値を設定
                     divAreaList.Clear();
                     maxArea = randomMapWidth * randomMapHeight;
@@ -794,12 +800,25 @@ public class BoardManager : MonoBehaviour
      */
     private void reduceDivisionArea(List<DivisionAreaClass> divAreaList)
     {
+        int randomInnerXPoint;
+        int randomInnerYPoint;
         for (int i=0;i<divAreaList.Count;i++)
         {
-            int randomInnerXPoint = Random.Range((int)(1+divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 4,1+ (int)(divAreaList[i].endPoint.x-divAreaList[i].startPoint.x)/3);
-            int randomInnerYPoint = Random.Range((int)(1+divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 4,1+ (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y)/3);
-            divAreaList[i].innerStartPoint = new Vector2(divAreaList[i].startPoint.x + randomInnerXPoint, divAreaList[i].startPoint.y + randomInnerYPoint);
-            divAreaList[i].innerEndPoint = new Vector2(divAreaList[i].endPoint.x - randomInnerXPoint, divAreaList[i].endPoint.y - randomInnerYPoint);
+            for (int j=0;j<2;j++)
+            {
+                randomInnerXPoint = Random.Range((int)(1 + divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 4, 1 + (int)(divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 3);
+                randomInnerYPoint = Random.Range((int)(1 + divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 4, 1 + (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 3);
+                //startpoint(左下の点)の設定
+                if (j == 0)
+                {
+                    divAreaList[i].innerStartPoint = new Vector2(divAreaList[i].startPoint.x + randomInnerXPoint, divAreaList[i].startPoint.y + randomInnerYPoint);
+                }
+                //endpoint(右下の点)の設定
+                else
+                {
+                    divAreaList[i].innerEndPoint = new Vector2(divAreaList[i].endPoint.x - randomInnerXPoint, divAreaList[i].endPoint.y - randomInnerYPoint);
+                }
+            }
         }
     }
 
@@ -811,23 +830,31 @@ public class BoardManager : MonoBehaviour
         AisleClass aisle = new AisleClass();
         List<Vector2> aisleList = new List<Vector2>();
         List<Vector2> aisleEndList = new List<Vector2>();
+        int randomPoint;
+        int extendNum;
+        List<int> randomPointList = new List<int>();
+        int xLineLength;
+        int yLineLength;
+        int extendCount = 0;
         for (int i=0;i<divAreaList.Count;i++)
         {
-            int randomPoint;
-            List<int> randomPointList = new List<int>();
+            xLineLength = (int)(divAreaList[i].innerEndPoint.x - divAreaList[i].innerStartPoint.x);
+            yLineLength = (int)(divAreaList[i].innerEndPoint.y - divAreaList[i].innerStartPoint.y);
             //左方向
             if (divAreaList[i].startPoint.x != 0)
             {
-                for (int j=0;j<2;j++)
+                extendNum = yLineLength < 10 ? 1 : Random.Range(1, 3);
+                while (extendCount < extendNum)
                 {
-                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.y,divAreaList[i].innerEndPoint.y);
+                    extendCount++;
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.y, divAreaList[i].innerEndPoint.y + 1);
                     if (randomPointList.Contains(randomPoint))
                     {
                         continue;
                     }
-                    for (int k=(int)divAreaList[i].innerStartPoint.x ;k >= divAreaList[i].startPoint.x;k--)
+                    for (int k = (int)divAreaList[i].innerStartPoint.x - 1; k >= divAreaList[i].startPoint.x; k--)
                     {
-                        aisleList.Add(new Vector2(k,randomPoint));
+                        aisleList.Add(new Vector2(k, randomPoint));
                         //通路の終点をリストに追加
                         if (k == divAreaList[i].startPoint.x)
                         {
@@ -837,43 +864,49 @@ public class BoardManager : MonoBehaviour
                     randomPointList.Add(randomPoint);
                 }
                 randomPointList.Clear();
+                extendCount = 0;
             }
 
             //下方向
             if (divAreaList[i].startPoint.y != 0)
             {
-                for (int j = 0; j < 2; j++)
+                extendNum = xLineLength < 10 ? 1 : Random.Range(1, 3);
+                while (extendCount < extendNum)
                 {
-                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.x, divAreaList[i].innerEndPoint.x);
+                    extendCount++;
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.x, divAreaList[i].innerEndPoint.x + 1);
                     if (randomPointList.Contains(randomPoint))
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerStartPoint.y; k >= divAreaList[i].startPoint.y; k--)
+                    for (int k = (int)divAreaList[i].innerStartPoint.y - 1; k >= divAreaList[i].startPoint.y; k--)
                     {
-                        aisleList.Add(new Vector2(randomPoint,k));
+                        aisleList.Add(new Vector2(randomPoint, k));
                         //通路の終点をリストに追加
                         if (k == divAreaList[i].startPoint.y)
                         {
-                            aisleEndList.Add(new Vector2(randomPoint,k));
+                            aisleEndList.Add(new Vector2(randomPoint, k));
                         }
                     }
                     randomPointList.Add(randomPoint);
                 }
                 randomPointList.Clear();
+                extendCount = 0;
             }
 
             //右方向
             if (divAreaList[i].endPoint.x != randomMapWidth)
             {
-                for (int j = 0; j < 2; j++)
+                extendNum = yLineLength < 10 ? 1 : Random.Range(1, 3);
+                while (extendCount < extendNum)
                 {
-                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.y, divAreaList[i].innerEndPoint.y);
+                    extendCount++;
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.y, divAreaList[i].innerEndPoint.y + 1);
                     if (randomPointList.Contains(randomPoint))
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerEndPoint.x; k <= divAreaList[i].endPoint.x; k++)
+                    for (int k = (int)divAreaList[i].innerEndPoint.x + 1; k <= divAreaList[i].endPoint.x; k++)
                     {
                         aisleList.Add(new Vector2(k, randomPoint));
                         //通路の終点をリストに追加
@@ -885,19 +918,22 @@ public class BoardManager : MonoBehaviour
                     randomPointList.Add(randomPoint);
                 }
                 randomPointList.Clear();
+                extendCount = 0;
             }
 
             //上方向
             if (divAreaList[i].endPoint.y != randomMapHeight)
             {
-                for (int j = 0; j < 2; j++)
+                extendNum = xLineLength < 10 ? 1 : Random.Range(1, 3);
+                while (extendCount < extendNum)
                 {
-                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.x, divAreaList[i].innerEndPoint.x);
+                    extendCount++;
+                    randomPoint = (int)Random.Range(divAreaList[i].innerStartPoint.x, divAreaList[i].innerEndPoint.x + 1);
                     if (randomPointList.Contains(randomPoint))
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerEndPoint.y; k <= divAreaList[i].endPoint.y; k++)
+                    for (int k = (int)divAreaList[i].innerEndPoint.y + 1; k <= divAreaList[i].endPoint.y; k++)
                     {
                         aisleList.Add(new Vector2(randomPoint, k));
                         //通路の終点をリストに追加
@@ -909,15 +945,22 @@ public class BoardManager : MonoBehaviour
                     randomPointList.Add(randomPoint);
                 }
                 randomPointList.Clear();
+                extendCount = 0;
             }
         }
         aisle.aisleList = aisleList;
         aisle.aisleEndPointList = aisleEndList;
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        for (int i=0;i<aisleEndList.Count;i++)
+        {
+            Debug.Log("aisleEndlist"+aisleEndList[i]);
+        }
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         return aisle;
     }
 
     /**
-     * 配列にマップ情報(移動可能エリア、外壁)を格納する
+     * 配列にマップ情報(移動可能エリア、移動不可エリア)を格納する
      */
     private void pushMapInfo(List<DivisionAreaClass> divAreaList,int[,] createMapArray)
     {
@@ -934,7 +977,7 @@ public class BoardManager : MonoBehaviour
                         Debug.Log("k:" + k);
                         createMapArray[j,k] = Define.MOVABLE; 
                     }
-                    //外壁
+                    //移動不可エリア
                     else
                     {
                         Debug.Log("j:" + j);
@@ -962,41 +1005,42 @@ public class BoardManager : MonoBehaviour
     /**
      * 通路と通路をつなぐ
      */
-    private HookAisleInfo hookAisle(List<DivisionAreaClass> divAreaList, List<Vector2> aisleEndPointList)
+    private List<Vector2> hookAisle(List<DivisionAreaClass> divAreaList, List<Vector2> aisleEndPointList)
     {
-        HookAisleInfo hookAisleInfo = new HookAisleInfo();
         List<Vector2> copyAisleEndPointList = new List<Vector2>(aisleEndPointList);
         List<Vector2> sameAxisList = new List<Vector2>();
         List<Vector2> hookAisleList = new List<Vector2>();
+        int xLength;
+        int yLength;
         for (int i=0;i<divAreaList.Count;i++)
         {
-            int xLength = (int)(divAreaList[i].endPoint.x - divAreaList[i].startPoint.x);
-            int yLength = (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y);
+            xLength = (int)(divAreaList[i].endPoint.x - divAreaList[i].startPoint.x);
+            yLength = (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y);
             //左辺
             if (divAreaList[i].startPoint.x != 0)
             {
-                for (int j=0;j< copyAisleEndPointList.Count;j++)
+                for (int j = 0; j < copyAisleEndPointList.Count; j++)
                 {
                     //x軸の一致するポイントをリストに追加
-                    if (copyAisleEndPointList[j].x == divAreaList[i].startPoint.x || copyAisleEndPointList[j].x == divAreaList[i].startPoint.x -1)
+                    if (copyAisleEndPointList[j].x == divAreaList[i].startPoint.x || copyAisleEndPointList[j].x == divAreaList[i].startPoint.x - 1)
                     {
                         sameAxisList.Add(copyAisleEndPointList[j]);
                     }
                 }
-                //リストの中身が2以下の場合
+                //リストの中身が2以上の場合
                 if (sameAxisList.Count > 1)
                 {
                     //リストをソートして最大と最小間を通路とする
                     sameAxisList.Sort((a, b) => (int)a.y - (int)b.y);
                     int minPoint = (int)sameAxisList[0].y;
-                    int maxPoint = (int)sameAxisList[sameAxisList.Count -1].y;
-                    for (int k=minPoint; k <= maxPoint ;k++)
+                    int maxPoint = (int)sameAxisList[sameAxisList.Count - 1].y;
+                    for (int k = minPoint; k <= maxPoint; k++)
                     {
                         //通路の座標を追加
                         hookAisleList.Add(new Vector2(divAreaList[i].startPoint.x, k));
                     }
                     //通路を結び終えた点はリストから削除
-                    for (int l=0;l<sameAxisList.Count;l++)
+                    for (int l = 0; l < sameAxisList.Count; l++)
                     {
                         copyAisleEndPointList.Remove(sameAxisList[l]);
                     }
@@ -1014,7 +1058,7 @@ public class BoardManager : MonoBehaviour
                         sameAxisList.Add(copyAisleEndPointList[j]);
                     }
                 }
-                //リストの中身が2以下の場合
+                //リストの中身が2以上の場合
                 if (sameAxisList.Count > 1)
                 {
                     //リストをソートして最大と最小間を通路とする
@@ -1024,7 +1068,7 @@ public class BoardManager : MonoBehaviour
                     for (int k = minPoint; k <= maxPoint; k++)
                     {
                         //通路の座標を追加
-                        hookAisleList.Add(new Vector2(k,divAreaList[i].startPoint.y));
+                        hookAisleList.Add(new Vector2(k, divAreaList[i].startPoint.y));
                     }
                     //通路を結び終えた点はリストから削除
                     for (int l = 0; l < sameAxisList.Count; l++)
@@ -1045,7 +1089,7 @@ public class BoardManager : MonoBehaviour
                         sameAxisList.Add(copyAisleEndPointList[j]);
                     }
                 }
-                //リストの中身が2以下の場合
+                //リストの中身が2以上の場合
                 if (sameAxisList.Count > 1)
                 {
                     //リストをソートして最大と最小間を通路とする
@@ -1076,7 +1120,7 @@ public class BoardManager : MonoBehaviour
                         sameAxisList.Add(copyAisleEndPointList[j]);
                     }
                 }
-                //リストの中身が2以下の場合
+                //リストの中身が2以上の場合
                 if (sameAxisList.Count > 1)
                 {
                     //リストをソートして最大と最小間を通路とする
@@ -1097,16 +1141,13 @@ public class BoardManager : MonoBehaviour
             }
             sameAxisList.Clear();
         }
-        //接続した通路の座標リスト
-        hookAisleInfo.hookAisleList = hookAisleList;
-        //接続されずに残った座標のリスト
-        hookAisleInfo.remainingAisleList = copyAisleEndPointList;
-        Debug.Log("hookAisleInfo.remainingAisleList.Count"+hookAisleInfo.remainingAisleList.Count);
-        for (int i=0;i<hookAisleInfo.remainingAisleList.Count;i++)
+        Debug.Log("copyAisleEndPointListcount"+ copyAisleEndPointList.Count);
+        for (int i=0;i<copyAisleEndPointList.Count;i++)
         {
-            Debug.Log(hookAisleInfo.remainingAisleList[i]);
+            Debug.Log("copyAisleEndPointList"+ copyAisleEndPointList[i]);
         }
-        return hookAisleInfo;
+        //接続した通路の座標リスト
+        return hookAisleList;
     }
 
     /**
@@ -1116,56 +1157,45 @@ public class BoardManager : MonoBehaviour
     {
         //Debug.Log("width" + createMapArray.GetLength(0));
         //Debug.Log("height" + createMapArray.GetLength(1));
-        for (int i=0;i<createMapArray.GetLength(0);i++)
+        for (int i=-1;i<=createMapArray.GetLength(0);i++)
         {
-            for (int j=0;j<createMapArray.GetLength(1);j++)
+            for (int j=-1;j<=createMapArray.GetLength(1);j++)
             {
                 Debug.Log("Vector2"+i+"  "+j);
-                Debug.Log("createMapArray[i,j]:"+ createMapArray[i, j]);
                 GameObject tile;
-                switch (createMapArray[i,j])
+                //マップ端
+                if (i == -1 || i == createMapArray.GetLength(0) || j == -1 || j == createMapArray.GetLength(1))
                 {
-                    //外壁
-                    case Define.WALL:
-                        tile = labyrinthStoneFloor;
-                        break;
-                    //移動可能エリア
-                    case Define.MOVABLE:
-                        tile = labyrinthGrassFloor;
-                        //アイテムと敵の配置用に座標を保存する
-                        gridPositons.Add(new Vector3(j,i,0));
-                        break;
-                    //通路
-                    case Define.AISLE:
-                        tile = labyrinthGrassFloor;
-                        break;
-                    default:
-                        tile = labyrinthGrassFloor;
-                        break;
+                    Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
+                    tile = labyrinthOuterWall5;
+                }
+                else
+                {
+                    Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
+                    switch (createMapArray[i, j])
+                    {
+                        //外壁
+                        case Define.WALL:
+                            Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
+                            tile = labyrinthOuterWall5;
+                            break;
+                        //移動可能エリア
+                        case Define.MOVABLE:
+                            tile = labyrinthGrassFloor;
+                            //アイテムと敵の配置用に座標を保存する
+                            gridPositons.Add(new Vector3(j, i, 0));
+                            break;
+                        //通路
+                        case Define.AISLE:
+                            tile = labyrinthGrassFloor;
+                            break;
+                        default:
+                            tile = labyrinthGrassFloor;
+                            break;
+                    }
                 }
                 Instantiate(tile, new Vector3(j,i,0), Quaternion.identity);
             }
-        }
-        //マップ端を外壁で埋める
-        //左端
-        for (int i=-1;i<=randomMapHeight;i++)
-        {
-            Instantiate(labyrinthStoneFloor, new Vector3(-1, i, 0), Quaternion.identity);
-        }
-        //下端
-        for (int i = -1; i <= randomMapWidth; i++)
-        {
-            Instantiate(labyrinthStoneFloor, new Vector3(i, -1, 0), Quaternion.identity);
-        }
-        //右端
-        for (int i = -1; i <= randomMapHeight; i++)
-        {
-            Instantiate(labyrinthStoneFloor, new Vector3(randomMapWidth + 1, i, 0), Quaternion.identity);
-        }
-        //上端
-        for (int i = -1; i <= randomMapWidth; i++)
-        {
-            Instantiate(labyrinthStoneFloor, new Vector3(i, randomMapHeight + 1, 0), Quaternion.identity);
         }
     }
 

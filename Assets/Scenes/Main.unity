@@ -1768,7 +1768,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -352, y: 182.72}
+  m_AnchoredPosition: {x: -351.99997, y: 182.72}
   m_SizeDelta: {x: -744.6, y: -391.63}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &455886879
@@ -3807,7 +3807,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1403084275}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999076
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4293,9 +4293,10 @@ MonoBehaviour:
   eventNpcAppearanceSkelton: {fileID: 56335149253562012, guid: c7758778adce57a4ba205b6d2d4099c2, type: 3}
   eventNpcAppearanceGhost: {fileID: 4074978532397710152, guid: 1838991b0efc94947b5611c664b6ade8, type: 3}
   createMapMode: 2
-  randomMapWidth: 30
-  randomMapHeight: 25
   labyrinthOuterWall: {fileID: 2819589318910859625, guid: 8a09991a364a9c94a87407cde582611b, type: 3}
+  labyrinthOuterWall2: {fileID: 7271320247045811844, guid: d088608abf5a05d4dbf99c8ea59bb071, type: 3}
+  labyrinthOuterWall3: {fileID: 0}
+  labyrinthOuterWall5: {fileID: 2150714836965138858, guid: 2bce042c8f2db864fb8e694d45d64a8d, type: 3}
   labyrinthGrassFloor: {fileID: 7877200778571232546, guid: fdd83b8aeb956d347a41d69e645e579b, type: 3}
   labyrinthStoneFloor: {fileID: 2693386319470781834, guid: 774082060bd6d15409362cb1509e29f4, type: 3}
 --- !u!4 &1483692205
@@ -4915,7 +4916,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.270004}
+  m_AnchoredPosition: {x: 142.74, y: -116.2699}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

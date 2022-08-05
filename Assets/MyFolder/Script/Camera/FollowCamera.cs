@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Common;
+
 [RequireComponent(typeof(Camera))]
 public class FollowCamera : MonoBehaviour
 {
@@ -29,8 +31,8 @@ public class FollowCamera : MonoBehaviour
             //不思議のダンジョン系マップモード
             else
             {
-                cameraMaxPointX = boardObj.randomMapWidth - 7.5f;
-                cameraMaxPos = new Vector2(cameraMaxPointX, boardObj.randomMapHeight - 3.0f);
+                cameraMaxPointX = Define.MYSTERYMAP_WHITH - 7.5f;
+                cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYMAP_HEIGHT - 3.0f);
                 camObj.orthographicSize = camObj.orthographicSize - 0.5f;
             }
         }

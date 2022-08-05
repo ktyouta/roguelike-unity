@@ -36,6 +36,12 @@ namespace Common
 		public const int NOMALENEMY_APPEARANCE_MINTURN = 10;
 		public const int NOMALENEMY_APPEARANCE_MAXTURN = 20;
 
+		//不思議のダンジョン系マップのサイズ
+		//横幅
+		public const int MYSTERYMAP_WHITH = 40;
+		//縦幅
+		public const int MYSTERYMAP_HEIGHT = 35;
+
 		//不思議のダンジョン系マップのタイル種別
 		public const int MOVABLE = 1;
 		public const int AISLE = 2;
@@ -43,7 +49,7 @@ namespace Common
 
 		//不思議のダンジョン系マップのエリア分割数
 		public const int AREA_MIN_NUM = 5;
-		public const int AREA_MAX_NUM = 7;
+		public const int AREA_MAX_NUM = 8;
 
 		//不思議のダンジョン系マップのエリア分割リセット回数
 		public const int AREA_SPLIT_MAXNUM = 10;
