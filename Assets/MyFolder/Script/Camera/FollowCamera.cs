@@ -10,7 +10,7 @@ public class FollowCamera : MonoBehaviour
     player pl;
     Transform playerTransform;
     Vector2 cameraMaxPos; // カメラの右上限界点
-    Vector2 cameraMinPos = new Vector2(7.5f, 3.5f); // カメラの左下限界点
+    Vector2 cameraMinPos = new Vector2(6.5f, 3.5f); // カメラの左下限界点
     [Header("マップ生成用オブジェクト")] public BoardManager boardObj;
     private float cameraMaxPointX;
     private Camera camObj;
@@ -31,7 +31,7 @@ public class FollowCamera : MonoBehaviour
             //不思議のダンジョン系マップモード
             else
             {
-                cameraMaxPointX = Define.MYSTERYMAP_WHITH - 7.5f;
+                cameraMaxPointX = Define.MYSTERYMAP_WHITH - 6.5f;
                 cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYMAP_HEIGHT - 3.0f);
                 camObj.orthographicSize = camObj.orthographicSize - 0.5f;
             }

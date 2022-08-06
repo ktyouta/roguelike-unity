@@ -1168,31 +1168,32 @@ public class BoardManager : MonoBehaviour
                 {
                     Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
                     tile = labyrinthOuterWall5;
+                    GameObject outerWallObj = Instantiate(tile, new Vector3(j, i, 0), Quaternion.identity) as GameObject;
+                    //マップ端の外壁は破壊不可
+                    outerWallObj.GetComponent<OuterWallScript>().isIndestructible = true;
+                    continue;
                 }
-                else
+                Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
+                switch (createMapArray[i, j])
                 {
-                    Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
-                    switch (createMapArray[i, j])
-                    {
-                        //外壁
-                        case Define.WALL:
-                            Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
-                            tile = labyrinthOuterWall5;
-                            break;
-                        //移動可能エリア
-                        case Define.MOVABLE:
-                            tile = labyrinthGrassFloor;
-                            //アイテムと敵の配置用に座標を保存する
-                            gridPositons.Add(new Vector3(j, i, 0));
-                            break;
-                        //通路
-                        case Define.AISLE:
-                            tile = labyrinthGrassFloor;
-                            break;
-                        default:
-                            tile = labyrinthGrassFloor;
-                            break;
-                    }
+                    //外壁
+                    case Define.WALL:
+                        Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
+                        tile = labyrinthOuterWall5;
+                        break;
+                    //移動可能エリア
+                    case Define.MOVABLE:
+                        tile = labyrinthGrassFloor;
+                        //アイテムと敵の配置用に座標を保存する
+                        gridPositons.Add(new Vector3(j, i, 0));
+                        break;
+                    //通路
+                    case Define.AISLE:
+                        tile = labyrinthGrassFloor;
+                        break;
+                    default:
+                        tile = labyrinthGrassFloor;
+                        break;
                 }
                 Instantiate(tile, new Vector3(j,i,0), Quaternion.identity);
             }

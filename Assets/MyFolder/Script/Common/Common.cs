@@ -23,6 +23,7 @@ namespace Common
 		public const int RANDOM_SETTING = 3;
 
 		//ÉåÉCÉÑÅ[ê›íË
+		public const int BLOCKING_LAYER = 3;
 		public const int ENEMY_LAYER = 7;
 		public const int TREASURE_LAYER = 8;
 

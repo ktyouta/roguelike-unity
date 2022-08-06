@@ -85,14 +85,12 @@ public class player : MovingObject
         //水平に移動するかどうかを確認し、移動する場合は垂直にゼロに設定します。(ズレ防止)
         if (inHorizontal != 0)
         {
-            vertical = 0;
-            nextHorizontalKey = horizontal > 0 ? 1 : -1;
+            nextHorizontalKey = inHorizontal > 0 ? 1 : -1;
             nextVerticalkey = 0;
         }
         else if (inVertical != 0)
         {
-            horizontal = 0;
-            nextVerticalkey = vertical > 0 ? 1 : -1;
+            nextVerticalkey = inVertical > 0 ? 1 : -1;
             nextHorizontalKey = 0;
         }
         //水平または垂直にゼロ以外の値があるかどうかを確認します
@@ -225,7 +223,7 @@ public class player : MovingObject
         animator.Play("PlayerAttack");
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(nextHorizontalKey, nextVerticalkey);
-        RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer);
+        RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer | blockingLayer);
         //攻撃の場合は現在地を追加
         GManager.instance.enemyNextPosition.Add(transform.position);
         //時間差で実行されるフラグをオンにする処理
@@ -257,6 +255,21 @@ public class player : MovingObject
                 return;
             }
             treasureObject.treasureHp -= GManager.instance.playerAttack;
+        }
+        //外壁にヒット
+        else if (hitObj.layer == Define.BLOCKING_LAYER && hitObj.tag == "OuterWall")
+        {
+            OuterWallScript outerWall = hitObj.GetComponent<OuterWallScript>();
+            if (outerWall == null)
+            {
+                return;
+            }
+            //破壊可能な場合
+            if (!outerWall.isIndestructible)
+            {
+                outerWall.wallHp -= GManager.instance.playerAttack;
+            }
+            outerWall.isAttacked = true;
         }
     }
 
