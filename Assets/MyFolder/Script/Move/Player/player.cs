@@ -76,7 +76,7 @@ public class player : MovingObject
         vertical = (int)(Input.GetAxisRaw("Vertical"));
         //攻撃
         leftShift = Input.GetKeyDown("left shift");
-
+        //プレイヤーを行動させる
         playerMove(horizontal,vertical,leftShift);
     }
 
@@ -96,6 +96,8 @@ public class player : MovingObject
         //水平または垂直にゼロ以外の値があるかどうかを確認します
         if (inHorizontal != 0 || inVertical != 0)
         {
+            Debug.Log("inHorizontal" + inHorizontal);
+            Debug.Log("inVertical" + inVertical);
             //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
             AttemptMove(inHorizontal, inVertical);
         }

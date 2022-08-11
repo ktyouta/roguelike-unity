@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MoveArrow : MonoBehaviour
 {
@@ -9,11 +10,57 @@ public class MoveArrow : MonoBehaviour
     private bool isPushBottom = false;
     private bool isPushRight = false;
     private bool isPushLeft = false;
+    [Header("方向")] public Direction direction;
+
+    public enum Direction
+    {
+        Top,
+        Bottom,
+        Right,
+        Left
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
+        //移動用のイベント設定
+        gameObject.AddComponent<EventTrigger>();
+        EventTrigger trigger = gameObject.GetComponent<EventTrigger>();
+
+        //ボタン押下
+        EventTrigger.Entry entryPointerDown = new EventTrigger.Entry();
+        entryPointerDown.eventID = EventTriggerType.PointerDown;
+
+        //ボタンから離れる
+        EventTrigger.Entry entryPointerUp = new EventTrigger.Entry();
+        entryPointerUp.eventID = EventTriggerType.PointerUp;
+
+        switch (direction)
+        {
+            //上方向
+            case Direction.Top:
+                entryPointerDown.callback.AddListener((eventDate) => { clickTopArrowBtn(); });
+                entryPointerUp.callback.AddListener((eventDate) => { buttonUp(); });
+                break;
+            //下方向
+            case Direction.Bottom:
+                entryPointerDown.callback.AddListener((eventDate) => { clickBottomArrowBtn(); });
+                entryPointerUp.callback.AddListener((eventDate) => { buttonUp(); });
+                break;
+            //右方向
+            case Direction.Right:
+                entryPointerDown.callback.AddListener((eventDate) => { clickRightArrowBtn(); });
+                entryPointerUp.callback.AddListener((eventDate) => { buttonUp(); });
+                break;
+            //左方向
+            case Direction.Left:
+                entryPointerDown.callback.AddListener((eventDate) => { clickLeftArrowBtn(); });
+                entryPointerUp.callback.AddListener((eventDate) => { buttonUp(); });
+                break;
+        }
+        trigger.triggers.Add(entryPointerDown);
+        trigger.triggers.Add(entryPointerUp);
     }
 
     // Update is called once per frame

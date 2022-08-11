@@ -231,6 +231,8 @@ public class BoardManager : MonoBehaviour
     [Header("草原フロア(不思議のダンジョン系)")] public GameObject labyrinthGrassFloor;
     //岩
     [Header("石フロア")] public GameObject labyrinthStoneFloor;
+    //階段
+    [Header("シーン切り替え用の階段")] public GameObject stairs;
 
     //マップ作成用
     enum Direction:int
@@ -585,7 +587,7 @@ public class BoardManager : MonoBehaviour
             {
                 //現在オブジェクトが置かれていない、ランダムな位置を取得
                 Vector3 randomPosition = RandomPosition();
-
+                if (tile.name == "Stairs") Debug.Log("階段の座標"+randomPosition);
                 //生成
                 Instantiate(tile, randomPosition, Quaternion.identity);
                 //移動不可の場合は移動不可地点リストに座標を追加
@@ -653,6 +655,8 @@ public class BoardManager : MonoBehaviour
         //不思議のダンジョン系マップモード
         else
         {
+            //シーン読み込み時にgridの中身をクリアする
+            gridPositons.Clear();
             //マップオブジェクト設置用の配列
             int[,] createMapArray = new int[randomMapHeight+1, randomMapWidth + 1];
             //マップを分割してリストに格納する
@@ -1205,11 +1209,14 @@ public class BoardManager : MonoBehaviour
      */
     private void layoutObject()
     {
+        //階段をインスタンス化
+        LayoutObjectAtRandom(stairs,1,1,false);
         //プレイヤーをインスタンス化
         LayoutObjectAtRandom(player, 1, 1, false);
-
         //食べ物をインスタンス化。
         LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum, false);
+        //敵をインスタンス化
+        //LayoutObjectAtRandom(enemy, 5, 5, false);
     }
 
 
