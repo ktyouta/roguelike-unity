@@ -237,7 +237,7 @@ RectTransform:
   m_Children:
   - {fileID: 231276523}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 9
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -328,7 +328,7 @@ RectTransform:
   m_Children:
   - {fileID: 744832028}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 12
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -801,7 +801,7 @@ RectTransform:
   m_Children:
   - {fileID: 1313620428}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 15
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1303,7 +1303,7 @@ RectTransform:
   m_Children:
   - {fileID: 755284388}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 16
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1619,7 +1619,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 922872483}
-  m_RootOrder: 10
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2111,7 +2111,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 922872483}
-  m_RootOrder: 11
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2202,7 +2202,7 @@ RectTransform:
   m_Children:
   - {fileID: 868189019}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 14
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2584,7 +2584,7 @@ RectTransform:
   - {fileID: 80736835}
   - {fileID: 324253326}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 8
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2913,7 +2913,7 @@ RectTransform:
   m_Children:
   - {fileID: 174197847}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 18
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3126,6 +3126,10 @@ RectTransform:
   - {fileID: 1441704136}
   - {fileID: 335040460}
   - {fileID: 1555215858}
+  - {fileID: 249951226}
+  - {fileID: 341348767}
+  - {fileID: 1644329652}
+  - {fileID: 881053036}
   - {fileID: 834582432}
   - {fileID: 117407720}
   - {fileID: 447990939}
@@ -3133,10 +3137,6 @@ RectTransform:
   - {fileID: 162658562}
   - {fileID: 1332141007}
   - {fileID: 711354474}
-  - {fileID: 249951226}
-  - {fileID: 341348767}
-  - {fileID: 1644329652}
-  - {fileID: 881053036}
   - {fileID: 1794146396}
   - {fileID: 1711796844}
   m_Father: {fileID: 0}
@@ -3230,9 +3230,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1483692206}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GManager, Assembly-CSharp
-        m_MethodName: openManual
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3589,7 +3589,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 922872483}
-  m_RootOrder: 13
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4712,7 +4712,7 @@ RectTransform:
   m_Children:
   - {fileID: 787794629}
   m_Father: {fileID: 922872483}
-  m_RootOrder: 17
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4860,7 +4860,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26998}
+  m_AnchoredPosition: {x: 142.74, y: -116.26936}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

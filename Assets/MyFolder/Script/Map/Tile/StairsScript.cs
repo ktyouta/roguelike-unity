@@ -20,6 +20,17 @@ public class StairsScript : MonoBehaviour
      */
     private void Restart()
     {
+        //ゲームオブジェクトを次のシーンに引き継ぐ
+        //アイテム
+        for (int i=0;i<GManager.instance.itemList.Count;i++)
+        {
+            DontDestroyOnLoad(GManager.instance.itemList[i]);
+        }
+        //NPC
+        for (int i = 0; i < GManager.instance.fellows.Count; i++)
+        {
+            DontDestroyOnLoad(GManager.instance.fellows[i]);
+        }
         GManager.instance.nowStairs.text = "";
         GManager.instance.mapLoadingText.text = ++GManager.instance.level + " F";
         GManager.instance.mapLoadingImage.SetActive(true);

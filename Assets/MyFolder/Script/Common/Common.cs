@@ -28,7 +28,7 @@ namespace Common
 		public const int TREASURE_LAYER = 8;
 
 		//仲間にできるNPCの上限数
-		public const int FELLOWS_MAXNUM = 0;
+		public const int FELLOWS_MAXNUM = 3;
 
 		//A-starアルゴリズムの最大計算(ループ)回数
 		public const int ASTAR_LOOPNUM = 3;

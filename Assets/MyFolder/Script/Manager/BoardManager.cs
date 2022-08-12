@@ -570,7 +570,7 @@ public class BoardManager : MonoBehaviour
     }
 
     //Mapにランダムで引数のものを配置する(敵、壁、アイテム)
-    void LayoutObjectAtRandom(GameObject tile, int minimum, int maximum, bool isUnmovable)
+    private void LayoutObjectAtRandom(GameObject tile, int minimum, int maximum, bool isUnmovable)
     {
         //tileがセットされていない場合はreturn
         if (tile == null)
@@ -583,19 +583,87 @@ public class BoardManager : MonoBehaviour
         //設置するオブジェクトの数分ループで回す
         for (int i = 0; i < objectCount; i++)
         {
-            if (gridPositons.Count > 0)
+            if (gridPositons.Count < 1)
             {
-                //現在オブジェクトが置かれていない、ランダムな位置を取得
-                Vector3 randomPosition = RandomPosition();
-                if (tile.name == "Stairs") Debug.Log("階段の座標"+randomPosition);
-                //生成
-                Instantiate(tile, randomPosition, Quaternion.identity);
-                //移動不可の場合は移動不可地点リストに座標を追加
-                if (isUnmovable)
+                return;
+            }
+            //現在オブジェクトが置かれていない、ランダムな位置を取得
+            Vector3 randomPosition = RandomPosition();
+            if (tile.name == "Stairs") Debug.Log("階段の座標" + randomPosition);
+            //生成
+            Instantiate(tile, randomPosition, Quaternion.identity);
+            //移動不可の場合は移動不可地点リストに座標を追加
+            if (isUnmovable)
+            {
+                GManager.instance.unmovableList.Add((Vector2)randomPosition);
+            }
+        }
+    }
+
+    /**
+     * プレイヤーおよびNPCを配置する
+     */
+    private void LayoutPlayerAtRandom()
+    {
+        //randomIndexを宣言して、gridPositionsの数から数値をランダムで入れる
+        int randomIndex = Random.Range(0, gridPositons.Count);
+        //randomPositionを宣言して、gridPositionsのrandomIndexに設定する
+        Vector3 randomPosition = gridPositons[randomIndex];
+        //使用したgridPositionsの要素を削除
+        gridPositons.RemoveAt(randomIndex);
+        Instantiate(player, randomPosition, Quaternion.identity);
+        //NPC用の座標リスト
+        List<Vector3> npcPointList = new List<Vector3>();
+        //仲間のNPCが存在しない場合
+        if (GManager.instance.fellows.Count < 1)
+        {
+            return;
+        }
+        //NPC用の座標リストを作成
+        for (int i=0;i<8;i++)
+        {
+            float phase = (float)(2 * Mathf.PI * (i/8.0));
+            float xValue = Mathf.Cos(phase);
+            float yValue = Mathf.Sin(phase);
+            if (i%2 != 0)
+            {
+                xValue = xValue == 0 ? 0 : xValue < 0 ? -1 : 1;
+                yValue = yValue == 0 ? 0 : yValue < 0 ? -1 : 1;
+            }
+            npcPointList.Add(new Vector3(randomPosition.x + (int)xValue, randomPosition.y + (int)yValue, 0));
+            Debug.Log("npcPointList"+ npcPointList[i]);
+        }
+        List<int> npcNextPositionList = new List<int>();
+        //gridPositionsのインデックスを取得
+        for (int i=0;i<npcPointList.Count;i++)
+        {
+            for (int j=0;j<gridPositons.Count;j++)
+            {
+                //NPCの初期位置候補が設置可能座標のリストに存在する場合
+                if (npcPointList[i] == gridPositons[j])
                 {
-                    GManager.instance.unmovableList.Add((Vector2)randomPosition);
+                    npcNextPositionList.Add(j);
+                    Debug.Log("gridPositons[j]"+ gridPositons[j]+ ":"+j);
+                    break;
                 }
             }
+        }
+        //降順ソート
+        npcNextPositionList.Sort();
+        npcNextPositionList.Reverse();
+        //NPCの初期位置設定
+        for (int i=0;i<GManager.instance.fellows.Count;i++)
+        {
+            //NPCの数が配置可能座標の数を超えている場合は次のシーンに引き継げない
+            if (i > npcNextPositionList.Count)
+            {
+                Destroy(GManager.instance.fellows[i]);
+                continue;
+            }
+            //DontDestroyOnLoad内のNPCの位置設定
+            Debug.Log("npcNextPositionList[i]"+ npcNextPositionList[i]);
+            GManager.instance.fellows[i].transform.position = gridPositons[npcNextPositionList[i]];
+            gridPositons.RemoveAt(npcNextPositionList[i]);
         }
     }
 
@@ -1212,11 +1280,16 @@ public class BoardManager : MonoBehaviour
         //階段をインスタンス化
         LayoutObjectAtRandom(stairs,1,1,false);
         //プレイヤーをインスタンス化
-        LayoutObjectAtRandom(player, 1, 1, false);
+        //LayoutObjectAtRandom(player, 1, 1, false);
+        LayoutPlayerAtRandom();
         //食べ物をインスタンス化。
         LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum, false);
         //敵をインスタンス化
         //LayoutObjectAtRandom(enemy, 5, 5, false);
+        //NPC(仲間)をインスタンス化
+        //LayoutObjectAtRandom(fellowTestNpc, 2, 2, true);
+        //NPC(仲間)をインスタンス化
+        //LayoutObjectAtRandom(fellowTestNpc2, 2, 2, true);
     }
 
 

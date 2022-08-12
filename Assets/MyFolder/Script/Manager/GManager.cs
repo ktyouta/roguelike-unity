@@ -70,6 +70,7 @@ public class GManager : MonoBehaviour
     private Button statusButton;
     private Button itemButton;
     private Button closeButton;
+    private Button manualButton;
 
     //リスト
     //敵ユニットのリスト。
@@ -156,6 +157,10 @@ public class GManager : MonoBehaviour
     //各レベルのゲームを初期化します。
     public void InitGame()
     {
+        //リストのリセット
+        unmovableList.Clear();
+        enemies.Clear();
+
         doingSetup = true;
         StartCoroutine(settingMapAndEnemies());
     }
@@ -194,6 +199,8 @@ public class GManager : MonoBehaviour
         grayImage = GameObject.FindWithTag("GrayImageTag");
         eManager = GetComponent<EventManager>();
         nowStairs = GameObject.Find("NowStairs").GetComponent<Text>();
+        manualButton = GameObject.Find("ManualButton").GetComponent<Button>();
+        manualButton.onClick.AddListener(() => openManual());
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -256,7 +263,6 @@ public class GManager : MonoBehaviour
         boardScript = GetComponent<BoardManager>();
         //マップのランダム生成
         boardScript.SetupScene(GManager.instance.level);
-        enemies.Clear();
         // 生成された敵オブジェクトを取得
         GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
@@ -655,7 +661,7 @@ public class GManager : MonoBehaviour
         for (var i = 0; i < itemList.Count; i++)
         {
             //メニューボタンの生成
-            GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x - 10, parentPosition.y + 80 - i * 35, 0f), Quaternion.identity) as GameObject;
+            GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x - 20, parentPosition.y + 60 - i * 35, 0f), Quaternion.identity) as GameObject;
             listButton.transform.SetParent(itemText.transform, false);
             listButton.transform.Find("Text").GetComponent<Text>().text = itemList[i].GetComponent<Item>().name;
             int index = i;

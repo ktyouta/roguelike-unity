@@ -10,20 +10,10 @@ public class NpcFellow : MovingObject
     [HideInInspector] public int npcId;
     protected player playerObj;
 
-    // Start is called before the first frame update
-    //protected override void Start()
-    //{
-    //    base.Start();
-    //    playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
-    //}
-
-    protected void Awake()
-    {
-        playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
-    }
-
     protected void OnEnable()
     {
+        //コンポーネントが有効になった際(NPCが仲間になった時)の処理
+        playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
         setFirstPosition();
     }
 
@@ -32,6 +22,11 @@ public class NpcFellow : MovingObject
      */
     public void fellowAction(Vector2 frontCharPosition)
     {
+        //プレイヤーオブジェクトがnullの場合(シーン読み込み後の最初の行動)
+        if (playerObj == null)
+        {
+            playerObj = GameObject.FindWithTag("Player").GetComponent<player>();
+        }
         //移動
         if (playerObj.isMoving)
         {

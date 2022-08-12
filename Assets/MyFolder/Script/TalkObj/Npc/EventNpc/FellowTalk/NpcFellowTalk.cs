@@ -51,7 +51,7 @@ public class NpcFellowTalk : NpcChoices
                     case 0:
                         int tempRequiredCharm = requiredCharm == 0 ? 1 : requiredCharm;
                         //’‡ŠÔ‚É‚Å‚«‚éãŒÀ”‚ð’´‚¦‚Ä‚¢‚é
-                        if (GManager.instance.fellows.Count > Common.Define.FELLOWS_MAXNUM)
+                        if (GManager.instance.fellows.Count >= Common.Define.FELLOWS_MAXNUM)
                         {
                             tempNowIndex = -100;
                         }
@@ -149,10 +149,10 @@ public class NpcFellowTalk : NpcChoices
         {
             if ((Vector2)transform.position == GManager.instance.unmovableList[nodeIndex])
             {
+                GManager.instance.unmovableList.RemoveAt(nowNodeIndex);
                 break;
             }
         }
-        GManager.instance.unmovableList.RemoveAt(nowNodeIndex);
     }
 
     /**
