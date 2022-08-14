@@ -57,6 +57,12 @@ namespace Common
 
 		//不思議のダンジョン系マップの分割エリアの最小面積
 		public const int MIN_AREA = 9;
+
+		//不思議のダンジョン系マップのタイルの切り替え時の階数(MAPTILE_CHANGE_STAIRS階ごとにマップが切り替わる)
+		public const int MAPTILE_CHANGE_STAIRS = 1;
+
+		//不思議のダンジョン系マップのアクセント用の外壁の抽選用変数
+		public const int WALL_LOTTERY_PARAM = 1;
 	}
 
 	//アイテムのタイプ

@@ -233,15 +233,37 @@ public class BoardManager : MonoBehaviour
     [Header("石フロア")] public GameObject labyrinthStoneFloor;
     //階段
     [Header("シーン切り替え用の階段")] public GameObject stairs;
+    //タイル設置用のリスト
+    //[Header("タイル設置用のリスト(不思議のダンジョン系)")] public List<LabyrinthMapCreateMapClass> labyrinthMapCreateMapList = new List<LabyrinthMapCreateMapClass>();
+    [Header("タイル設置用のリスト(不思議のダンジョン系)")] public LabyrinthMapCreateMapClass labyrinthMapCreateMap;
 
-    //マップ作成用
-    enum Direction:int
+    //アイテム等の複数設置するオブジェクト用のクラス
+    [System.Serializable]
+    public class MultipleSettingObjectClass
     {
-        Top,
-        Right,
-        Left,
-        Bottom
+        [Header("設置するオブジェクト")] public GameObject multipleSettingObj;
+        [Header("最小設置個数")] public int minSettingNum;
+        [Header("最大設置個数")] public int maxSettingNum;
+        [Header("trueの場合オブジェクトを設置しない")] public bool noSettingFlg;
     }
+
+    //不思議のダンジョン系マップのタイル設置用クラス
+    [System.Serializable]
+    public class LabyrinthMapCreateMapListClass
+    {
+        [Header("フロアオブジェクト")] public GameObject floreObj;
+        [Header("外壁オブジェクト")] public GameObject wallObj;
+        [Header("外壁オブジェクト(アクセント用)リスト")] public List<GameObject> subWallObjList;
+        [Header("複数設置オブジェクト用リスト")] public List<MultipleSettingObjectClass> multiObjList;
+    }
+
+    //LabyrinthMapCreateMapListClassのリストクラス
+    [System.Serializable]
+    public class LabyrinthMapCreateMapClass
+    {
+        [Header("階層ごとのフロア、外壁等のオブジェクトを格納するリスト")] public List<LabyrinthMapCreateMapListClass> objList = new List<LabyrinthMapCreateMapListClass>();
+    }
+
 
     //フィールド生成
     /**
@@ -578,7 +600,7 @@ public class BoardManager : MonoBehaviour
             return;
         }
         //生成するアイテムの個数を最小最大値からランダムに決め、objectCountに設定する
-        int objectCount = Random.Range(minimum, maximum);
+        int objectCount = Random.Range(minimum, maximum + 1);
         //割り当て用の座標が余っている場合のみ配置可能
         //設置するオブジェクトの数分ループで回す
         for (int i = 0; i < objectCount; i++)
@@ -703,7 +725,7 @@ public class BoardManager : MonoBehaviour
     }
 
     //ゲームボードをレイアウトする
-    public void SetupScene(int level)
+    public void SetupScene()
     {
         createTreasureItemList();
         //横スクロールマップモード
@@ -751,11 +773,12 @@ public class BoardManager : MonoBehaviour
             List<Vector2> hookAisleInfo = hookAisle(divAreaList, aisleInfo.aisleEndPointList);
             //配列にマップ情報(接続用の通路)を格納する
             pushMapInfoAisle(hookAisleInfo, createMapArray);
-            //Instantiate(player, new Vector3(1, 1, 0f), Quaternion.identity);
-            //マップ情報を元にオブジェクトをセットする
-            createLabyrinthMap(createMapArray);
+            //リストの要素数を超えているかチェック
+            int hierarchyIndex = (GManager.instance.level -1) / Define.MAPTILE_CHANGE_STAIRS < labyrinthMapCreateMap.objList.Count ? (GManager.instance.level -1) / Define.MAPTILE_CHANGE_STAIRS : labyrinthMapCreateMap.objList.Count - 1;
+            //マップ情報を元にオブジェクト(タイル)をセットする
+            createLabyrinthMap(createMapArray, hierarchyIndex);
             //ゲームオブジェクトをマップに配置する
-            layoutObject();
+            layoutObjectInLabyrinth(hierarchyIndex);
         }
     }
 
@@ -810,7 +833,7 @@ public class BoardManager : MonoBehaviour
             Debug.Log("yDirectionPoint:" + yDirectionPoint);
 
             //エリア分割をやり直す
-            if (firstLength < 5 || secondLength < 5)
+            if (firstLength <= 5 || secondLength <= 5)
             {
                 splitAreaFlg = false;
                 splitResetCounter++;
@@ -924,7 +947,7 @@ public class BoardManager : MonoBehaviour
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerStartPoint.x - 1; k >= divAreaList[i].startPoint.x; k--)
+                    for (int k = (int)divAreaList[i].innerStartPoint.x ; k >= divAreaList[i].startPoint.x; k--)
                     {
                         aisleList.Add(new Vector2(k, randomPoint));
                         //通路の終点をリストに追加
@@ -951,7 +974,7 @@ public class BoardManager : MonoBehaviour
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerStartPoint.y - 1; k >= divAreaList[i].startPoint.y; k--)
+                    for (int k = (int)divAreaList[i].innerStartPoint.y ; k >= divAreaList[i].startPoint.y; k--)
                     {
                         aisleList.Add(new Vector2(randomPoint, k));
                         //通路の終点をリストに追加
@@ -978,7 +1001,7 @@ public class BoardManager : MonoBehaviour
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerEndPoint.x + 1; k <= divAreaList[i].endPoint.x; k++)
+                    for (int k = (int)divAreaList[i].innerEndPoint.x ; k <= divAreaList[i].endPoint.x; k++)
                     {
                         aisleList.Add(new Vector2(k, randomPoint));
                         //通路の終点をリストに追加
@@ -1005,7 +1028,7 @@ public class BoardManager : MonoBehaviour
                     {
                         continue;
                     }
-                    for (int k = (int)divAreaList[i].innerEndPoint.y + 1; k <= divAreaList[i].endPoint.y; k++)
+                    for (int k = (int)divAreaList[i].innerEndPoint.y ; k <= divAreaList[i].endPoint.y; k++)
                     {
                         aisleList.Add(new Vector2(randomPoint, k));
                         //通路の終点をリストに追加
@@ -1225,46 +1248,50 @@ public class BoardManager : MonoBehaviour
     /**
      * 配列のマップ情報からオブジェクトをセットする
      */
-    private void createLabyrinthMap(int[,] createMapArray)
+    private void createLabyrinthMap(int[,] createMapArray,int hierarchyIndex)
     {
-        //Debug.Log("width" + createMapArray.GetLength(0));
-        //Debug.Log("height" + createMapArray.GetLength(1));
+        GameObject floreTile = labyrinthMapCreateMap.objList[hierarchyIndex].floreObj;
+        GameObject wallTile = labyrinthMapCreateMap.objList[hierarchyIndex].wallObj;
+        //外壁(アクセント用)がnull以外でフィルター
+        List<GameObject> subWallTileList = labyrinthMapCreateMap.objList[hierarchyIndex].subWallObjList.FindAll(obj => obj != null);
+        GameObject tile;
         for (int i=-1;i<=createMapArray.GetLength(0);i++)
         {
             for (int j=-1;j<=createMapArray.GetLength(1);j++)
             {
                 Debug.Log("Vector2"+i+"  "+j);
-                GameObject tile;
-                //マップ端
-                if (i == -1 || i == createMapArray.GetLength(0) || j == -1 || j == createMapArray.GetLength(1))
+                //マップ端または移動不可エリア
+                bool isMapEdge = i == -1 || i == createMapArray.GetLength(0) || j == -1 || j == createMapArray.GetLength(1);
+                if (isMapEdge || createMapArray[i, j] == Define.WALL)
                 {
-                    Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
-                    tile = labyrinthOuterWall5;
+                    //先に通常のフロアを設置
+                    Instantiate(floreTile, new Vector3(j, i, 0), Quaternion.identity);
+                    tile = subWallTileList.Count < 1 ? wallTile : getRandomWallTile(wallTile, subWallTileList[Random.Range(0, subWallTileList.Count)]);
                     GameObject outerWallObj = Instantiate(tile, new Vector3(j, i, 0), Quaternion.identity) as GameObject;
-                    //マップ端の外壁は破壊不可
-                    outerWallObj.GetComponent<OuterWallScript>().isIndestructible = true;
+                    //移動不可地点リストに座標を追加
+                    GManager.instance.unmovableList.Add(new Vector2(j, i));
+                    //マップ端の外壁を破壊不可にする
+                    if (isMapEdge)
+                    {
+                        outerWallObj.GetComponent<OuterWallScript>().isIndestructible = true;
+                    }
                     continue;
                 }
                 Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
                 switch (createMapArray[i, j])
                 {
-                    //外壁
-                    case Define.WALL:
-                        Instantiate(labyrinthGrassFloor, new Vector3(j, i, 0), Quaternion.identity);
-                        tile = labyrinthOuterWall5;
-                        break;
                     //移動可能エリア
                     case Define.MOVABLE:
-                        tile = labyrinthGrassFloor;
+                        tile = floreTile;
                         //アイテムと敵の配置用に座標を保存する
                         gridPositons.Add(new Vector3(j, i, 0));
                         break;
                     //通路
                     case Define.AISLE:
-                        tile = labyrinthGrassFloor;
+                        tile = floreTile;
                         break;
                     default:
-                        tile = labyrinthGrassFloor;
+                        tile = floreTile;
                         break;
                 }
                 Instantiate(tile, new Vector3(j,i,0), Quaternion.identity);
@@ -1273,23 +1300,58 @@ public class BoardManager : MonoBehaviour
     }
 
     /**
+     * 設置する外壁をランダムで選択して返却
+     */
+    private GameObject getRandomWallTile(GameObject mainTile,GameObject subTile)
+    {
+        int randomNum = Random.Range(1,11);
+        GameObject wall = mainTile;
+        //一定の確率でアクセント用の外壁を返却
+        if (Random.Range(1, 11) <= Define.WALL_LOTTERY_PARAM)
+        {
+            wall = subTile;
+        }
+        return wall;
+    }
+
+    /**
      * マップ上にオブジェクトを配置
      */
-    private void layoutObject()
+    private void layoutObjectInLabyrinth(int hierarchyIndex)
     {
         //階段をインスタンス化
         LayoutObjectAtRandom(stairs,1,1,false);
         //プレイヤーをインスタンス化
         //LayoutObjectAtRandom(player, 1, 1, false);
         LayoutPlayerAtRandom();
-        //食べ物をインスタンス化。
-        LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum, false);
+        //複数設置用オブジェクトを設置
+        settingMultipleObject(hierarchyIndex);
+
+        //食べ物をインスタンス化
+        //LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum, false);
         //敵をインスタンス化
         //LayoutObjectAtRandom(enemy, 5, 5, false);
         //NPC(仲間)をインスタンス化
         //LayoutObjectAtRandom(fellowTestNpc, 2, 2, true);
         //NPC(仲間)をインスタンス化
         //LayoutObjectAtRandom(fellowTestNpc2, 2, 2, true);
+    }
+
+    /**
+     * 複数設置用オブジェクトの設置
+     */
+    private void settingMultipleObject(int hierarchyIndex)
+    {
+        //設置用オブジェクトがセットされているものでフィルターする
+        List<MultipleSettingObjectClass> multiObjList = labyrinthMapCreateMap.objList[hierarchyIndex].multiObjList.FindAll(obj => obj.multipleSettingObj != null);
+        for (int i=0;i<multiObjList.Count;i++)
+        {
+            if (multiObjList[i].noSettingFlg)
+            {
+                continue;
+            }
+            LayoutObjectAtRandom(multiObjList[i].multipleSettingObj,multiObjList[i].minSettingNum,multiObjList[i].maxSettingNum,false);
+        }
     }
 
 

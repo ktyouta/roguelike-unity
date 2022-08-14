@@ -262,7 +262,7 @@ public class GManager : MonoBehaviour
 
         boardScript = GetComponent<BoardManager>();
         //マップのランダム生成
-        boardScript.SetupScene(GManager.instance.level);
+        boardScript.SetupScene();
         // 生成された敵オブジェクトを取得
         GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
