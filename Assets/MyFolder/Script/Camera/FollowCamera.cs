@@ -31,9 +31,20 @@ public class FollowCamera : MonoBehaviour
             //不思議のダンジョン系マップモード
             else
             {
-                cameraMaxPointX = Define.MYSTERYMAP_WHITH - 6.5f;
-                cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYMAP_HEIGHT - 3.0f);
+                //ボス戦マップ
+                if (boardObj.isBossMode)
+                {
+                    cameraMaxPointX = Define.MYSTERYBOSSMAP_WHITH - 6.5f;
+                    cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYBOSSMAP_HEIGHT - 3.0f);
+                }
+                //通常マップ
+                else
+                {
+                    cameraMaxPointX = Define.MYSTERYMAP_WHITH - 6.5f;
+                    cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYMAP_HEIGHT - 3.0f);
+                }
                 camObj.orthographicSize = camObj.orthographicSize - 0.5f;
+
             }
         }
     }

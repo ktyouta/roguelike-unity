@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Common;
 
@@ -216,9 +217,13 @@ public class BoardManager : MonoBehaviour
     //マップの生成モード
     [HideInInspector] public int createMapMode = 2;
 
-    //不思議のダンジョン系マップの作成用のパラメータ
+    //不思議のダンジョン系マップの通常マップ作成用のパラメータ
     private int randomMapWidth = Define.MYSTERYMAP_WHITH;
     private int randomMapHeight = Define.MYSTERYMAP_HEIGHT;
+
+    //不思議のダンジョン系マップのボス戦マップ作成用のパラメータ
+    private int bossMapWidth = Define.MYSTERYBOSSMAP_WHITH;
+    private int bossMapHeight = Define.MYSTERYBOSSMAP_HEIGHT;
 
     //不思議のダンジョン系マップ用フロア
     //外壁
@@ -234,8 +239,16 @@ public class BoardManager : MonoBehaviour
     //階段
     [Header("シーン切り替え用の階段")] public GameObject stairs;
     //タイル設置用のリスト
-    //[Header("タイル設置用のリスト(不思議のダンジョン系)")] public List<LabyrinthMapCreateMapClass> labyrinthMapCreateMapList = new List<LabyrinthMapCreateMapClass>();
     [Header("タイル設置用のリスト(不思議のダンジョン系)")] public LabyrinthMapCreateMapClass labyrinthMapCreateMap;
+
+    //不思議のダンジョン系マップ用フラグ
+    [HideInInspector] public bool isBossMode;
+
+    //不思議のダンジョン系マップ用gridPositons ※Dictionary型で保持
+    Dictionary<int, List<Vector3>> gridPositionsDictionary;
+
+    //プレイヤーのオブジェクト
+    private GameObject playerObj;
 
     //アイテム等の複数設置するオブジェクト用のクラス
     [System.Serializable]
@@ -247,21 +260,40 @@ public class BoardManager : MonoBehaviour
         [Header("trueの場合オブジェクトを設置しない")] public bool noSettingFlg;
     }
 
-    //不思議のダンジョン系マップのタイル設置用クラス
+    //不思議のダンジョン系マップのタイル設置用クラス(階層ごとに設定するリスト形式)
     [System.Serializable]
     public class LabyrinthMapCreateMapListClass
     {
         [Header("フロアオブジェクト")] public GameObject floreObj;
+        [Header("フロアオブジェクト(アクセント用)リスト")] public List<GameObject> subFloreObjList;
+        [Header("効果付きフロアオブジェクト用リスト")] public List<GameObject> effectFloreObjList;
         [Header("外壁オブジェクト")] public GameObject wallObj;
         [Header("外壁オブジェクト(アクセント用)リスト")] public List<GameObject> subWallObjList;
-        [Header("複数設置オブジェクト用リスト")] public List<MultipleSettingObjectClass> multiObjList;
+        [Header("アイテムリスト")] public List<MultipleSettingObjectClass> itemObjList;
+        [Header("敵リスト")] public List<MultipleSettingObjectClass> enemyObjList;
+        [Header("Trueの場合は最後の階層でボス戦あり")] public bool isCreateBossMap;
+        [Header("ボスモンスター")] public GameObject bossMonsterObj;
     }
 
-    //LabyrinthMapCreateMapListClassのリストクラス
+    //LabyrinthMapCreateMapListClassのリストクラス(不思議のダンジョン系マップ)
     [System.Serializable]
     public class LabyrinthMapCreateMapClass
     {
         [Header("階層ごとのフロア、外壁等のオブジェクトを格納するリスト")] public List<LabyrinthMapCreateMapListClass> objList = new List<LabyrinthMapCreateMapListClass>();
+    }
+
+    //タイル設置およびモンスターハウス作成用クラス
+    public class createMapArrayClass
+    {
+        public int? areaDivNum;
+        public int tileType;
+    }
+
+    //プレイヤー設置時に使用するクラス
+    public class SettingPlayerPositionClass
+    {
+        public int? nowPlyerPositionKey;
+        public Vector3 randomPosition;
     }
 
 
@@ -622,50 +654,217 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+
     /**
-     * プレイヤーおよびNPCを配置する
+     * 不思議のダンジョン系マップにオブジェクトを設置する
      */
-    private void LayoutPlayerAtRandom()
+    private void LayoutObjectAtRandomMysterymap(GameObject tile, int minimum, int maximum, bool isUnmovable,int? argDictionaryKey)
     {
-        //randomIndexを宣言して、gridPositionsの数から数値をランダムで入れる
-        int randomIndex = Random.Range(0, gridPositons.Count);
-        //randomPositionを宣言して、gridPositionsのrandomIndexに設定する
-        Vector3 randomPosition = gridPositons[randomIndex];
-        //使用したgridPositionsの要素を削除
-        gridPositons.RemoveAt(randomIndex);
-        Instantiate(player, randomPosition, Quaternion.identity);
-        //NPC用の座標リスト
-        List<Vector3> npcPointList = new List<Vector3>();
-        //仲間のNPCが存在しない場合
-        if (GManager.instance.fellows.Count < 1)
+        //tileがセットされていない場合はreturn
+        if (tile == null)
         {
             return;
         }
-        //NPC用の座標リストを作成
-        for (int i=0;i<8;i++)
+        int? dictionaryKey;
+        //生成するアイテムの個数を最小最大値からランダムに決め、objectCountに設定する
+        int objectCount = Random.Range(minimum, maximum + 1);
+        //割り当て用の座標が余っている場合のみ配置可能
+        //設置するオブジェクトの数分ループで回す
+        for (int i = 0; i < objectCount; i++)
         {
-            float phase = (float)(2 * Mathf.PI * (i/8.0));
+            //オブジェクトを配置する座標がなくなった場合
+            if (gridPositionsDictionary.Count < 1)
+            {
+                return;
+            }
+            //引数でキーを渡されている場合はそれをセット
+            //渡されていない場合はランダムに取得する
+            dictionaryKey = argDictionaryKey == null ? getRandomDictionaryKey() : argDictionaryKey;
+            //キーが存在しない場合
+            if (dictionaryKey == null)
+            {
+                continue;
+            }
+            //現在オブジェクトが置かれていない、ランダムな位置を取得
+            Vector3? randomPosition = getRandomPositionFromMysterymap((int)dictionaryKey);
+            if (randomPosition == null)
+            {
+                continue;
+            }
+            if (tile.name == "Stairs") Debug.Log("階段の座標" + randomPosition);
+            //生成
+            Instantiate(tile, (Vector3)randomPosition, Quaternion.identity);
+            //移動不可の場合は移動不可地点リストに座標を追加
+            if (isUnmovable)
+            {
+                GManager.instance.unmovableList.Add((Vector2)randomPosition);
+            }
+        }
+    }
+
+    //gridPositionsDictionaryからランダムな位置を取得する
+    Vector3? getRandomPositionFromMysterymap(int dictionaryKey)
+    {
+        //キーに対応したリストからランダムに座標を取得する
+        Vector3 randomPosition = getPositionFromDictionary((int)dictionaryKey,out int randomPositionIndex);
+
+        //使用した座標を削除する
+        deleteUsedPosition((int)dictionaryKey, randomPositionIndex);
+        return randomPosition;
+    }
+
+    /**
+     * gridPositionsDictionaryからランダムにキーを取得する
+     */
+    private int? getRandomDictionaryKey()
+    {
+        List<int> keyList = gridPositionsDictionary.Keys.ToList();
+        int randomDictionaryKey = Random.Range(0, keyList.Count);
+        int dictionaryKey = keyList[randomDictionaryKey];
+        //キーが存在しない場合
+        if (!gridPositionsDictionary.ContainsKey(dictionaryKey))
+        {
+            return null;
+        }
+        return dictionaryKey;
+    }
+
+    /**
+     * Dictionaryのキーから座標を返却
+     */
+    private Vector3 getPositionFromDictionary(int dictionaryKey,out int randomPositionIndex)
+    {
+        //キーに対応したリスト
+        List<Vector3> pickedAreaPositionList = gridPositionsDictionary[dictionaryKey];
+        //リストからランダムに座標を取得する
+        randomPositionIndex = Random.Range(0, pickedAreaPositionList.Count);
+        return pickedAreaPositionList[randomPositionIndex];
+    }
+
+    /**
+     * オブジェクトを配置した座標をリストから削除する
+     */
+    private void deleteUsedPosition(int dictionaryKey,int randomPositionIndex)
+    {
+        gridPositionsDictionary[(int)dictionaryKey].RemoveAt(randomPositionIndex);
+        //座標リストが空になった場合はDictionaryから削除する
+        if (gridPositionsDictionary[(int)dictionaryKey].Count < 1)
+        {
+            gridPositionsDictionary.Remove((int)dictionaryKey);
+        }
+    }
+
+    /**
+     * メインオブジェクトを配置する
+     */
+    private void LayoutMainObjAtRandom(int hierarchyIndex,bool isBossMode)
+    {
+        //プレイヤーを設置
+        SettingPlayerPositionClass settingPlayerInfo = new SettingPlayerPositionClass();
+        LayoutPlayerAtRandom(settingPlayerInfo);
+        //キーが存在しない場合
+        if (settingPlayerInfo.nowPlyerPositionKey == null)
+        {
+            return;
+        }
+
+        //NPC(仲間)を設置
+        if (GManager.instance.fellows.Count < 1)
+        {
+            LayoutNpcAtRandom(settingPlayerInfo.randomPosition, (int)settingPlayerInfo.nowPlyerPositionKey);
+        }
+
+        //ボスマップの場合はモンスターハウスを作成しない
+        if (isBossMode)
+        {
+            return;
+        }
+
+        //モンスターハウスが出現する場合
+        if (Random.Range(1, 101) <= Define.MONSTERHOUSE_PROBABILITY)
+        {
+            createMonsterHouse((int)settingPlayerInfo.nowPlyerPositionKey, hierarchyIndex);
+        }
+    }
+
+    /**
+     * プレイヤーを設置
+     */
+    private void LayoutPlayerAtRandom(SettingPlayerPositionClass settingPlayerInfo)
+    {
+        //gridPositionsDictionaryからランダムにキーを取得する
+        int? nowPlyerPositionKey = getRandomDictionaryKey();
+        settingPlayerInfo.nowPlyerPositionKey = getRandomDictionaryKey();
+        //キーが存在しない場合
+        if (settingPlayerInfo.nowPlyerPositionKey == null)
+        {
+            return;
+        }
+        //座標を取得
+        settingPlayerInfo.randomPosition = getPositionFromDictionary((int)nowPlyerPositionKey, out int randomPositionIndex);
+        playerObj = Instantiate(player, settingPlayerInfo.randomPosition, Quaternion.identity) as GameObject;
+        deleteUsedPosition((int)nowPlyerPositionKey, randomPositionIndex);
+    }
+
+    /**
+     * モンスターハウスの作成
+     */
+    private void createMonsterHouse(int nowPlyerPositionKey,int hierarchyIndex)
+    {
+        //敵の出現数を取得
+        int appearEnemyNum = gridPositionsDictionary[nowPlyerPositionKey].Count / 5;
+        int startAppearNum = 1;
+        int randomAppearNum;
+        //敵
+        List<MultipleSettingObjectClass> multiEnemyObjList = labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => obj.multipleSettingObj != null);
+        for (int i=0;i< multiEnemyObjList.Count;i++)
+        {
+            randomAppearNum = Random.Range(startAppearNum, appearEnemyNum + 1);
+            if (i == multiEnemyObjList.Count -1)
+            {
+                randomAppearNum = appearEnemyNum + 1 - startAppearNum;
+            }
+            LayoutObjectAtRandomMysterymap(multiEnemyObjList[i].multipleSettingObj, randomAppearNum, randomAppearNum, false, null);
+            startAppearNum = randomAppearNum + 1;
+        }
+        GManager.instance.wrightLog("モンスターハウスだ！！");
+    }
+
+    /**
+     * NPCをプレイヤーの周囲に配置
+     */
+    private void LayoutNpcAtRandom(Vector3 randomPosition,int nowPlyerPositionKey)
+    {
+        Debug.Log("(Vector3)randomPosition" + (Vector3)randomPosition);
+        //NPC用の座標リスト
+        List<Vector3> npcPointList = new List<Vector3>();
+        //NPC用の座標リストを作成(プレイヤーの周囲8マス)
+        for (int i = 0; i < 8; i++)
+        {
+            float phase = (float)(2 * Mathf.PI * (i / 8.0));
             float xValue = Mathf.Cos(phase);
             float yValue = Mathf.Sin(phase);
-            if (i%2 != 0)
+            if (i % 2 != 0)
             {
                 xValue = xValue == 0 ? 0 : xValue < 0 ? -1 : 1;
                 yValue = yValue == 0 ? 0 : yValue < 0 ? -1 : 1;
             }
-            npcPointList.Add(new Vector3(randomPosition.x + (int)xValue, randomPosition.y + (int)yValue, 0));
-            Debug.Log("npcPointList"+ npcPointList[i]);
+            Debug.Log("((Vector3)randomPosition).x + (int)xValue" + ((randomPosition).x + (int)xValue));
+            Debug.Log("((Vector3)randomPosition).y + (int)yValue" + ((randomPosition).y + (int)yValue));
+            npcPointList.Add(new Vector3((int)randomPosition.x + (int)xValue, (int)randomPosition.y + (int)yValue, 0));
         }
+        //int keyInteger = nowPlyerPositionKey;
+        List<Vector3> keyGridPositionList = gridPositionsDictionary[nowPlyerPositionKey];
+        //gridPositionsDictionary[(int)nowPlyerPositionKey]のインデックスを取得
         List<int> npcNextPositionList = new List<int>();
-        //gridPositionsのインデックスを取得
-        for (int i=0;i<npcPointList.Count;i++)
+        for (int i = 0; i < npcPointList.Count; i++)
         {
-            for (int j=0;j<gridPositons.Count;j++)
+            for (int j = 0; j < keyGridPositionList.Count; j++)
             {
                 //NPCの初期位置候補が設置可能座標のリストに存在する場合
-                if (npcPointList[i] == gridPositons[j])
+                if (npcPointList[i] == keyGridPositionList[j])
                 {
                     npcNextPositionList.Add(j);
-                    Debug.Log("gridPositons[j]"+ gridPositons[j]+ ":"+j);
                     break;
                 }
             }
@@ -674,7 +873,7 @@ public class BoardManager : MonoBehaviour
         npcNextPositionList.Sort();
         npcNextPositionList.Reverse();
         //NPCの初期位置設定
-        for (int i=0;i<GManager.instance.fellows.Count;i++)
+        for (int i = 0; i < GManager.instance.fellows.Count; i++)
         {
             //NPCの数が配置可能座標の数を超えている場合は次のシーンに引き継げない
             if (i > npcNextPositionList.Count)
@@ -683,10 +882,103 @@ public class BoardManager : MonoBehaviour
                 continue;
             }
             //DontDestroyOnLoad内のNPCの位置設定
-            Debug.Log("npcNextPositionList[i]"+ npcNextPositionList[i]);
-            GManager.instance.fellows[i].transform.position = gridPositons[npcNextPositionList[i]];
-            gridPositons.RemoveAt(npcNextPositionList[i]);
+            Debug.Log("npcNextPositionList[i]" + npcNextPositionList[i]);
+            Debug.Log("gridPositionsDictionary[(int)nowPlyerPositionKey][npcNextPositionList[i]]" + gridPositionsDictionary[nowPlyerPositionKey][npcNextPositionList[i]]);
+            GManager.instance.fellows[i].transform.position = keyGridPositionList[npcNextPositionList[i]];
+            Debug.Log("GManager.instance.fellows[i].transform.position" + GManager.instance.fellows[i].transform.position);
+            gridPositionsDictionary[nowPlyerPositionKey].RemoveAt(npcNextPositionList[i]);
         }
+
+        //NPC用の座標リスト
+        //List<Vector3> npcPointList = new List<Vector3>();
+        ////仲間のNPCが存在しない場合
+        //if (GManager.instance.fellows.Count < 1)
+        //{
+        //    return;
+        //}
+        ////NPC用の座標リストを作成
+        //for (int i=0;i<8;i++)
+        //{
+        //    float phase = (float)(2 * Mathf.PI * (i/8.0));
+        //    float xValue = Mathf.Cos(phase);
+        //    float yValue = Mathf.Sin(phase);
+        //    if (i%2 != 0)
+        //    {
+        //        xValue = xValue == 0 ? 0 : xValue < 0 ? -1 : 1;
+        //        yValue = yValue == 0 ? 0 : yValue < 0 ? -1 : 1;
+        //    }
+        //    npcPointList.Add(new Vector3(((Vector3)randomPosition).x + (int)xValue, ((Vector3)randomPosition).y + (int)yValue, 0));
+        //    Debug.Log("npcPointList"+ npcPointList[i]);
+        //}
+
+        //List<int> npcNextPositionList = new List<int>();
+        ////gridPositionsのインデックスを取得
+        //for (int i=0;i<npcPointList.Count;i++)
+        //{
+        //    for (int j=0;j<gridPositons.Count;j++)
+        //    {
+        //        //NPCの初期位置候補が設置可能座標のリストに存在する場合
+        //        if (npcPointList[i] == gridPositons[j])
+        //        {
+        //            npcNextPositionList.Add(j);
+        //            break;
+        //        }
+        //    }
+        //}
+        ////降順ソート
+        //npcNextPositionList.Sort();
+        //npcNextPositionList.Reverse();
+        ////NPCの初期位置設定
+        //for (int i=0;i<GManager.instance.fellows.Count;i++)
+        //{
+        //    //NPCの数が配置可能座標の数を超えている場合は次のシーンに引き継げない
+        //    if (i > npcNextPositionList.Count)
+        //    {
+        //        Destroy(GManager.instance.fellows[i]);
+        //        continue;
+        //    }
+        //    //DontDestroyOnLoad内のNPCの位置設定
+        //    Debug.Log("npcNextPositionList[i]"+ npcNextPositionList[i]);
+        //    GManager.instance.fellows[i].transform.position = gridPositons[npcNextPositionList[i]];
+        //    gridPositons.RemoveAt(npcNextPositionList[i]);
+        //}
+    }
+
+    /**
+     * 座標からDictionaryのキーを返却
+     */
+    private int? getGridPositionsDictionaryKey(Vector3 point)
+    {
+        foreach (KeyValuePair<int, List<Vector3>> element in gridPositionsDictionary)
+        {
+            foreach (Vector3 vector in element.Value)
+            {
+                Debug.Log("vector"+ vector);
+                Debug.Log("point" + point);
+                //座標が一致した場合キーを返却
+                if (vector == point)
+                {
+                    return element.Key;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * ボスのHPが0以下になった際に階段を配置する
+     */
+    public void LayoutStairsAtRandom()
+    {
+        Vector3 randomStairsPosition;
+        do
+        {
+            int randomStairsIndex = Random.Range(0, gridPositionsDictionary[0].Count);
+            randomStairsPosition = gridPositionsDictionary[0][randomStairsIndex];
+            gridPositionsDictionary[0].RemoveAt(randomStairsIndex);
+            //プレイヤーの現在位置と一致した場合再度位置を取得し直す
+        } while (playerObj.transform.position == randomStairsPosition);
+        Instantiate(stairs, randomStairsPosition, Quaternion.identity);
     }
 
     /**
@@ -747,38 +1039,63 @@ public class BoardManager : MonoBehaviour
         {
             //シーン読み込み時にgridの中身をクリアする
             gridPositons.Clear();
-            //マップオブジェクト設置用の配列
-            int[,] createMapArray = new int[randomMapHeight+1, randomMapWidth + 1];
-            //マップを分割してリストに格納する
-            List<DivisionAreaClass> divAreaList = splitMap();
-            Debug.Log("divarealistcount:" + divAreaList.Count);
-            //分割された区画を縮小する
-            reduceDivisionArea(divAreaList);
-            Debug.Log("----------------------------------------------------------------");
-            for (int i=0;i<divAreaList.Count;i++)
-            {
-                Debug.Log("startpoint"+ divAreaList[i].startPoint);
-                Debug.Log("endpoint" + divAreaList[i].endPoint);
-                Debug.Log("innerstartpoint" + divAreaList[i].innerStartPoint);
-                Debug.Log("innerendpoint" + divAreaList[i].innerEndPoint);
-                Debug.Log("area" + divAreaList[i].areaValue);
-            }
-            //境界線に対して通路を伸ばす
-            AisleClass aisleInfo = extendAisle(divAreaList);
-            //配列にマップ情報(移動可能エリア、外壁)を格納する
-            pushMapInfo(divAreaList, createMapArray);
-            //配列にマップ情報(通路)を格納する
-            pushMapInfoAisle(aisleInfo.aisleList, createMapArray);
-            //通路と通路をつなぐ
-            List<Vector2> hookAisleInfo = hookAisle(divAreaList, aisleInfo.aisleEndPointList);
-            //配列にマップ情報(接続用の通路)を格納する
-            pushMapInfoAisle(hookAisleInfo, createMapArray);
+            //シーン読み込み時にgridPositionsDictionaryの中身をクリアする
+            gridPositionsDictionary = new Dictionary<int, List<Vector3>>();
+            int quotientNowHierarchyLevel = (GManager.instance.hierarchyLevel - 1) / Define.MAPTILE_CHANGE_STAIRS;
             //リストの要素数を超えているかチェック
-            int hierarchyIndex = (GManager.instance.level -1) / Define.MAPTILE_CHANGE_STAIRS < labyrinthMapCreateMap.objList.Count ? (GManager.instance.level -1) / Define.MAPTILE_CHANGE_STAIRS : labyrinthMapCreateMap.objList.Count - 1;
+            bool isLessListCount = quotientNowHierarchyLevel < labyrinthMapCreateMap.objList.Count;
+            //リストのインデックスを取得
+            int hierarchyIndex = isLessListCount ? quotientNowHierarchyLevel : labyrinthMapCreateMap.objList.Count - 1;
+            //マップレイアウト用の配列
+            createMapArrayClass[,] createMapArray;
+            //ボス戦用マップを作成するかの判定
+            isBossMode = GManager.instance.hierarchyLevel % Define.MAPTILE_CHANGE_STAIRS == 0 &&
+                         isLessListCount &&
+                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].isCreateBossMap &&
+                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj &&
+                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj.GetComponent<BossScript>() &&
+                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj.GetComponent<BossScript>().enabled;
+            //ボス戦マップ作成
+            if (isBossMode)
+            {
+                //マップオブジェクト設置用の配列
+                createMapArray = new createMapArrayClass[bossMapHeight + 1, bossMapWidth + 1];
+                pushBossMapInfo(createMapArray);
+            }
+            //通常マップ作成
+            else
+            {
+                //マップオブジェクト設置用の配列
+                createMapArray = new createMapArrayClass[randomMapHeight + 1, randomMapWidth + 1];
+                //マップを分割してリストに格納する
+                List<DivisionAreaClass> divAreaList = splitMap();
+                Debug.Log("divarealistcount:" + divAreaList.Count);
+                //分割された区画を縮小する
+                reduceDivisionArea(divAreaList);
+                Debug.Log("----------------------------------------------------------------");
+                for (int i = 0; i < divAreaList.Count; i++)
+                {
+                    Debug.Log("startpoint" + divAreaList[i].startPoint);
+                    Debug.Log("endpoint" + divAreaList[i].endPoint);
+                    Debug.Log("innerstartpoint" + divAreaList[i].innerStartPoint);
+                    Debug.Log("innerendpoint" + divAreaList[i].innerEndPoint);
+                    Debug.Log("area" + divAreaList[i].areaValue);
+                }
+                //境界線に対して通路を伸ばす
+                AisleClass aisleInfo = extendAisle(divAreaList);
+                //配列にマップ情報(移動可能エリア、外壁)を格納する
+                pushMapInfo(divAreaList, createMapArray);
+                //配列にマップ情報(通路)を格納する
+                pushMapInfoAisle(aisleInfo.aisleList, createMapArray);
+                //通路と通路をつなぐ
+                List<Vector2> hookAisleInfo = hookAisle(divAreaList, aisleInfo.aisleEndPointList);
+                //配列にマップ情報(接続用の通路)を格納する
+                pushMapInfoAisle(hookAisleInfo, createMapArray);
+            }
             //マップ情報を元にオブジェクト(タイル)をセットする
             createLabyrinthMap(createMapArray, hierarchyIndex);
             //ゲームオブジェクトをマップに配置する
-            layoutObjectInLabyrinth(hierarchyIndex);
+            layoutObjectInLabyrinth(hierarchyIndex, isBossMode);
         }
     }
 
@@ -901,8 +1218,8 @@ public class BoardManager : MonoBehaviour
         {
             for (int j=0;j<2;j++)
             {
-                randomInnerXPoint = Random.Range((int)(1 + divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 4, 1 + (int)(divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 3);
-                randomInnerYPoint = Random.Range((int)(1 + divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 4, 1 + (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 3);
+                randomInnerXPoint = Random.Range((int)(1 + divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 5, 1 + (int)(divAreaList[i].endPoint.x - divAreaList[i].startPoint.x) / 3);
+                randomInnerYPoint = Random.Range((int)(1 + divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 5, 1 + (int)(divAreaList[i].endPoint.y - divAreaList[i].startPoint.y) / 3);
                 //startpoint(左下の点)の設定
                 if (j == 0)
                 {
@@ -1057,7 +1374,7 @@ public class BoardManager : MonoBehaviour
     /**
      * 配列にマップ情報(移動可能エリア、移動不可エリア)を格納する
      */
-    private void pushMapInfo(List<DivisionAreaClass> divAreaList,int[,] createMapArray)
+    private void pushMapInfo(List<DivisionAreaClass> divAreaList, createMapArrayClass[,] createMapArray)
     {
         for (int i=0;i<divAreaList.Count;i++)
         {
@@ -1070,14 +1387,14 @@ public class BoardManager : MonoBehaviour
                     {
                         Debug.Log("j:" + j);
                         Debug.Log("k:" + k);
-                        createMapArray[j,k] = Define.MOVABLE; 
+                        createMapArray[j, k] = new createMapArrayClass {areaDivNum = i,tileType = Define.MOVABLE };
                     }
                     //移動不可エリア
                     else
                     {
                         Debug.Log("j:" + j);
                         Debug.Log("k:" + k);
-                        createMapArray[j, k] = Define.WALL;
+                        createMapArray[j, k] = new createMapArrayClass { tileType = Define.WALL };
                     }
                 }
             }
@@ -1087,13 +1404,13 @@ public class BoardManager : MonoBehaviour
     /**
      * 配列にマップ情報(通路)を格納する
      */
-    private void pushMapInfoAisle(List<Vector2> aisleList, int[,] createMapArray)
+    private void pushMapInfoAisle(List<Vector2> aisleList, createMapArrayClass[,] createMapArray)
     {
         for (int i=0;i<aisleList.Count;i++)
         {
             Debug.Log("aisleList[i].x"+ aisleList[i].x);
             Debug.Log("aisleList[i].y"+ aisleList[i].y);
-            createMapArray[(int)aisleList[i].y, (int)aisleList[i].x] = Define.AISLE;
+            createMapArray[(int)aisleList[i].y, (int)aisleList[i].x] = new createMapArrayClass { areaDivNum = null, tileType = Define.AISLE };
         }
     }
 
@@ -1248,25 +1565,32 @@ public class BoardManager : MonoBehaviour
     /**
      * 配列のマップ情報からオブジェクトをセットする
      */
-    private void createLabyrinthMap(int[,] createMapArray,int hierarchyIndex)
+    private void createLabyrinthMap(createMapArrayClass[,] createMapArray,int hierarchyIndex)
     {
         GameObject floreTile = labyrinthMapCreateMap.objList[hierarchyIndex].floreObj;
         GameObject wallTile = labyrinthMapCreateMap.objList[hierarchyIndex].wallObj;
+        //フロア(アクセント用)がnull以外でフィルター
+        List<GameObject> subFloreTileList = labyrinthMapCreateMap.objList[hierarchyIndex].subFloreObjList.FindAll(obj => obj != null);
+        //フロア(効果付き)がnull以外でフィルター
+        List<GameObject> effectFloreTileList = labyrinthMapCreateMap.objList[hierarchyIndex].effectFloreObjList.FindAll(obj => obj != null);
         //外壁(アクセント用)がnull以外でフィルター
-        List<GameObject> subWallTileList = labyrinthMapCreateMap.objList[hierarchyIndex].subWallObjList.FindAll(obj => obj != null);
+        List <GameObject> subWallTileList = labyrinthMapCreateMap.objList[hierarchyIndex].subWallObjList.FindAll(obj => obj != null);
         GameObject tile;
+        GameObject effectTile;
         for (int i=-1;i<=createMapArray.GetLength(0);i++)
         {
             for (int j=-1;j<=createMapArray.GetLength(1);j++)
             {
                 Debug.Log("Vector2"+i+"  "+j);
-                //マップ端または移動不可エリア
+                effectTile = null;
                 bool isMapEdge = i == -1 || i == createMapArray.GetLength(0) || j == -1 || j == createMapArray.GetLength(1);
-                if (isMapEdge || createMapArray[i, j] == Define.WALL)
+                //マップ端または移動不可エリア
+                if (isMapEdge || createMapArray[i, j].tileType == Define.WALL)
                 {
                     //先に通常のフロアを設置
                     Instantiate(floreTile, new Vector3(j, i, 0), Quaternion.identity);
-                    tile = subWallTileList.Count < 1 ? wallTile : getRandomWallTile(wallTile, subWallTileList[Random.Range(0, subWallTileList.Count)]);
+                    //アクセント用の外壁がセットされている場合は確率で設置
+                    tile = subWallTileList.Count > 0 ? getRandomWallTile(wallTile, subWallTileList[Random.Range(0, subWallTileList.Count)]) : wallTile;
                     GameObject outerWallObj = Instantiate(tile, new Vector3(j, i, 0), Quaternion.identity) as GameObject;
                     //移動不可地点リストに座標を追加
                     GManager.instance.unmovableList.Add(new Vector2(j, i));
@@ -1278,13 +1602,34 @@ public class BoardManager : MonoBehaviour
                     continue;
                 }
                 Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
-                switch (createMapArray[i, j])
+                switch (createMapArray[i, j].tileType)
                 {
-                    //移動可能エリア
+                    //移動可能エリア(通常フロア)
                     case Define.MOVABLE:
-                        tile = floreTile;
+                        //アクセント用のフロアがセットされている場合は確率で設置
+                        tile = subFloreTileList.Count > 0 ? getRandomWallTile(floreTile, subFloreTileList[Random.Range(0, subFloreTileList.Count)]) : floreTile;
                         //アイテムと敵の配置用に座標を保存する
-                        gridPositons.Add(new Vector3(j, i, 0));
+                        //gridPositons.Add(new Vector3(j, i, 0));
+
+                        if (createMapArray[i, j].areaDivNum != null)
+                        {
+                            //DictionaryのgridPositionsにも値を格納する
+                            //キーが存在する場合
+                            if (gridPositionsDictionary.ContainsKey((int)createMapArray[i, j].areaDivNum))
+                            {
+                                gridPositionsDictionary[(int)createMapArray[i, j].areaDivNum].Add(new Vector3(j, i, 0));
+                            }
+                            else
+                            {
+                                gridPositionsDictionary.Add((int)createMapArray[i, j].areaDivNum, new List<Vector3> { new Vector3(j, i, 0) });
+                            }
+                        }
+
+                        //効果付きタイルがセットされている場合は確率で設置
+                        if (effectFloreTileList.Count > 0 && Random.Range(1, 101) <= Define.WALL_LOTTERY_PARAM)
+                        {
+                            effectTile = effectFloreTileList[Random.Range(0, effectFloreTileList.Count)];
+                        }
                         break;
                     //通路
                     case Define.AISLE:
@@ -1295,6 +1640,11 @@ public class BoardManager : MonoBehaviour
                         break;
                 }
                 Instantiate(tile, new Vector3(j,i,0), Quaternion.identity);
+                //効果付きタイルを設置する場合
+                if (effectTile)
+                {
+                    Instantiate(effectTile, new Vector3(j, i, 0), Quaternion.identity);
+                }
             }
         }
     }
@@ -1304,10 +1654,10 @@ public class BoardManager : MonoBehaviour
      */
     private GameObject getRandomWallTile(GameObject mainTile,GameObject subTile)
     {
-        int randomNum = Random.Range(1,11);
+        int randomNum = Random.Range(1,101);
         GameObject wall = mainTile;
         //一定の確率でアクセント用の外壁を返却
-        if (Random.Range(1, 11) <= Define.WALL_LOTTERY_PARAM)
+        if (Random.Range(1, 101) <= Define.WALL_LOTTERY_PARAM)
         {
             wall = subTile;
         }
@@ -1317,24 +1667,27 @@ public class BoardManager : MonoBehaviour
     /**
      * マップ上にオブジェクトを配置
      */
-    private void layoutObjectInLabyrinth(int hierarchyIndex)
+    private void layoutObjectInLabyrinth(int hierarchyIndex,bool isBossMode)
     {
-        //階段をインスタンス化
-        LayoutObjectAtRandom(stairs,1,1,false);
-        //プレイヤーをインスタンス化
-        //LayoutObjectAtRandom(player, 1, 1, false);
-        LayoutPlayerAtRandom();
+        //ボス戦マップ
+        if (isBossMode)
+        {
+            //ボスモンスターを設置
+            LayoutObjectAtRandomMysterymap(labyrinthMapCreateMap.objList[hierarchyIndex].bossMonsterObj, 1, 1, false, null);
+        }
+        //通常マップ
+        else
+        {
+            //階段を配置
+            LayoutObjectAtRandomMysterymap(stairs, 1, 1, true, null);
+        }
+        //メインのオブジェクトを設置
+        LayoutMainObjAtRandom(hierarchyIndex, isBossMode);
         //複数設置用オブジェクトを設置
         settingMultipleObject(hierarchyIndex);
-
-        //食べ物をインスタンス化
-        //LayoutObjectAtRandom(food, foodcount.minmum, foodcount.maximum, false);
-        //敵をインスタンス化
-        //LayoutObjectAtRandom(enemy, 5, 5, false);
-        //NPC(仲間)をインスタンス化
-        //LayoutObjectAtRandom(fellowTestNpc, 2, 2, true);
-        //NPC(仲間)をインスタンス化
-        //LayoutObjectAtRandom(fellowTestNpc2, 2, 2, true);
+        //NPC(デバッグ用)
+        //LayoutObjectAtRandomMysterymap(fellowTestNpc,3,3,true, null);
+        //LayoutObjectAtRandomMysterymap(fellowTestNpc2, 3, 3, true, null);
     }
 
     /**
@@ -1343,14 +1696,44 @@ public class BoardManager : MonoBehaviour
     private void settingMultipleObject(int hierarchyIndex)
     {
         //設置用オブジェクトがセットされているものでフィルターする
-        List<MultipleSettingObjectClass> multiObjList = labyrinthMapCreateMap.objList[hierarchyIndex].multiObjList.FindAll(obj => obj.multipleSettingObj != null);
-        for (int i=0;i<multiObjList.Count;i++)
+        //アイテム
+        List<MultipleSettingObjectClass> compositeObjList = labyrinthMapCreateMap.objList[hierarchyIndex].itemObjList.FindAll(obj => obj.multipleSettingObj != null);
+        //敵
+        compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => obj.multipleSettingObj != null));
+        for (int i=0;i< compositeObjList.Count;i++)
         {
-            if (multiObjList[i].noSettingFlg)
+            if (compositeObjList[i].noSettingFlg)
             {
                 continue;
             }
-            LayoutObjectAtRandom(multiObjList[i].multipleSettingObj,multiObjList[i].minSettingNum,multiObjList[i].maxSettingNum,false);
+            LayoutObjectAtRandomMysterymap(compositeObjList[i].multipleSettingObj, compositeObjList[i].minSettingNum, compositeObjList[i].maxSettingNum,false, null);
+        }
+    }
+
+    /**
+     * ボスマップ用の情報を格納する
+     */
+    private void pushBossMapInfo(createMapArrayClass[,] createMapArray)
+    {
+        Debug.Log("createMapArray.GetLength(0)"+ createMapArray.GetLength(0));
+        Debug.Log("createMapArray.GetLength(1)"+ createMapArray.GetLength(1));
+        for (int i = 0; i < createMapArray.GetLength(0); i++)
+        {
+            for (int j = 0; j < createMapArray.GetLength(1); j++)
+            {
+                //移動不可エリア
+                if (i == 0 || i == createMapArray.GetLength(0) -1 || i == createMapArray.GetLength(0) || 
+                    j == 0 || j == createMapArray.GetLength(1)-1 || j == createMapArray.GetLength(1)
+                    )
+                {
+                    createMapArray[i, j] = new createMapArrayClass { tileType = Define.WALL };
+                }
+                //移動可能エリア
+                else
+                {
+                    createMapArray[i, j] = new createMapArrayClass { areaDivNum = 0, tileType = Define.MOVABLE };
+                }
+            }
         }
     }
 

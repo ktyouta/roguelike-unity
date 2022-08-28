@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Common;
+
 
 //abstractをつけると、抽象クラスの宣言になる
 public abstract class MovingObject : MonoBehaviour
@@ -11,10 +13,10 @@ public abstract class MovingObject : MonoBehaviour
     [Header("チェストレイヤー")] public LayerMask treasureLayer;
     [Header("NPCレイヤー")] public LayerMask npcLayer;
     [HideInInspector] public bool isMoving;                    //動けるかどうか
+    [HideInInspector] public Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
     protected bool canMove;
     protected BoxCollider2D boxCollider;         //このオブジェクトにアタッチされた、BoxCollider2Dの入れ物を用意
     protected Animator animator;
-    private Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
     private float inverseMoveTime;            //動きをより効率的にするために使用されます
     private float moveTime = 0.075f;            //オブジェクトの移動にかかる時間（秒単位）※最初の設定は0.1
 
@@ -40,7 +42,7 @@ public abstract class MovingObject : MonoBehaviour
     protected IEnumerator SmoothMovement(Vector3 end)
     {
         isMoving = true;
-
+        yield return new WaitForSeconds(Define.ACTION_WAITTIME);
         //現在の位置と終了パラメーターの差の2乗の大きさに基づいて、移動する残りの距離を計算します。
         //計算量が少ないため、等級の代わりに平方等級使用。(sqrMagnitudeは返り値をベクトルの二乗にする)
         float sqrRemainingDistance = (transform.position - end).sqrMagnitude;

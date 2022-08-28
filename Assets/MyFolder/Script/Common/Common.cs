@@ -37,11 +37,17 @@ namespace Common
 		public const int NOMALENEMY_APPEARANCE_MINTURN = 10;
 		public const int NOMALENEMY_APPEARANCE_MAXTURN = 20;
 
-		//不思議のダンジョン系マップのサイズ
+		//不思議のダンジョン系マップ(通常)のサイズ
 		//横幅
 		public const int MYSTERYMAP_WHITH = 40;
 		//縦幅
 		public const int MYSTERYMAP_HEIGHT = 35;
+
+		//不思議のダンジョン系マップ(ボス戦)のサイズ
+		//横幅
+		public const int MYSTERYBOSSMAP_WHITH = 15;
+		//縦幅
+		public const int MYSTERYBOSSMAP_HEIGHT = 10;
 
 		//不思議のダンジョン系マップのタイル種別
 		public const int MOVABLE = 1;
@@ -61,8 +67,14 @@ namespace Common
 		//不思議のダンジョン系マップのタイルの切り替え時の階数(MAPTILE_CHANGE_STAIRS階ごとにマップが切り替わる)
 		public const int MAPTILE_CHANGE_STAIRS = 1;
 
-		//不思議のダンジョン系マップのアクセント用の外壁の抽選用変数
-		public const int WALL_LOTTERY_PARAM = 1;
+		//不思議のダンジョン系マップのアクセント用の外壁の配置確率(%)
+		public const int WALL_LOTTERY_PARAM = 10;
+
+		//不思議のダンジョン系マップのモンスターハウスの出現確率(%)
+		public const int MONSTERHOUSE_PROBABILITY = 5;
+
+		//行動時のコルーチンの待ち時間
+		public const float ACTION_WAITTIME = 0.005f;
 	}
 
 	//アイテムのタイプ

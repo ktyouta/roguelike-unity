@@ -96,7 +96,7 @@ public class GManager : MonoBehaviour
     //敵が動く際に次の移動点を保持する
     [HideInInspector] public List<Vector2> enemyNextPosition = new List<Vector2>();
     [HideInInspector] public bool isCloseCommand = true;
-    [HideInInspector] public int level = 1;
+    [HideInInspector] public int hierarchyLevel = 1;
     [HideInInspector] public bool playersTurn = true;
     [HideInInspector] public int latestNpcId = 0;
     [HideInInspector] public int enemyActionEndCount;
@@ -176,7 +176,7 @@ public class GManager : MonoBehaviour
         {
             //現在の階数を画面に表示
             mapLoadingText = GameObject.Find("MapLoadingText").GetComponent<Text>();
-            mapLoadingText.text = level + " F";
+            mapLoadingText.text = hierarchyLevel + " F";
         }
         levelText = GameObject.Find("LevelText");
         commandPanel = GameObject.Find("CommandPanel");
@@ -271,20 +271,28 @@ public class GManager : MonoBehaviour
         {
             AddEnemyToList(enemyObjects[i], i);
         }
+        for (int i = 0; i < GManager.instance.fellows.Count; i++)
+        {
+            Debug.Log("GManager.instance.fellows[i].transform.positionbbbbbbbbbbbbbbb" + GManager.instance.fellows[i].transform.position);
+        }
         yield return new WaitForSeconds(2.0f);
         //処理完了後に画面表示
-        HideLevelImage();
+        hideLevelImage();
+        for (int i = 0; i < GManager.instance.fellows.Count; i++)
+        {
+            Debug.Log("GManager.instance.fellows[i].transform.positionaaaaaaaaaaaaa" + GManager.instance.fellows[i].transform.position);
+        }
     }
 
     //初期表示の黒い画像を非表示にする
-    public void HideLevelImage()
+    public void hideLevelImage()
     {
         mapLoadingImage.SetActive(false);
         doingSetup = false;
         mapLoadingText.text = "";
         if (nowStairs != null)
         {
-            nowStairs.text = level + "F";
+            nowStairs.text = hierarchyLevel + "F";
         }
     }
 
@@ -445,7 +453,12 @@ public class GManager : MonoBehaviour
             {
                 continue;
             }
-            yield return null;
+            //yield return null;
+            //yield return new WaitForSeconds(0.005f);
+            if (i > enemies.Count -1)
+            {
+                break;
+            }
             //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す
             enemies[i].moveEnemy();
         }

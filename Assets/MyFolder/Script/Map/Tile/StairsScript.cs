@@ -32,7 +32,7 @@ public class StairsScript : MonoBehaviour
             DontDestroyOnLoad(GManager.instance.fellows[i]);
         }
         GManager.instance.nowStairs.text = "";
-        GManager.instance.mapLoadingText.text = ++GManager.instance.level + " F";
+        GManager.instance.mapLoadingText.text = ++GManager.instance.hierarchyLevel + " F";
         GManager.instance.mapLoadingImage.SetActive(true);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }

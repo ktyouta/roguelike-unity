@@ -23,7 +23,7 @@ public class Enemy : MovingObject
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
     private Transform target;                            //各ターンに移動しようとする目的object
-    private bool isDefeatEnemy = false;
+    protected bool isDefeatEnemy = false;
     List<Vector2> trackingNodeList = new List<Vector2>();
 
 
@@ -49,7 +49,7 @@ public class Enemy : MovingObject
         base.Start();
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (enemyHp <= 0 && !isDefeatEnemy)
         {
@@ -195,14 +195,14 @@ public class Enemy : MovingObject
                 {
                     continue;
                 }
-                //RaycastHit2D hit = Physics2D.Linecast(start, next, blockingLayer | treasureLayer | npcLayer);
-                ////他のオブジェクトに当たる場合
-                //if (hit.transform != null)
-                //{
-                //    //linecastを複数回行わないようにリストに追加する
-                //    GManager.instance.unmovableList.Add(next);
-                //    continue;
-                //}
+                RaycastHit2D hit = Physics2D.Linecast(start, next, blockingLayer | treasureLayer | npcLayer);
+                //他のオブジェクトに当たる場合
+                if (hit.transform != null)
+                {
+                    //linecastを複数回行わないようにリストに追加する
+                    GManager.instance.unmovableList.Add(next);
+                    continue;
+                }
                 //オープンリストに追加するための設定
                 PositionNodeClass positionNode = new PositionNodeClass();
                 positionNode.position = next;
@@ -257,13 +257,13 @@ public class Enemy : MovingObject
                 return true;
             }
         }
-        for (int i=0;i< GManager.instance.unmovableList.Count;i++)
-        {
-            if (node == GManager.instance.unmovableList[i])
-            {
-                return true;
-            }
-        }
+        //for (int i=0;i< GManager.instance.unmovableList.Count;i++)
+        //{
+        //    if (node == GManager.instance.unmovableList[i])
+        //    {
+        //        return true;
+        //    }
+        //}
         return false;
     }
 
@@ -329,6 +329,7 @@ public class Enemy : MovingObject
 
     protected IEnumerator enemySmoothMovement(Vector3 end)
     {
+
         yield return StartCoroutine(SmoothMovement(end));
         GManager.instance.enemyActionEndCount++;
     }
@@ -355,10 +356,12 @@ public class Enemy : MovingObject
      */
     protected IEnumerator enemyAttack()
     {
+        yield return new WaitForSeconds(Define.ACTION_WAITTIME);
         //攻撃の場合はプレイヤーの行動完了を待つ
         yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
         animator.Play("EnemyAttack");
         GManager.instance.playerHp -= enemyAttackValue;
+        Debug.Log("GManager.instance.playerHp"+ GManager.instance.playerHp);
         GManager.instance.wrightAttackLog(enemyName, GManager.instance.playerName, enemyAttackValue);
         GManager.instance.enemyActionEndCount++;
     }
@@ -366,7 +369,7 @@ public class Enemy : MovingObject
     /**
      * 敵が倒された時の処理
      */
-    protected void enemyDefeat()
+    protected virtual void enemyDefeat()
     {
         GManager.instance.wrightDeadLog(enemyName);
         isDefeatEnemy = true;
