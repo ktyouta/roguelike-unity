@@ -220,7 +220,7 @@ public class player : MovingObject
     /**
      * ƒvƒŒƒCƒ„[‚ÌUŒ‚
      */
-    protected void Attack()
+    public void Attack()
     {
         animator.Play("PlayerAttack");
         Vector2 start = transform.position;
