@@ -660,7 +660,7 @@ public class BoardManager : MonoBehaviour
      */
     private void LayoutObjectAtRandomMysterymap(GameObject tile, int minimum, int maximum, bool isUnmovable,int? argDictionaryKey)
     {
-        //tileがセットされていない場合はreturn
+        //オブジェクトがセットされていない場合
         if (tile == null)
         {
             return;
@@ -793,7 +793,6 @@ public class BoardManager : MonoBehaviour
     private void LayoutPlayerAtRandom(SettingPlayerPositionClass settingPlayerInfo)
     {
         //gridPositionsDictionaryからランダムにキーを取得する
-        int? nowPlyerPositionKey = getRandomDictionaryKey();
         settingPlayerInfo.nowPlyerPositionKey = getRandomDictionaryKey();
         //キーが存在しない場合
         if (settingPlayerInfo.nowPlyerPositionKey == null)
@@ -801,9 +800,9 @@ public class BoardManager : MonoBehaviour
             return;
         }
         //座標を取得
-        settingPlayerInfo.randomPosition = getPositionFromDictionary((int)nowPlyerPositionKey, out int randomPositionIndex);
+        settingPlayerInfo.randomPosition = getPositionFromDictionary((int)settingPlayerInfo.nowPlyerPositionKey, out int randomPositionIndex);
         playerObj = Instantiate(player, settingPlayerInfo.randomPosition, Quaternion.identity) as GameObject;
-        deleteUsedPosition((int)nowPlyerPositionKey, randomPositionIndex);
+        deleteUsedPosition((int)settingPlayerInfo.nowPlyerPositionKey, randomPositionIndex);
     }
 
     /**
@@ -811,11 +810,11 @@ public class BoardManager : MonoBehaviour
      */
     private void createMonsterHouse(int nowPlyerPositionKey,int hierarchyIndex)
     {
-        //敵の出現数を取得
-        int appearEnemyNum = gridPositionsDictionary[nowPlyerPositionKey].Count / 5;
+        //敵の出現数
+        int appearEnemyNum = Random.Range(gridPositionsDictionary[nowPlyerPositionKey].Count / 6, (gridPositionsDictionary[nowPlyerPositionKey].Count / 5)+1);
         int startAppearNum = 1;
         int randomAppearNum;
-        //敵
+        //敵のリスト
         List<MultipleSettingObjectClass> multiEnemyObjList = labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => obj.multipleSettingObj != null);
         for (int i=0;i< multiEnemyObjList.Count;i++)
         {
@@ -824,8 +823,12 @@ public class BoardManager : MonoBehaviour
             {
                 randomAppearNum = appearEnemyNum + 1 - startAppearNum;
             }
-            LayoutObjectAtRandomMysterymap(multiEnemyObjList[i].multipleSettingObj, randomAppearNum, randomAppearNum, false, null);
+            LayoutObjectAtRandomMysterymap(multiEnemyObjList[i].multipleSettingObj, randomAppearNum, randomAppearNum, false, nowPlyerPositionKey);
             startAppearNum = randomAppearNum + 1;
+            if (startAppearNum == appearEnemyNum + 1)
+            {
+                break;
+            }
         }
         GManager.instance.wrightLog("モンスターハウスだ！！");
     }
@@ -1609,8 +1612,6 @@ public class BoardManager : MonoBehaviour
                         //アクセント用のフロアがセットされている場合は確率で設置
                         tile = subFloreTileList.Count > 0 ? getRandomWallTile(floreTile, subFloreTileList[Random.Range(0, subFloreTileList.Count)]) : floreTile;
                         //アイテムと敵の配置用に座標を保存する
-                        //gridPositons.Add(new Vector3(j, i, 0));
-
                         if (createMapArray[i, j].areaDivNum != null)
                         {
                             //DictionaryのgridPositionsにも値を格納する
@@ -1686,8 +1687,11 @@ public class BoardManager : MonoBehaviour
         //複数設置用オブジェクトを設置
         settingMultipleObject(hierarchyIndex);
         //NPC(デバッグ用)
-        //LayoutObjectAtRandomMysterymap(fellowTestNpc,3,3,true, null);
-        //LayoutObjectAtRandomMysterymap(fellowTestNpc2, 3, 3, true, null);
+        if (GManager.instance.hierarchyLevel == 1)
+        {
+            LayoutObjectAtRandomMysterymap(fellowTestNpc,3,3,true, null);
+            LayoutObjectAtRandomMysterymap(fellowTestNpc2, 3, 3, true, null);
+        }
     }
 
     /**
@@ -1699,7 +1703,7 @@ public class BoardManager : MonoBehaviour
         //アイテム
         List<MultipleSettingObjectClass> compositeObjList = labyrinthMapCreateMap.objList[hierarchyIndex].itemObjList.FindAll(obj => obj.multipleSettingObj != null);
         //敵
-        compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => obj.multipleSettingObj != null));
+        //compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => obj.multipleSettingObj != null));
         for (int i=0;i< compositeObjList.Count;i++)
         {
             if (compositeObjList[i].noSettingFlg)

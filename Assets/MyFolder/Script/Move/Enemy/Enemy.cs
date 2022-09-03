@@ -96,8 +96,8 @@ public class Enemy : MovingObject
         }
         xDir = (int)(trackingNodeList[0].x - transform.position.x);
         yDir = (int)(trackingNodeList[0].y - transform.position.y);
-        Debug.Log("xdir"+xDir);
-        Debug.Log("ydir" + yDir);
+        //Debug.Log("xdir"+xDir);
+        //Debug.Log("ydir" + yDir);
         //x軸がイプシロン(ほぼ)の方が大きい場合
         //if (Mathf.Abs(GManager.instance.enemyNextPosition[0].x - transform.position.x) < float.Epsilon)
         //{
@@ -119,12 +119,12 @@ public class Enemy : MovingObject
             return;
         }
         //移動点が他の敵と被れば移動できない
-        if (checkNextPosition(next))
+        if (GManager.instance.enemyNextPosition.Contains(next))
         {
             GManager.instance.enemyActionEndCount++;
             return;
         }
-        GManager.instance.enemyNextPosition.Add(next);
+        //GManager.instance.enemyNextPosition.Add(next);
         AttemptMove(xDir, yDir);
     }
 
@@ -284,8 +284,7 @@ public class Enemy : MovingObject
         //ヒットしなかった場合は行動開始
         if (hit.transform == null)
         {
-            trackingNodeList.RemoveAt(0);
-            StartCoroutine(enemySmoothMovement(end));
+            afterComfirmMove(end);
             return;
         }
         Enemy otherEnemy = hit.collider.GetComponent<Enemy>();
@@ -323,32 +322,24 @@ public class Enemy : MovingObject
             trackingNodeList.Clear();
             return;
         }
+        //移動開始
+        afterComfirmMove(end);
+    }
+
+    /**
+     * 移動確定後の処理
+     */
+    private  void afterComfirmMove(Vector2 end)
+    {
         trackingNodeList.RemoveAt(0);
+        GManager.instance.enemyNextPosition.Add(end);
         StartCoroutine(enemySmoothMovement(end));
     }
 
     protected IEnumerator enemySmoothMovement(Vector3 end)
     {
-
         yield return StartCoroutine(SmoothMovement(end));
         GManager.instance.enemyActionEndCount++;
-    }
-
-    /**
-     * 敵が次の移動点に移動できるか判定(既に他の敵の先約がないかチェック)
-     */
-    protected bool checkNextPosition(Vector2 next)
-    {
-        for (int i = 1; i < GManager.instance.enemyNextPosition.Count; i++)
-        {
-            //移動点が被った場合
-            if (GManager.instance.enemyNextPosition[i] == next)
-            {
-                GManager.instance.enemyActionEndCount++;
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -356,13 +347,12 @@ public class Enemy : MovingObject
      */
     protected IEnumerator enemyAttack()
     {
-        yield return new WaitForSeconds(Define.ACTION_WAITTIME);
         //攻撃の場合はプレイヤーの行動完了を待つ
         yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
         animator.Play("EnemyAttack");
         GManager.instance.playerHp -= enemyAttackValue;
-        Debug.Log("GManager.instance.playerHp"+ GManager.instance.playerHp);
         GManager.instance.wrightAttackLog(enemyName, GManager.instance.playerName, enemyAttackValue);
+        yield return new WaitForSeconds(0.5f);
         GManager.instance.enemyActionEndCount++;
     }
 

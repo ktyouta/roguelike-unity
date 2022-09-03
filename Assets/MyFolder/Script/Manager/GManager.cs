@@ -454,7 +454,6 @@ public class GManager : MonoBehaviour
                 continue;
             }
             //yield return null;
-            //yield return new WaitForSeconds(0.005f);
             if (i > enemies.Count -1)
             {
                 break;

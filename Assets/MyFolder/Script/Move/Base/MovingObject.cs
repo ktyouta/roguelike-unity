@@ -42,7 +42,7 @@ public abstract class MovingObject : MonoBehaviour
     protected IEnumerator SmoothMovement(Vector3 end)
     {
         isMoving = true;
-        yield return new WaitForSeconds(Define.ACTION_WAITTIME);
+        //yield return new WaitForSeconds(Define.ACTION_WAITTIME);
         //現在の位置と終了パラメーターの差の2乗の大きさに基づいて、移動する残りの距離を計算します。
         //計算量が少ないため、等級の代わりに平方等級使用。(sqrMagnitudeは返り値をベクトルの二乗にする)
         float sqrRemainingDistance = (transform.position - end).sqrMagnitude;

@@ -72,9 +72,6 @@ namespace Common
 
 		//不思議のダンジョン系マップのモンスターハウスの出現確率(%)
 		public const int MONSTERHOUSE_PROBABILITY = 5;
-
-		//行動時のコルーチンの待ち時間
-		public const float ACTION_WAITTIME = 0.005f;
 	}
 
 	//アイテムのタイプ
