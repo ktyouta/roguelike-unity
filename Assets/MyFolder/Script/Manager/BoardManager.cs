@@ -838,7 +838,7 @@ public class BoardManager : MonoBehaviour
      */
     private void LayoutNpcAtRandom(Vector3 randomPosition,int nowPlyerPositionKey)
     {
-        Debug.Log("(Vector3)randomPosition" + (Vector3)randomPosition);
+        //Debug.Log("(Vector3)randomPosition" + (Vector3)randomPosition);
         //NPC用の座標リスト
         List<Vector3> npcPointList = new List<Vector3>();
         //NPC用の座標リストを作成(プレイヤーの周囲8マス)
@@ -852,8 +852,8 @@ public class BoardManager : MonoBehaviour
                 xValue = xValue == 0 ? 0 : xValue < 0 ? -1 : 1;
                 yValue = yValue == 0 ? 0 : yValue < 0 ? -1 : 1;
             }
-            Debug.Log("((Vector3)randomPosition).x + (int)xValue" + ((randomPosition).x + (int)xValue));
-            Debug.Log("((Vector3)randomPosition).y + (int)yValue" + ((randomPosition).y + (int)yValue));
+            //Debug.Log("((Vector3)randomPosition).x + (int)xValue" + ((randomPosition).x + (int)xValue));
+            //Debug.Log("((Vector3)randomPosition).y + (int)yValue" + ((randomPosition).y + (int)yValue));
             npcPointList.Add(new Vector3((int)randomPosition.x + (int)xValue, (int)randomPosition.y + (int)yValue, 0));
         }
         //int keyInteger = nowPlyerPositionKey;
@@ -885,10 +885,10 @@ public class BoardManager : MonoBehaviour
                 continue;
             }
             //DontDestroyOnLoad内のNPCの位置設定
-            Debug.Log("npcNextPositionList[i]" + npcNextPositionList[i]);
-            Debug.Log("gridPositionsDictionary[(int)nowPlyerPositionKey][npcNextPositionList[i]]" + gridPositionsDictionary[nowPlyerPositionKey][npcNextPositionList[i]]);
+            //Debug.Log("npcNextPositionList[i]" + npcNextPositionList[i]);
+            //Debug.Log("gridPositionsDictionary[(int)nowPlyerPositionKey][npcNextPositionList[i]]" + gridPositionsDictionary[nowPlyerPositionKey][npcNextPositionList[i]]);
             GManager.instance.fellows[i].transform.position = keyGridPositionList[npcNextPositionList[i]];
-            Debug.Log("GManager.instance.fellows[i].transform.position" + GManager.instance.fellows[i].transform.position);
+            //Debug.Log("GManager.instance.fellows[i].transform.position" + GManager.instance.fellows[i].transform.position);
             gridPositionsDictionary[nowPlyerPositionKey].RemoveAt(npcNextPositionList[i]);
         }
 
@@ -956,8 +956,8 @@ public class BoardManager : MonoBehaviour
         {
             foreach (Vector3 vector in element.Value)
             {
-                Debug.Log("vector"+ vector);
-                Debug.Log("point" + point);
+                //Debug.Log("vector"+ vector);
+                //Debug.Log("point" + point);
                 //座標が一致した場合キーを返却
                 if (vector == point)
                 {
@@ -1149,8 +1149,8 @@ public class BoardManager : MonoBehaviour
                 secondLength = yDirectionPoint - startYPoint;
             }
 
-            Debug.Log("xDirectionPoint:"+ xDirectionPoint);
-            Debug.Log("yDirectionPoint:" + yDirectionPoint);
+            //Debug.Log("xDirectionPoint:"+ xDirectionPoint);
+            //Debug.Log("yDirectionPoint:" + yDirectionPoint);
 
             //エリア分割をやり直す
             if (firstLength <= 5 || secondLength <= 5)
@@ -1170,7 +1170,7 @@ public class BoardManager : MonoBehaviour
                     endYPoint = randomMapHeight;
                     //分割数を減らす
                     splitAreaNum--;
-                    Debug.Log("resetsplit");
+                    //Debug.Log("resetsplit");
                 }
                 continue;
             }
@@ -1365,12 +1365,12 @@ public class BoardManager : MonoBehaviour
         }
         aisle.aisleList = aisleList;
         aisle.aisleEndPointList = aisleEndList;
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        for (int i=0;i<aisleEndList.Count;i++)
-        {
-            Debug.Log("aisleEndlist"+aisleEndList[i]);
-        }
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        //for (int i=0;i<aisleEndList.Count;i++)
+        //{
+        //    Debug.Log("aisleEndlist"+aisleEndList[i]);
+        //}
+        //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         return aisle;
     }
 
@@ -1388,15 +1388,15 @@ public class BoardManager : MonoBehaviour
                     //移動可能エリア
                     if (j >= divAreaList[i].innerStartPoint.y && j <= divAreaList[i].innerEndPoint.y && k >= divAreaList[i].innerStartPoint.x && k <= divAreaList[i].innerEndPoint.x)
                     {
-                        Debug.Log("j:" + j);
-                        Debug.Log("k:" + k);
+                        //Debug.Log("j:" + j);
+                        //Debug.Log("k:" + k);
                         createMapArray[j, k] = new createMapArrayClass {areaDivNum = i,tileType = Define.MOVABLE };
                     }
                     //移動不可エリア
                     else
                     {
-                        Debug.Log("j:" + j);
-                        Debug.Log("k:" + k);
+                        //Debug.Log("j:" + j);
+                        //Debug.Log("k:" + k);
                         createMapArray[j, k] = new createMapArrayClass { tileType = Define.WALL };
                     }
                 }
@@ -1411,8 +1411,8 @@ public class BoardManager : MonoBehaviour
     {
         for (int i=0;i<aisleList.Count;i++)
         {
-            Debug.Log("aisleList[i].x"+ aisleList[i].x);
-            Debug.Log("aisleList[i].y"+ aisleList[i].y);
+            //Debug.Log("aisleList[i].x"+ aisleList[i].x);
+            //Debug.Log("aisleList[i].y"+ aisleList[i].y);
             createMapArray[(int)aisleList[i].y, (int)aisleList[i].x] = new createMapArrayClass { areaDivNum = null, tileType = Define.AISLE };
         }
     }
@@ -1556,10 +1556,10 @@ public class BoardManager : MonoBehaviour
             }
             sameAxisList.Clear();
         }
-        Debug.Log("copyAisleEndPointListcount"+ copyAisleEndPointList.Count);
+        //Debug.Log("copyAisleEndPointListcount"+ copyAisleEndPointList.Count);
         for (int i=0;i<copyAisleEndPointList.Count;i++)
         {
-            Debug.Log("copyAisleEndPointList"+ copyAisleEndPointList[i]);
+            //Debug.Log("copyAisleEndPointList"+ copyAisleEndPointList[i]);
         }
         //接続した通路の座標リスト
         return hookAisleList;
@@ -1584,7 +1584,7 @@ public class BoardManager : MonoBehaviour
         {
             for (int j=-1;j<=createMapArray.GetLength(1);j++)
             {
-                Debug.Log("Vector2"+i+"  "+j);
+                //Debug.Log("Vector2"+i+"  "+j);
                 effectTile = null;
                 bool isMapEdge = i == -1 || i == createMapArray.GetLength(0) || j == -1 || j == createMapArray.GetLength(1);
                 //マップ端または移動不可エリア
@@ -1604,17 +1604,30 @@ public class BoardManager : MonoBehaviour
                     }
                     continue;
                 }
-                Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
+                //Debug.Log("createMapArray[i,j]:" + createMapArray[i, j]);
                 switch (createMapArray[i, j].tileType)
                 {
                     //移動可能エリア(通常フロア)
                     case Define.MOVABLE:
+
+                        if (createMapArray[i, j].areaDivNum == null)
+                        {
+                            continue;
+                        }
+
                         //アクセント用のフロアがセットされている場合は確率で設置
                         tile = subFloreTileList.Count > 0 ? getRandomWallTile(floreTile, subFloreTileList[Random.Range(0, subFloreTileList.Count)]) : floreTile;
-                        //アイテムと敵の配置用に座標を保存する
-                        if (createMapArray[i, j].areaDivNum != null)
+
+                        //効果付きタイルがセットされている場合は確率で設置
+                        if (effectFloreTileList.Count > 0 && Random.Range(1, 101) <= Define.WALL_LOTTERY_PARAM)
                         {
-                            //DictionaryのgridPositionsにも値を格納する
+                            effectTile = effectFloreTileList[Random.Range(0, effectFloreTileList.Count)];
+                        }
+
+                        //効果付きタイルの上にオブジェクトを設置しない
+                        if (effectTile == null)
+                        {
+                            //アイテムと敵の配置用に座標を保存する
                             //キーが存在する場合
                             if (gridPositionsDictionary.ContainsKey((int)createMapArray[i, j].areaDivNum))
                             {
@@ -1624,12 +1637,6 @@ public class BoardManager : MonoBehaviour
                             {
                                 gridPositionsDictionary.Add((int)createMapArray[i, j].areaDivNum, new List<Vector3> { new Vector3(j, i, 0) });
                             }
-                        }
-
-                        //効果付きタイルがセットされている場合は確率で設置
-                        if (effectFloreTileList.Count > 0 && Random.Range(1, 101) <= Define.WALL_LOTTERY_PARAM)
-                        {
-                            effectTile = effectFloreTileList[Random.Range(0, effectFloreTileList.Count)];
                         }
                         break;
                     //通路
@@ -1642,7 +1649,7 @@ public class BoardManager : MonoBehaviour
                 }
                 Instantiate(tile, new Vector3(j,i,0), Quaternion.identity);
                 //効果付きタイルを設置する場合
-                if (effectTile)
+                if (effectTile != null)
                 {
                     Instantiate(effectTile, new Vector3(j, i, 0), Quaternion.identity);
                 }
@@ -1719,8 +1726,8 @@ public class BoardManager : MonoBehaviour
      */
     private void pushBossMapInfo(createMapArrayClass[,] createMapArray)
     {
-        Debug.Log("createMapArray.GetLength(0)"+ createMapArray.GetLength(0));
-        Debug.Log("createMapArray.GetLength(1)"+ createMapArray.GetLength(1));
+        //Debug.Log("createMapArray.GetLength(0)"+ createMapArray.GetLength(0));
+        //Debug.Log("createMapArray.GetLength(1)"+ createMapArray.GetLength(1));
         for (int i = 0; i < createMapArray.GetLength(0); i++)
         {
             for (int j = 0; j < createMapArray.GetLength(1); j++)

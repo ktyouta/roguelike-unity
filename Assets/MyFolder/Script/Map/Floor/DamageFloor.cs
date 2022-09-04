@@ -8,6 +8,10 @@ public class DamageFloor : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.tag != "Player")
+        {
+            return;
+        }
         GManager.instance.damagePlayerHp(consumeValue);
         GManager.instance.wrightLog("フィールドダメージを受けた");
     }
