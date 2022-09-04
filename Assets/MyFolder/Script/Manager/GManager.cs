@@ -299,12 +299,12 @@ public class GManager : MonoBehaviour
     //更新はフレームごとに呼び出されます。
     void Update()
     {
-        if (!isCloseCommand || playerObj.plState != player.playerState.Normal)
+        if (playerObj.plState != player.playerState.Normal)
         {
             return;
         }
         //コマンドパネル開閉
-        if (Input.GetKeyDown("space"))
+        if (!isCloseCommand || Input.GetKeyDown("space"))
         {
             playerObj.setPlayerState(player.playerState.Command);
             isCloseCommand = false;
