@@ -4554,27 +4554,6 @@ MonoBehaviour:
   stairs: {fileID: 1527049776367764191, guid: 2af8a123c2dd80e459846ee655047d2f, type: 3}
   labyrinthMapCreateMap:
     objList:
-    - floreObj: {fileID: 7877200778571232546, guid: fdd83b8aeb956d347a41d69e645e579b, type: 3}
-      subFloreObjList: []
-      effectFloreObjList: []
-      wallObj: {fileID: 2150714836965138858, guid: 2bce042c8f2db864fb8e694d45d64a8d, type: 3}
-      subWallObjList: []
-      itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 1
-      isCreateBossMap: 1
-      bossMonsterObj: {fileID: 6411965051382903684, guid: 9feae4fb56fedcc4686e1241a3940e84, type: 3}
     - floreObj: {fileID: 3355569214100897694, guid: 9b8b3a76c21288848a71693e5cb3cb20, type: 3}
       subFloreObjList: []
       effectFloreObjList: []
@@ -4583,25 +4562,74 @@ MonoBehaviour:
       - {fileID: 4070275452904732534, guid: 61344e9401c0b5047b10ae91c800f999, type: 3}
       - {fileID: 4771977316951097841, guid: 8d5a3c7eb796efa458f44eb0024fadf8, type: 3}
       itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 2
+        maxSettingNumNomalMap: 5
+        noSettingBossMap: 0
+        minSettingNumBossMap: 3
+        maxSettingNumBossMap: 3
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 2
+        maxSettingNumBossMap: 2
       enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 755405083974979417, guid: a0a63a885479c8d488ef9cd51b2d951c, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 3
+        maxSettingNumNomalMap: 6
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 755405083974979417, guid: a0a63a885479c8d488ef9cd51b2d951c, type: 3}
+        minSettingNumNomalMap: 3
+        maxSettingNumNomalMap: 6
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      isCreateBossMap: 1
+      bossMonsterObj: {fileID: 6411965051382903684, guid: 9feae4fb56fedcc4686e1241a3940e84, type: 3}
+    - floreObj: {fileID: 7877200778571232546, guid: fdd83b8aeb956d347a41d69e645e579b, type: 3}
+      subFloreObjList: []
+      effectFloreObjList: []
+      wallObj: {fileID: 2150714836965138858, guid: 2bce042c8f2db864fb8e694d45d64a8d, type: 3}
+      subWallObjList: []
+      itemObjList:
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 2
+        maxSettingNumNomalMap: 5
+        noSettingBossMap: 0
+        minSettingNumBossMap: 3
+        maxSettingNumBossMap: 3
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 2
+        maxSettingNumNomalMap: 5
+        noSettingBossMap: 0
+        minSettingNumBossMap: 2
+        maxSettingNumBossMap: 2
+      enemyObjList:
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 3
+        maxSettingNumNomalMap: 6
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       isCreateBossMap: 0
-      bossMonsterObj: {fileID: 0}
+      bossMonsterObj: {fileID: 6411965051382903684, guid: 9feae4fb56fedcc4686e1241a3940e84, type: 3}
     - floreObj: {fileID: 3872000626174554168, guid: ffed1f885fc14c047af3a832c502d7e7, type: 3}
       subFloreObjList: []
       effectFloreObjList:
@@ -4609,19 +4637,31 @@ MonoBehaviour:
       wallObj: {fileID: 8437807712667727569, guid: e6cca028f8bee35488255432dd0bae5d, type: 3}
       subWallObjList: []
       itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 1
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 1042772312660975521, guid: cfb89398adb649240b7936df908b102f, type: 3}
@@ -4630,19 +4670,31 @@ MonoBehaviour:
       wallObj: {fileID: 2613552745309838863, guid: e56fe389a4bc98c40b1f28f66ae342ca, type: 3}
       subWallObjList: []
       itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 1
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 8761736197254918833, guid: 6cb8087ac2350bf47a715b987f5cb552, type: 3}
@@ -4651,19 +4703,31 @@ MonoBehaviour:
       wallObj: {fileID: 2044734066580537855, guid: 93097dbbc8f58ba4c91c28c612b51d7d, type: 3}
       subWallObjList: []
       itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 1
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 2942659431030212937, guid: 94fb11c7adfc3c143b203265a0dd3703, type: 3}
@@ -4672,19 +4736,31 @@ MonoBehaviour:
       wallObj: {fileID: 879495510084134112, guid: 211fbe88335badc4fa794493b1a92a01, type: 3}
       subWallObjList: []
       itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 1
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 5619734057693643439, guid: a92b76e6277af5b4a805d9efcace1c2c, type: 3}
@@ -4694,19 +4770,31 @@ MonoBehaviour:
       wallObj: {fileID: 3257296153136483803, guid: 91951736bf188704380b759fe7f6da44, type: 3}
       subWallObjList: []
       itemObjList:
-      - multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
-      - multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
-        minSettingNum: 2
-        maxSettingNum: 5
-        noSettingFlg: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4846897076777129375, guid: 2d5028d9733df38449a1097600f68829, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       enemyObjList:
-      - multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNum: 3
-        maxSettingNum: 5
-        noSettingFlg: 1
+      - noSettingFlg: 1
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        minSettingNumNomalMap: 0
+        maxSettingNumNomalMap: 0
+        noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
   isBossMode: 0
@@ -5286,7 +5374,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.27}
+  m_AnchoredPosition: {x: 142.74, y: -116.26998}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

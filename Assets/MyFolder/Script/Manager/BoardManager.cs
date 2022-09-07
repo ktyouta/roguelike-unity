@@ -254,10 +254,14 @@ public class BoardManager : MonoBehaviour
     [System.Serializable]
     public class MultipleSettingObjectClass
     {
-        [Header("設置するオブジェクト")] public GameObject multipleSettingObj;
-        [Header("最小設置個数")] public int minSettingNum;
-        [Header("最大設置個数")] public int maxSettingNum;
         [Header("trueの場合オブジェクトを設置しない")] public bool noSettingFlg;
+        [Header("trueの場合通常マップにオブジェクトを設置しない")] public bool noSettingNomalMap;
+        [Header("設置するオブジェクト")] public GameObject multipleSettingObj;
+        [Header("最小設置個数")] public int minSettingNumNomalMap;
+        [Header("最大設置個数")] public int maxSettingNumNomalMap;
+        [Header("trueの場合ボスマップにオブジェクトを配置しない")] public bool noSettingBossMap;
+        [Header("最小設置個数(ボスマップ)")] public int minSettingNumBossMap;
+        [Header("最大設置個数(ボスマップ)")] public int maxSettingNumBossMap;
     }
 
     //不思議のダンジョン系マップのタイル設置用クラス(階層ごとに設定するリスト形式)
@@ -294,6 +298,14 @@ public class BoardManager : MonoBehaviour
     {
         public int? nowPlyerPositionKey;
         public Vector3 randomPosition;
+    }
+
+    //アイテム等の設置時に使用するクラス
+    public class SettingGameObjClass
+    {
+        public GameObject settingObj;
+        public int minSetNum;
+        public int maxSetNum;
     }
 
 
@@ -751,39 +763,6 @@ public class BoardManager : MonoBehaviour
         if (gridPositionsDictionary[(int)dictionaryKey].Count < 1)
         {
             gridPositionsDictionary.Remove((int)dictionaryKey);
-        }
-    }
-
-    /**
-     * メインオブジェクトを配置する
-     */
-    private void LayoutMainObjAtRandom(int hierarchyIndex,bool isBossMode)
-    {
-        //プレイヤーを設置
-        SettingPlayerPositionClass settingPlayerInfo = new SettingPlayerPositionClass();
-        LayoutPlayerAtRandom(settingPlayerInfo);
-        //キーが存在しない場合
-        if (settingPlayerInfo.nowPlyerPositionKey == null)
-        {
-            return;
-        }
-
-        //NPC(仲間)を設置
-        if (GManager.instance.fellows.Count < 1)
-        {
-            LayoutNpcAtRandom(settingPlayerInfo.randomPosition, (int)settingPlayerInfo.nowPlyerPositionKey);
-        }
-
-        //ボスマップの場合はモンスターハウスを作成しない
-        if (isBossMode)
-        {
-            return;
-        }
-
-        //モンスターハウスが出現する場合
-        if (Random.Range(1, 101) <= Define.MONSTERHOUSE_PROBABILITY)
-        {
-            createMonsterHouse((int)settingPlayerInfo.nowPlyerPositionKey, hierarchyIndex);
         }
     }
 
@@ -1677,47 +1656,74 @@ public class BoardManager : MonoBehaviour
      */
     private void layoutObjectInLabyrinth(int hierarchyIndex,bool isBossMode)
     {
+        List<MultipleSettingObjectClass> compositeObjList = new List<MultipleSettingObjectClass>();
+        List<SettingGameObjClass> settingGameObjList = new List<SettingGameObjClass>();
+        //プレイヤーを設置
+        SettingPlayerPositionClass settingPlayerInfo = new SettingPlayerPositionClass();
+        LayoutPlayerAtRandom(settingPlayerInfo);
+        //キーが存在しない場合
+        if (settingPlayerInfo.nowPlyerPositionKey == null)
+        {
+            return;
+        }
+
+        //NPC(仲間)を設置
+        if (GManager.instance.fellows.Count > 0)
+        {
+            LayoutNpcAtRandom(settingPlayerInfo.randomPosition, (int)settingPlayerInfo.nowPlyerPositionKey);
+        }
+
         //ボス戦マップ
         if (isBossMode)
         {
             //ボスモンスターを設置
             LayoutObjectAtRandomMysterymap(labyrinthMapCreateMap.objList[hierarchyIndex].bossMonsterObj, 1, 1, false, null);
+            //アイテム
+            compositeObjList = labyrinthMapCreateMap.objList[hierarchyIndex].itemObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingBossMap && obj.multipleSettingObj != null);
+            //敵
+            compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingBossMap && obj.multipleSettingObj != null));
+            foreach (MultipleSettingObjectClass item in compositeObjList)
+            {
+                settingGameObjList.Add(
+                    new SettingGameObjClass
+                    {
+                        settingObj = item.multipleSettingObj,
+                        minSetNum = item.minSettingNumBossMap,
+                        maxSetNum = item.maxSettingNumBossMap
+                    }
+                );
+            }
         }
         //通常マップ
         else
         {
             //階段を配置
             LayoutObjectAtRandomMysterymap(stairs, 1, 1, true, null);
-        }
-        //メインのオブジェクトを設置
-        LayoutMainObjAtRandom(hierarchyIndex, isBossMode);
-        //複数設置用オブジェクトを設置
-        settingMultipleObject(hierarchyIndex);
-        //NPC(デバッグ用)
-        if (GManager.instance.hierarchyLevel == 1)
-        {
-            LayoutObjectAtRandomMysterymap(fellowTestNpc,3,3,true, null);
-            LayoutObjectAtRandomMysterymap(fellowTestNpc2, 3, 3, true, null);
-        }
-    }
-
-    /**
-     * 複数設置用オブジェクトの設置
-     */
-    private void settingMultipleObject(int hierarchyIndex)
-    {
-        //設置用オブジェクトがセットされているものでフィルターする
-        //アイテム
-        List<MultipleSettingObjectClass> compositeObjList = labyrinthMapCreateMap.objList[hierarchyIndex].itemObjList.FindAll(obj => obj.multipleSettingObj != null);
-        //敵
-        //compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => obj.multipleSettingObj != null));
-        for (int i=0;i< compositeObjList.Count;i++)
-        {
-            if (compositeObjList[i].noSettingFlg)
+            //モンスターハウスが出現する場合
+            if (Random.Range(1, 101) <= Define.MONSTERHOUSE_PROBABILITY)
             {
-                continue;
+                createMonsterHouse((int)settingPlayerInfo.nowPlyerPositionKey, hierarchyIndex);
             }
-            LayoutObjectAtRandomMysterymap(compositeObjList[i].multipleSettingObj, compositeObjList[i].minSettingNum, compositeObjList[i].maxSettingNum,false, null);
+            //アイテム
+            compositeObjList = labyrinthMapCreateMap.objList[hierarchyIndex].itemObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null);
+            //敵
+            compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null));
+            foreach (MultipleSettingObjectClass item in compositeObjList)
+            {
+                settingGameObjList.Add(
+                    new SettingGameObjClass
+                    {
+                        settingObj = item.multipleSettingObj,
+                        minSetNum = item.minSettingNumNomalMap,
+                        maxSetNum = item.maxSettingNumNomalMap
+                    }
+                );
+            }
+        }
+        //複数設置用オブジェクトを設置
+        for (int i = 0; i < settingGameObjList.Count; i++)
+        {
+            LayoutObjectAtRandomMysterymap(settingGameObjList[i].settingObj, settingGameObjList[i].minSetNum, settingGameObjList[i].maxSetNum, false, null);
         }
     }
 
