@@ -275,6 +275,7 @@ public class BoardManager : MonoBehaviour
         [Header("外壁オブジェクト(アクセント用)リスト")] public List<GameObject> subWallObjList;
         [Header("アイテムリスト")] public List<MultipleSettingObjectClass> itemObjList;
         [Header("敵リスト")] public List<MultipleSettingObjectClass> enemyObjList;
+        [Header("トラップリスト")] public List<MultipleSettingObjectClass> trapObjList;
         [Header("Trueの場合は最後の階層でボス戦あり")] public bool isCreateBossMap;
         [Header("ボスモンスター")] public GameObject bossMonsterObj;
     }
@@ -1708,6 +1709,8 @@ public class BoardManager : MonoBehaviour
             compositeObjList = labyrinthMapCreateMap.objList[hierarchyIndex].itemObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null);
             //敵
             compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null));
+            //トラップ
+            compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].trapObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null));
             foreach (MultipleSettingObjectClass item in compositeObjList)
             {
                 settingGameObjList.Add(

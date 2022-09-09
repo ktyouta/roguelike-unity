@@ -20,6 +20,9 @@ TextureImporter:
   - first:
       213: -1127731273884169915
     second: WorldMap-B_5
+  - first:
+      213: -4708538178778269760
+    second: WorldMap-B_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -234,7 +237,7 @@ TextureImporter:
         width: 28
         height: 35
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -242,6 +245,27 @@ TextureImporter:
       bones: []
       spriteID: 5490902a16e7950f0800000000000000
       internalID: -1127731273884169915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WorldMap-B_6
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 417
+        width: 33
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c77e8a2979e7aeb0800000000000000
+      internalID: -4708538178778269760
       vertices: []
       indices: 
       edges: []

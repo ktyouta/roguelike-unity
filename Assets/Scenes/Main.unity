@@ -4595,6 +4595,7 @@ MonoBehaviour:
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
+      trapObjList: []
       isCreateBossMap: 1
       bossMonsterObj: {fileID: 6411965051382903684, guid: 9feae4fb56fedcc4686e1241a3940e84, type: 3}
     - floreObj: {fileID: 7877200778571232546, guid: fdd83b8aeb956d347a41d69e645e579b, type: 3}
@@ -4626,6 +4627,15 @@ MonoBehaviour:
         minSettingNumNomalMap: 3
         maxSettingNumNomalMap: 6
         noSettingBossMap: 0
+        minSettingNumBossMap: 0
+        maxSettingNumBossMap: 0
+      trapObjList:
+      - noSettingFlg: 0
+        noSettingNomalMap: 0
+        multipleSettingObj: {fileID: 6553339283769810889, guid: 228dbe20c5545c24cbdbf653486c6677, type: 3}
+        minSettingNumNomalMap: 3
+        maxSettingNumNomalMap: 5
+        noSettingBossMap: 1
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
       isCreateBossMap: 0
@@ -4662,6 +4672,7 @@ MonoBehaviour:
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
+      trapObjList: []
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 1042772312660975521, guid: cfb89398adb649240b7936df908b102f, type: 3}
@@ -4695,6 +4706,7 @@ MonoBehaviour:
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
+      trapObjList: []
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 8761736197254918833, guid: 6cb8087ac2350bf47a715b987f5cb552, type: 3}
@@ -4728,6 +4740,7 @@ MonoBehaviour:
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
+      trapObjList: []
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 2942659431030212937, guid: 94fb11c7adfc3c143b203265a0dd3703, type: 3}
@@ -4761,6 +4774,7 @@ MonoBehaviour:
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
+      trapObjList: []
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
     - floreObj: {fileID: 5619734057693643439, guid: a92b76e6277af5b4a805d9efcace1c2c, type: 3}
@@ -4795,6 +4809,7 @@ MonoBehaviour:
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
+      trapObjList: []
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
   isBossMode: 0
@@ -5374,7 +5389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26998}
+  m_AnchoredPosition: {x: 142.74, y: -116.26996}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070
