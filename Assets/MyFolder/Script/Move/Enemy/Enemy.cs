@@ -22,6 +22,7 @@ public class Enemy : MovingObject
     [HideInInspector] public int enemyNumber;            //敵に付与される連番
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
+    protected bool isDefeat = false;
     private Transform target;                            //各ターンに移動しようとする目的object
     List<Vector2> trackingNodeList = new List<Vector2>();
 
@@ -347,6 +348,7 @@ public class Enemy : MovingObject
      */
     protected virtual void enemyDefeat()
     {
+        isDefeat = true;
         GManager.instance.wrightDeadLog(enemyName);
         GManager.instance.playerMoney += enemyMoney;
         GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
@@ -369,6 +371,10 @@ public class Enemy : MovingObject
      */
     public void calculateDamage(int damage,string name)
     {
+        if (isDefeat)
+        {
+            return;
+        }
         enemyHp -= damage;
         if (name != null)
         {
