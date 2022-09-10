@@ -255,7 +255,7 @@ public class player : MovingObject
             {
                 return;
             }
-            treasureObject.treasureHp -= GManager.instance.playerAttack;
+            treasureObject.calculateDamage(GManager.instance.playerAttack);
         }
         //ŠO•Ç‚Éƒqƒbƒg
         else if (hitObj.layer == Define.BLOCKING_LAYER && hitObj.tag == "OuterWall")

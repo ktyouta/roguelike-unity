@@ -7,15 +7,6 @@ public class Treasure : MonoBehaviour
     [HideInInspector] public int treasureHp = 100;
     [Header("アイテムの抽選に用いるID")] public int lotteryId;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (treasureHp <= 0)
-        {
-            openTreasure();
-        }
-    }
-
     //宝箱開封時の処理
     private void openTreasure()
     {
@@ -28,6 +19,18 @@ public class Treasure : MonoBehaviour
         else
         {
             treasureHp = 1;
+        }
+    }
+
+    /**
+     * 宝箱のダメージ計算
+     */
+    public void calculateDamage(int damage)
+    {
+        treasureHp -= damage;
+        if (treasureHp <= 0)
+        {
+            openTreasure();
         }
     }
 }
