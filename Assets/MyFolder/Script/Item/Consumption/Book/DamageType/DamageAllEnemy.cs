@@ -9,12 +9,7 @@ public class DamageAllEnemy : BookBase
     protected override void Start()
     {
         base.Start();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        damageValue = damageValue == 0 ? 10 : damageValue;
     }
 
     public override void useItem()
@@ -24,7 +19,7 @@ public class DamageAllEnemy : BookBase
             SpriteRenderer sr = GManager.instance.enemies[i].GetComponent<SpriteRenderer>();
             if (sr.isVisible)
             {
-                GManager.instance.enemies[i].enemyHp -= damageValue == 0 ?10:20;
+                GManager.instance.enemies[i].calculateDamage(damageValue);
             }
         }
         base.useItem();
