@@ -23,7 +23,6 @@ public class Enemy : MovingObject
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
     private Transform target;                            //各ターンに移動しようとする目的object
-    protected bool isDefeatEnemy = false;
     List<Vector2> trackingNodeList = new List<Vector2>();
 
 
@@ -36,25 +35,12 @@ public class Enemy : MovingObject
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
     protected override void Start()
     {
-        // Enemyオブジェクトのリストに追加して、この敵をGameManagerのインスタンスに登録します。
-        //これにより、GameManagerが移動コマンドを発行できるようになります。
-        //GManager.instance.AddEnemyToList(this);
-
-        //タグを使用してPlayer GameObjectを見つけ、transformを保存します。
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
         sr = GetComponent<SpriteRenderer>();
         
         //スタート関数を抽象クラスから呼ぶ
         base.Start();
-    }
-
-    protected virtual void Update()
-    {
-        if (enemyHp <= 0 && !isDefeatEnemy)
-        {
-            enemyDefeat();
-        }
     }
 
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
@@ -362,12 +348,35 @@ public class Enemy : MovingObject
     protected virtual void enemyDefeat()
     {
         GManager.instance.wrightDeadLog(enemyName);
-        isDefeatEnemy = true;
         GManager.instance.playerMoney += enemyMoney;
         GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
         GManager.instance.nowExprience += experiencePoint;
         GManager.instance.mostRecentExperience = experiencePoint;
         GManager.instance.removeEnemyToList(enemyNumber);
         Destroy(gameObject, 0.5f);
+    }
+
+    /**
+     * 敵のダメージ計算(ログ出力なし)
+     */
+    public void calculateDamage(int damage)
+    {
+        calculateDamage(damage,null);
+    }
+
+    /**
+     * 敵のダメージ計算(ログ出力あり)
+     */
+    public void calculateDamage(int damage,string name)
+    {
+        enemyHp -= damage;
+        if (name != null)
+        {
+            GManager.instance.wrightAttackLog(name, enemyName, damage);
+        }
+        if (enemyHp <= 0)
+        {
+            enemyDefeat();
+        }
     }
 }

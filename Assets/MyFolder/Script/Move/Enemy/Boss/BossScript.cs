@@ -12,12 +12,6 @@ public class BossScript : Enemy
         base.Start();
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     /**
      * “G‚ÌHP‚ª0ˆÈ‰º‚É‚È‚Á‚½Œã‚ÉŠK’i‚ğİ’u‚·‚é
      */

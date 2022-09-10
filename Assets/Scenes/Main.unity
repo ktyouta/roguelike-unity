@@ -4621,11 +4621,11 @@ MonoBehaviour:
         minSettingNumBossMap: 2
         maxSettingNumBossMap: 2
       enemyObjList:
-      - noSettingFlg: 1
+      - noSettingFlg: 0
         noSettingNomalMap: 0
         multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
-        minSettingNumNomalMap: 3
-        maxSettingNumNomalMap: 6
+        minSettingNumNomalMap: 5
+        maxSettingNumNomalMap: 5
         noSettingBossMap: 0
         minSettingNumBossMap: 0
         maxSettingNumBossMap: 0
@@ -5389,7 +5389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26996}
+  m_AnchoredPosition: {x: 142.74, y: -116.269295}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

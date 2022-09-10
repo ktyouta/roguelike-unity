@@ -245,8 +245,7 @@ public class player : MovingObject
             {
                 return;
             }
-            enemyObject.enemyHp -= GManager.instance.playerAttack;
-            GManager.instance.wrightAttackLog(GManager.instance.playerName, enemyObject.enemyName, GManager.instance.playerAttack);
+            enemyObject.calculateDamage(GManager.instance.playerAttack, GManager.instance.playerName);
         }
         //•ó” ‚Éƒqƒbƒg
         else if (hitObj.layer == Define.TREASURE_LAYER)
