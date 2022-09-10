@@ -266,12 +266,7 @@ public class player : MovingObject
             {
                 return;
             }
-            //”j‰ó‰Â”\‚Èê‡
-            if (!outerWall.isIndestructible)
-            {
-                outerWall.wallHp -= GManager.instance.playerAttack;
-            }
-            outerWall.isAttacked = true;
+            outerWall.calculateWallDamage(GManager.instance.playerAttack);
         }
     }
 
