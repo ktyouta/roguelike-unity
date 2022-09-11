@@ -952,7 +952,7 @@ public class BoardManager : MonoBehaviour
     /**
      * ボスのHPが0以下になった際に階段を配置する
      */
-    public void LayoutStairsAtRandom()
+    public void LayoutStairsAtRandom(Vector3 bossPosition)
     {
         Vector3 randomStairsPosition;
         do
@@ -960,8 +960,8 @@ public class BoardManager : MonoBehaviour
             int randomStairsIndex = Random.Range(0, gridPositionsDictionary[0].Count);
             randomStairsPosition = gridPositionsDictionary[0][randomStairsIndex];
             gridPositionsDictionary[0].RemoveAt(randomStairsIndex);
-            //プレイヤーの現在位置と一致した場合再度位置を取得し直す
-        } while (playerObj.transform.position == randomStairsPosition);
+            //プレイヤーまたはボスの現在位置と一致した場合再度位置を取得し直す
+        } while (randomStairsPosition == playerObj.transform.position || bossPosition == randomStairsPosition);
         Instantiate(stairs, randomStairsPosition, Quaternion.identity);
     }
 

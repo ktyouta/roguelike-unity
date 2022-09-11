@@ -17,7 +17,7 @@ public class BossScript : Enemy
      */
     protected override void enemyDefeat()
     {
-        boardObj.LayoutStairsAtRandom();
+        boardObj.LayoutStairsAtRandom(transform.position);
         base.enemyDefeat();
     }
 }
