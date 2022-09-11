@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrapBase : MonoBehaviour
+public abstract class TrapBase : MonoBehaviour
 {
     Renderer render;
     // Start is called before the first frame update
@@ -23,5 +23,11 @@ public class TrapBase : MonoBehaviour
             return;
         }
         render.enabled = true;
+        stepOnTrap();
     }
+
+    /**
+     * ƒgƒ‰ƒbƒv‚ğ“¥‚ñ‚¾Û‚Ìˆ—
+     */
+    protected abstract void stepOnTrap();
 }

@@ -12,9 +12,11 @@ public class ThornScript : TrapBase
         damegePoint = damegePoint == 0 ?10:damegePoint;
     }
 
-    protected override void OnTriggerEnter2D(Collider2D other)
+    /**
+     * トラップを踏んだ際の処理
+     */
+    protected override void stepOnTrap()
     {
-        base.OnTriggerEnter2D(other);
         GManager.instance.playerHp -= damegePoint;
         GManager.instance.wrightLog("棘トラップを踏んだ");
     }
