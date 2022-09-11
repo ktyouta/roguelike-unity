@@ -285,6 +285,7 @@ public class BoardManager : MonoBehaviour
     public class LabyrinthMapCreateMapClass
     {
         [Header("階層ごとのフロア、外壁等のオブジェクトを格納するリスト")] public List<LabyrinthMapCreateMapListClass> objList = new List<LabyrinthMapCreateMapListClass>();
+        [Header("階層に関係なく設置するオブジェクトのリスト")] public List<MultipleSettingObjectClass> allFloorSettingObjList = new List<MultipleSettingObjectClass>();
     }
 
     //タイル設置およびモンスターハウス作成用クラス
@@ -1711,6 +1712,8 @@ public class BoardManager : MonoBehaviour
             compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].enemyObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null));
             //トラップ
             compositeObjList.AddRange(labyrinthMapCreateMap.objList[hierarchyIndex].trapObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null));
+            // 階層に関係なく設置するオブジェクト
+            compositeObjList.AddRange(labyrinthMapCreateMap.allFloorSettingObjList.FindAll(obj => !obj.noSettingFlg && !obj.noSettingNomalMap && obj.multipleSettingObj != null));
             foreach (MultipleSettingObjectClass item in compositeObjList)
             {
                 settingGameObjList.Add(

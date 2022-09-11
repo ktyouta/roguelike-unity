@@ -4812,6 +4812,15 @@ MonoBehaviour:
       trapObjList: []
       isCreateBossMap: 0
       bossMonsterObj: {fileID: 0}
+    allFloorSettingObjList:
+    - noSettingFlg: 0
+      noSettingNomalMap: 0
+      multipleSettingObj: {fileID: 1790636213761801690, guid: 1bd639421f1c9474fbcdad6078362100, type: 3}
+      minSettingNumNomalMap: 2
+      maxSettingNumNomalMap: 2
+      noSettingBossMap: 1
+      minSettingNumBossMap: 0
+      maxSettingNumBossMap: 0
   isBossMode: 0
 --- !u!4 &1483692205
 Transform:
@@ -5389,7 +5398,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26999}
+  m_AnchoredPosition: {x: 142.74, y: -116.26981}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070
