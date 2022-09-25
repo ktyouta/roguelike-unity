@@ -7,6 +7,9 @@ using Common;
 
 public class player : MovingObject
 {
+    //[Header("プレイヤーのステータス")] public PlayerStatusClass playerStatusObj = new PlayerStatusClass();
+    [HideInInspector] public StatusComponentPlayer statusObj;
+
     [Header("アイテムレイヤー")] public LayerMask itemLayer;
     [HideInInspector] public Vector2 playerBeforePosition;
     [HideInInspector] public playerState plState = playerState.Normal;
@@ -38,6 +41,25 @@ public class player : MovingObject
         //GManager.instance.playerFoodPoints = GManager.instance.playerFoodPoints;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        //Debug.Log("statusObj:" + statusObj);
+        // 1Fの時のみ取得し、以降は前のシーンから引き継ぐ
+        if (GManager.instance.hierarchyLevel == 1)
+        {
+            setPlayerStatus();
+        }
+    }
+
+    /**
+     * キャラクターのステータスを取得
+     */
+    protected virtual void setPlayerStatus()
+    {
+        // キャストする型をキャラクターごとに変える
+        statusObj = (StatusComponentPlayer)GetComponent<StatusComponentBase>();
+    }
 
     private void Update()
     {
@@ -57,7 +79,8 @@ public class player : MovingObject
         if (GManager.instance.nowExprience >= GManager.instance.nowMaxExprience)
         {
             GManager.instance.updateLevel();
-            GManager.instance.updateStatus();
+            //playerStatusObj.updateStatus();
+            statusObj.updateStatus();
         }
 
         //プレイヤーのターンでない、移動中、攻撃中はコマンド入力を受け付けない
@@ -151,10 +174,15 @@ public class player : MovingObject
         //プレイヤーの移動前の位置を保存する
         playerBeforePosition = transform.position;
         reduceFoodCounter++;
+        Debug.Log("food:" + statusObj.charFood.showFoodPoint());
         //プレイヤーが移動するたびに、フードポイントの合計から減算
         if (reduceFoodCounter == 5)
         {
-            GManager.instance.playerFoodPoint--;
+            //playerStatusObj.consumeFoodPoint(1);
+            statusObj.charFood.subFoodPoint(1);
+            Debug.Log("food"+ statusObj.charFood.showFoodPoint());
+            //playerStatusObj.playerFoodPoint--;
+            //GManager.instance.playerFoodPoint--;
             reduceFoodCounter = 0;
         }
 
@@ -208,9 +236,11 @@ public class player : MovingObject
     private void CheckIfGameOver()
     {
         //フードポイントの残りが0より低い、または同じ場合
-        if (GManager.instance.playerFoodPoint <= 0 || GManager.instance.playerHp <= 0)
+        //if (playerStatusObj.playerFoodPoint <= 0 || playerStatusObj.playerHp <= 0)
+        if (statusObj.charFood.showFoodPoint() <= 0 || statusObj.charHp.showHp() <= 0)
         {
-            GManager.instance.wrightDeadLog(GManager.instance.playerName);
+            //GManager.instance.wrightDeadLog(playerStatusObj.playerName);
+            GManager.instance.wrightDeadLog(statusObj.charName.showName());
             //GameManagerのGameOver関数を呼び出します。
             GManager.instance.GameOver();
             isDefeat = true;
@@ -237,36 +267,47 @@ public class player : MovingObject
             return;
         }
         GameObject hitObj = hit.transform.gameObject;
-        //敵にヒット
-        if (hitObj.layer == Define.ENEMY_LAYER)
+        DamageActionComponentBase DamageActionComponent = hitObj.GetComponent<DamageActionComponentBase>();
+        if (DamageActionComponent == null)
         {
-            enemyObject = hitObj.GetComponent<Enemy>();
-            if (enemyObject == null)
-            {
-                return;
-            }
-            enemyObject.calculateDamage(GManager.instance.playerAttack, GManager.instance.playerName);
+            return;
         }
-        //宝箱にヒット
-        else if (hitObj.layer == Define.TREASURE_LAYER)
-        {
-            treasureObject = hitObj.GetComponent<Treasure>();
-            if (treasureObject == null)
-            {
-                return;
-            }
-            treasureObject.calculateDamage(GManager.instance.playerAttack);
-        }
-        //外壁にヒット
-        else if (hitObj.layer == Define.BLOCKING_LAYER && hitObj.tag == "OuterWall")
-        {
-            OuterWallScript outerWall = hitObj.GetComponent<OuterWallScript>();
-            if (outerWall == null)
-            {
-                return;
-            }
-            outerWall.calculateWallDamage(GManager.instance.playerAttack);
-        }
+        // ダメージ計算処理
+        int calDamage = DamageActionComponent.calculateDamage(statusObj.charAttack.showAttack());
+        int calHp = DamageActionComponent.subHp(calDamage);
+        GManager.instance.wrightAttackLog(statusObj.charName.showName(), DamageActionComponent.statusObj.charName.showName(), calDamage);
+        DamageActionComponent.reciveDamageAction(calHp);
+
+        ////敵にヒット
+        //if (hitObj.layer == Define.ENEMY_LAYER)
+        //{
+        //    //enemyObject = hitObj.GetComponent<Enemy>();
+        //    //if (enemyObject == null)
+        //    //{
+        //    //    return;
+        //    //}
+        //    //enemyObject.calculateDamage(playerStatusObj.playerAttack, playerStatusObj.playerName);
+        //}
+        ////宝箱にヒット
+        //else if (hitObj.layer == Define.TREASURE_LAYER)
+        //{
+        //    treasureObject = hitObj.GetComponent<Treasure>();
+        //    if (treasureObject == null)
+        //    {
+        //        return;
+        //    }
+        //    treasureObject.calculateDamage(playerStatusObj.playerAttack);
+        //}
+        ////外壁にヒット
+        //else if (hitObj.layer == Define.BLOCKING_LAYER && hitObj.tag == "OuterWall")
+        //{ 
+        //    OuterWallScript outerWall = hitObj.GetComponent<OuterWallScript>();
+        //    if (outerWall == null)
+        //    {
+        //        return;
+        //    }
+        //    outerWall.calculateWallDamage(playerStatusObj.playerAttack);
+        //}
     }
 
     /*

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6548890291416856286}
   - component: {fileID: 2492329088577154867}
   - component: {fileID: 5744456167437916244}
+  - component: {fileID: -3406771577812764858}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -180,6 +181,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   isMoving: 0
+  rb2D: {fileID: 0}
+  statusObj: {fileID: 0}
   itemLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -191,3 +194,40 @@ MonoBehaviour:
   nextVerticalkey: 0
   isAttack: 0
   enemyObject: {fileID: 0}
+  horizontal: 0
+  vertical: 0
+  leftShift: 0
+--- !u!114 &-3406771577812764858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2846253646200167766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e026bd5969e6b34491fc828edccd494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 100
+    maxHp: 100
+  charName:
+    name: "\u30D7\u30EC\u30A4\u30E4\u30FC"
+  charAttack:
+    attack: 5
+  charDefence:
+    defence: 0
+  charWallet:
+    money: 0
+    maxMoney: 99999
+  charFood:
+    foodPoint: 100
+    maxFoodPoint: 100
+  charExperience:
+    level: 1
+    experience: 0
+    maxExperience: 0
+  charCarm:
+    charmPoint: 100
+    maxCharmPoint: 100

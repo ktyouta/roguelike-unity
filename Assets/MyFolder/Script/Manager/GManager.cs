@@ -39,8 +39,8 @@ public class GManager : MonoBehaviour
     [Header("プレイヤーの満腹度の上限値")] public int playerMaxFoodPoint = 100;
     [HideInInspector] public int mostRecentExperience;
     [HideInInspector] public int beforeLevelupExperience;
-    [HideInInspector] public player playerObj;
     [HideInInspector] public int nowExprience;
+    [HideInInspector] public player playerObj;
 
     //パネル制御系
     [Header("インベントリーに展開されるアイテムボタン")] public GameObject itemBtn;
@@ -271,17 +271,9 @@ public class GManager : MonoBehaviour
         {
             AddEnemyToList(enemyObjects[i], i);
         }
-        for (int i = 0; i < GManager.instance.fellows.Count; i++)
-        {
-            Debug.Log("GManager.instance.fellows[i].transform.positionbbbbbbbbbbbbbbb" + GManager.instance.fellows[i].transform.position);
-        }
         yield return new WaitForSeconds(2.0f);
         //処理完了後に画面表示
         hideLevelImage();
-        for (int i = 0; i < GManager.instance.fellows.Count; i++)
-        {
-            Debug.Log("GManager.instance.fellows[i].transform.positionaaaaaaaaaaaaa" + GManager.instance.fellows[i].transform.position);
-        }
     }
 
     //初期表示の黒い画像を非表示にする
@@ -374,6 +366,12 @@ public class GManager : MonoBehaviour
         {
             enemies.RemoveAt(listIndex);
         }
+    }
+
+    //hpが0になった敵をリストから削除
+    public void removeEnemyToList(Enemy targetEnemy)
+    {
+        enemies.Remove(targetEnemy);
     }
 
     //これを呼び出して、渡された敵を敵オブジェクトのリストに追加します。
@@ -619,21 +617,21 @@ public class GManager : MonoBehaviour
         statusText.SetActive(true);
         //プレイヤーのステータスを表示
         string status;
-        status = "プレイヤー名 : " + playerName;
+        status = "プレイヤー名 : " + playerObj.statusObj.charName.showName();
         status += "\n";
-        status += "レベル : " + playerLevel;
+        status += "レベル : " + playerObj.statusObj.charExperience.showLevel();
         status += "\n";
-        status += "HP : " + playerHp;
+        status += "HP : " + playerObj.statusObj.charHp.showHp();
         status += "\n";
-        status += "攻撃力 : " + playerAttack;
+        status += "攻撃力 : " + playerObj.statusObj.charAttack.showAttack();
         status += "\n";
-        status += "防御力 : " + playerDefence;
+        status += "防御力 : " + playerObj.statusObj.charDefence.showDefence();
         status += "\n";
-        status += "満腹度 : " + playerFoodPoint;
+        status += "満腹度 : " + playerObj.statusObj.charFood.showFoodPoint();
         status += "\n";
-        status += "所持金 : " + playerMoney;
+        status += "所持金 : " + playerObj.statusObj.charWallet.showMoney();
         status += "\n";
-        status += "魅力度 : " + playerCharm;
+        status += "魅力度 : " + playerObj.statusObj.charCarm.showCharmPoint();
         status += "\n";
         status += "武器 : " + weaponName;
         status += "\n";

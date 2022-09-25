@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static player;
 
 public class FoodItem : RecoveryItem
 {
@@ -13,22 +14,18 @@ public class FoodItem : RecoveryItem
         foodText = GameObject.Find("Food").GetComponent<Text>();
         base.Start();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
    
     public override void useItem()
     {
+        StatusComponentPlayer playerStatusObj = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
         //プレイヤーの満腹度が満タンの場合は回復しない
-        if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
+        //if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
+        if (playerStatusObj.charFood.showFoodPoint() >= playerStatusObj.charFood.showMaxFoodPoint())
         {
             GManager.instance.wrightLog("プレイヤーの満腹度が満タンです。");
             return;
         }
-        GManager.instance.recoveryFoodPoint(foodPoint);
+        playerStatusObj.charFood.addFoodPoint(foodPoint);
         base.useItem();
     }
 }

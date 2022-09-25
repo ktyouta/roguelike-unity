@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 5254936180158176971}
   - component: {fileID: 7685963859210645264}
   - component: {fileID: 6537894078576264053}
+  - component: {fileID: 2564050569386225746}
+  - component: {fileID: 6892108011760483180}
+  - component: {fileID: 8151887944116094279}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -180,6 +183,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3072
   isMoving: 0
+  rb2D: {fileID: 0}
   enemyAttackValue: 2
   enemyMoney: 100
   experiencePoint: 50
@@ -188,3 +192,50 @@ MonoBehaviour:
   enemyNumber: 0
   isAction: 0
   sr: {fileID: 0}
+--- !u!114 &2564050569386225746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450068965489674141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 10
+    maxHp: 0
+  charName:
+    name: "\u30A8\u30CD\u30DF\u30FC1"
+  charAttack:
+    attack: 2
+  charDefence:
+    defence: 0
+--- !u!114 &6892108011760483180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450068965489674141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22156acd936842549af9889af19610be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &8151887944116094279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450068965489674141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3a5bdc85c2a334cbf25832e80dcdd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

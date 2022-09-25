@@ -25,6 +25,7 @@ public class Enemy : MovingObject
     protected bool isDefeat = false;
     private Transform target;                            //各ターンに移動しようとする目的object
     List<Vector2> trackingNodeList = new List<Vector2>();
+    protected StatusComponentBase statusObj;
 
 
     struct EnemyNextPosition
@@ -39,7 +40,13 @@ public class Enemy : MovingObject
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
         sr = GetComponent<SpriteRenderer>();
-        
+
+        this.statusObj = GetComponent<StatusComponentBase>();
+        if (this.statusObj == null)
+        {
+            Destroy(gameObject);
+            GManager.instance.removeEnemyToList(GetComponent<Enemy>());
+        }
         //スタート関数を抽象クラスから呼ぶ
         base.Start();
     }
@@ -47,7 +54,7 @@ public class Enemy : MovingObject
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void moveEnemy()
     {
-        if (enemyHp <= 0)
+        if (statusObj.charHp.showHp() <= 0)
         {
             return;
         }
@@ -102,7 +109,7 @@ public class Enemy : MovingObject
         //移動先がプレイヤーの移動先と被った場合は攻撃
         if (next == GManager.instance.enemyNextPosition[0])
         {
-            StartCoroutine(enemyAttack());
+            StartCoroutine(enemyAttack(next));
             return;
         }
         //移動点が他の敵と被れば移動できない
@@ -332,13 +339,20 @@ public class Enemy : MovingObject
     /**
      * 敵の攻撃処理
      */
-    protected IEnumerator enemyAttack()
+    protected IEnumerator enemyAttack(Vector2 next)
     {
         //攻撃の場合はプレイヤーの行動完了を待つ
         yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, next, playerLayer);
+        if (hit.transform == null)
+        {
+            yield break;
+        }
+        StatusComponentBase playerStatusObj = hit.transform.GetComponent<player>().statusObj;
         animator.Play("EnemyAttack");
-        GManager.instance.playerHp -= enemyAttackValue;
-        GManager.instance.wrightAttackLog(enemyName, GManager.instance.playerName, enemyAttackValue);
+        playerStatusObj.charHp.subHp(enemyAttackValue);
+        //GManager.instance.playerHp -= enemyAttackValue;
+        GManager.instance.wrightAttackLog(enemyName, playerStatusObj.charName.showName(), enemyAttackValue);
         yield return new WaitForSeconds(0.5f);
         GManager.instance.enemyActionEndCount++;
     }

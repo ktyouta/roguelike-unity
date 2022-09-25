@@ -13,13 +13,15 @@ public class PortionItem : RecoveryItem
 
     public override void useItem()
     {
+        StatusComponentPlayer playerStatusObj = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
         //プレイヤーのHPが満タンの場合は回復しない
-        if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
+        //if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
+        if (playerStatusObj.charHp.showHp() >= playerStatusObj.charHp.showMaxHp())
         {
             GManager.instance.wrightLog("プレイヤーのHPが満タンです。");
             return;
         }
-        GManager.instance.recoveryHp(hpPoint);
+        playerStatusObj.charHp.addHp(hpPoint);
         base.useItem();
     }
 }
