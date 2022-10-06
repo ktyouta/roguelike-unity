@@ -1581,7 +1581,12 @@ public class BoardManager : MonoBehaviour
                     //マップ端の外壁を破壊不可にする
                     if (isMapEdge)
                     {
-                        outerWallObj.GetComponent<OuterWallScript>().isIndestructible = true;
+                        //outerWallObj.GetComponent<OuterWallScript>().isIndestructible = true;
+                        DamageActionComponentOuterWall damageActionObj = outerWallObj?.GetComponent<DamageActionComponentOuterWall>();
+                        if (damageActionObj != null)
+                        {
+                            damageActionObj.isIndestructible = true;
+                        }
                     }
                     continue;
                 }

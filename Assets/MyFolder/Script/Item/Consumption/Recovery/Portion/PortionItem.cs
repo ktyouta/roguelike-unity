@@ -16,7 +16,7 @@ public class PortionItem : RecoveryItem
         StatusComponentPlayer playerStatusObj = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
         //プレイヤーのHPが満タンの場合は回復しない
         //if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
-        if (playerStatusObj.charHp.showHp() >= playerStatusObj.charHp.showMaxHp())
+        if (playerStatusObj.charHp.hp >= playerStatusObj.charHp.maxHp)
         {
             GManager.instance.wrightLog("プレイヤーのHPが満タンです。");
             return;

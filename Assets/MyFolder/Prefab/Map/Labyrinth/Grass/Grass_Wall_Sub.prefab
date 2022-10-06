@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 6580199720169512463}
   - component: {fileID: 7646289336207805106}
   - component: {fileID: 3358020473746224273}
+  - component: {fileID: 4891451678679929652}
+  - component: {fileID: 8583318620918070076}
+  - component: {fileID: -2316130168364402796}
   m_Layer: 3
   m_Name: Grass_Wall_Sub
   m_TagString: OuterWall
@@ -124,4 +127,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isIndestructible: 0
   wallHp: 0
-  isAttacked: 0
+--- !u!114 &4891451678679929652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4070275452904732534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 100
+    maxHp: 0
+  charName:
+    name: 
+  charAttack:
+    attack: 0
+  charDefence:
+    defence: 0
+--- !u!114 &8583318620918070076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4070275452904732534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &-2316130168364402796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4070275452904732534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c39590727eb55c4aa0adaa5e4054b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIndestructible: 0

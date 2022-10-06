@@ -17,7 +17,14 @@ public class Forest : TileBase
             isColCounter = !isColCounter;
             if (isColCounter)
             {
-                GManager.instance.recoveryHp(recoveryValue);
+                //GManager.instance.recoveryHp(recoveryValue);
+                OutAccessComponentBase outAccessObj = other.transform.gameObject?.GetComponent<OutAccessComponentBase>();
+                if (outAccessObj == null)
+                {
+                    return;
+                }
+                //É_ÉÅÅ[ÉWèàóù
+                outAccessObj.callCalculateRecoveryHp(recoveryValue);
             }
         }
     }

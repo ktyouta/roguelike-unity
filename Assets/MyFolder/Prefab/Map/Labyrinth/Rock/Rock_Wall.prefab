@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 9173075914292504710}
   - component: {fileID: 5620998775629331515}
   - component: {fileID: 758516706798551576}
+  - component: {fileID: -221981552437864051}
+  - component: {fileID: 8605772898968621707}
+  - component: {fileID: -7711950781050476747}
   m_Layer: 3
   m_Name: Rock_Wall
   m_TagString: OuterWall
@@ -124,4 +127,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isIndestructible: 0
   wallHp: 0
-  isAttacked: 0
+--- !u!114 &-221981552437864051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044734066580537855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 100
+    maxHp: 0
+  charName:
+    name: 
+  charAttack:
+    attack: 0
+  charDefence:
+    defence: 0
+--- !u!114 &8605772898968621707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044734066580537855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &-7711950781050476747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044734066580537855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c39590727eb55c4aa0adaa5e4054b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIndestructible: 0

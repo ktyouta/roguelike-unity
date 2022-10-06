@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 8005585651483889049}
   - component: {fileID: 6797355531565226276}
   - component: {fileID: 1932616675368937223}
+  - component: {fileID: -2593887652793908254}
+  - component: {fileID: 5841361920763803430}
+  - component: {fileID: 4177841849140194398}
   m_Layer: 3
   m_Name: Snow_Wall
   m_TagString: OuterWall
@@ -124,4 +127,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isIndestructible: 0
   wallHp: 0
-  isAttacked: 0
+--- !u!114 &-2593887652793908254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879495510084134112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 100
+    maxHp: 0
+  charName:
+    name: 
+  charAttack:
+    attack: 0
+  charDefence:
+    defence: 0
+--- !u!114 &5841361920763803430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879495510084134112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &4177841849140194398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879495510084134112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c39590727eb55c4aa0adaa5e4054b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIndestructible: 0

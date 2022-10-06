@@ -15,9 +15,16 @@ public class ThornScript : TrapBase
     /**
      * トラップを踏んだ際の処理
      */
-    protected override void stepOnTrap()
+    protected override void stepOnTrap(Collider2D other)
     {
-        GManager.instance.playerHp -= damegePoint;
+        //GManager.instance.playerHp -= damegePoint;
+        OutAccessComponentBase outAccessObj = other.transform.gameObject?.GetComponent<OutAccessComponentBase>();
+        if (outAccessObj == null)
+        {
+            return;
+        }
+        //ダメージ処理
+        outAccessObj.callCalculateDamage(damegePoint);
         GManager.instance.wrightLog("棘トラップを踏んだ");
     }
 }

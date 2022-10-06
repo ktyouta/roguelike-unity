@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 1599912930921979816}
   - component: {fileID: 2844176267358145301}
   - component: {fileID: 7205633273603388726}
+  - component: {fileID: -7104890324372057601}
+  - component: {fileID: 6906005053543617962}
+  - component: {fileID: 7988303089889995944}
   m_Layer: 3
   m_Name: Wilderness_Wall
   m_TagString: OuterWall
@@ -124,4 +127,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isIndestructible: 0
   wallHp: 0
-  isAttacked: 0
+--- !u!114 &-7104890324372057601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437807712667727569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 100
+    maxHp: 0
+  charName:
+    name: 
+  charAttack:
+    attack: 0
+  charDefence:
+    defence: 0
+--- !u!114 &6906005053543617962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437807712667727569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &7988303089889995944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437807712667727569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c39590727eb55c4aa0adaa5e4054b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIndestructible: 0

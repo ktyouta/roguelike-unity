@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static player;
@@ -48,9 +50,17 @@ public class StairsScript : MonoBehaviour
      */
     private void handoverData(Scene next, LoadSceneMode mode)
     {
-        player nextPlayerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
-        //ステータスを引き渡す
-        nextPlayerObj.statusObj = previousSceneStatus;
+        //次のシーンのステータスのインスタンスを取得
+        StatusComponentPlayer nextSceneStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
+
+        var fields = previousSceneStatus.GetType().GetFields();
+        // フィールド分のステータスを引き渡す
+        foreach (var field in fields)
+        {
+            var previousSceneStatusField = previousSceneStatus.GetType().GetField(field.Name);
+            var nextSceneStatusField = nextSceneStatus.GetType().GetField(field.Name);
+            nextSceneStatusField?.SetValue(nextSceneStatus, previousSceneStatusField?.GetValue(previousSceneStatus));
+        }
 
         // イベントから削除
         SceneManager.sceneLoaded -= handoverData;

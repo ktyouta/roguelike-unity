@@ -19,9 +19,4 @@ public class WalletClass
         int afterMoney = money - point;
         money = afterMoney < 0 ? 0 : afterMoney;
     }
-
-    public int showMoney()
-    {
-        return money;
-    }
 }

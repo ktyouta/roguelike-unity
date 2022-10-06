@@ -13,17 +13,17 @@ public class HpText : MonoBehaviour
     private void Start()
     {
         hpText = GetComponent<Text>();
-        playerStatus = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
+        playerStatus = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //if (beforeHpValue != GManager.instance.playerHp)
-        if (beforeHpValue != playerStatus.charHp.showHp())
+        if (beforeHpValue != playerStatus.charHp.hp)
         {
-            hpText.text = "HP:" + playerStatus.charHp.showHp() + " / " + playerStatus.charHp.showMaxHp();
-            beforeHpValue = playerStatus.charHp.showHp();
+            hpText.text = "HP:" + playerStatus.charHp.hp + " / " + playerStatus.charHp.maxHp;
+            beforeHpValue = playerStatus.charHp.hp;
         }
     }
 }

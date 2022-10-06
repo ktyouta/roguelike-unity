@@ -33,14 +33,4 @@ public class FoodPointClass
     {
         maxFoodPoint += point;
     }
-
-    public int showFoodPoint()
-    {
-        return foodPoint;
-    }
-
-    public int showMaxFoodPoint()
-    {
-        return maxFoodPoint;
-    }
 }

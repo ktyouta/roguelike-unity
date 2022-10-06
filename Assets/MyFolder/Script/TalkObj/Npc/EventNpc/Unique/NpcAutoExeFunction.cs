@@ -73,7 +73,7 @@ public class NpcAutoExeFunction : NpcBase
      */
     protected void recoveryPlayerHp()
     {
-        GManager.instance.playerHp += 10;
+        //GManager.instance.playerHp += 10;
     }
 
     /**

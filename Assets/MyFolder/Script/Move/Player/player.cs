@@ -46,10 +46,7 @@ public class player : MovingObject
         base.Start();
         //Debug.Log("statusObj:" + statusObj);
         // 1Fの時のみ取得し、以降は前のシーンから引き継ぐ
-        if (GManager.instance.hierarchyLevel == 1)
-        {
-            setPlayerStatus();
-        }
+        setPlayerStatus();
     }
 
     /**
@@ -76,12 +73,12 @@ public class player : MovingObject
         CheckIfGameOver();
 
         //レベルアップ
-        if (GManager.instance.nowExprience >= GManager.instance.nowMaxExprience)
-        {
-            GManager.instance.updateLevel();
-            //playerStatusObj.updateStatus();
-            statusObj.updateStatus();
-        }
+        //if (GManager.instance.nowExprience >= GManager.instance.nowMaxExprience)
+        //{
+        //    GManager.instance.updateLevel();
+        //    //playerStatusObj.updateStatus();
+        //    statusObj.updateStatus();
+        //}
 
         //プレイヤーのターンでない、移動中、攻撃中はコマンド入力を受け付けない
         if (!GManager.instance.playersTurn || isMoving || isAttack)
@@ -174,13 +171,11 @@ public class player : MovingObject
         //プレイヤーの移動前の位置を保存する
         playerBeforePosition = transform.position;
         reduceFoodCounter++;
-        Debug.Log("food:" + statusObj.charFood.showFoodPoint());
         //プレイヤーが移動するたびに、フードポイントの合計から減算
         if (reduceFoodCounter == 5)
         {
             //playerStatusObj.consumeFoodPoint(1);
             statusObj.charFood.subFoodPoint(1);
-            Debug.Log("food"+ statusObj.charFood.showFoodPoint());
             //playerStatusObj.playerFoodPoint--;
             //GManager.instance.playerFoodPoint--;
             reduceFoodCounter = 0;
@@ -237,10 +232,10 @@ public class player : MovingObject
     {
         //フードポイントの残りが0より低い、または同じ場合
         //if (playerStatusObj.playerFoodPoint <= 0 || playerStatusObj.playerHp <= 0)
-        if (statusObj.charFood.showFoodPoint() <= 0 || statusObj.charHp.showHp() <= 0)
+        if (statusObj.charFood.foodPoint <= 0 || statusObj.charHp.hp <= 0)
         {
             //GManager.instance.wrightDeadLog(playerStatusObj.playerName);
-            GManager.instance.wrightDeadLog(statusObj.charName.showName());
+            GManager.instance.wrightDeadLog(statusObj.charName.name);
             //GameManagerのGameOver関数を呼び出します。
             GManager.instance.GameOver();
             isDefeat = true;
@@ -266,17 +261,19 @@ public class player : MovingObject
         {
             return;
         }
-        GameObject hitObj = hit.transform.gameObject;
-        DamageActionComponentBase DamageActionComponent = hitObj.GetComponent<DamageActionComponentBase>();
-        if (DamageActionComponent == null)
+        //対象オブジェクトのダメージ処理を行う
+        OutAccessComponentBase outAccessObj = hit.transform.gameObject?.GetComponent<OutAccessComponentBase>();
+        if (outAccessObj == null)
         {
             return;
         }
-        // ダメージ計算処理
-        int calDamage = DamageActionComponent.calculateDamage(statusObj.charAttack.showAttack());
-        int calHp = DamageActionComponent.subHp(calDamage);
-        GManager.instance.wrightAttackLog(statusObj.charName.showName(), DamageActionComponent.statusObj.charName.showName(), calDamage);
-        DamageActionComponent.reciveDamageAction(calHp);
+        //ダメージ処理
+        outAccessObj.callCalculateDamage(statusObj.charAttack.attack, statusObj.charName.name);
+
+        //int calDamage = outAccessObj.calculateDamage(statusObj.charAttack.attack);
+        //int calHp = outAccessObj.subHp(calDamage);
+        //GManager.instance.wrightAttackLog(statusObj.charName.name, outAccessObj.statusObj.charName.name, calDamage);
+        //outAccessObj.reciveDamageAction(calHp);
 
         ////敵にヒット
         //if (hitObj.layer == Define.ENEMY_LAYER)

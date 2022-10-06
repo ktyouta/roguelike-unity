@@ -16,7 +16,7 @@ public class Mountain : TileBase
             isColCounter = !isColCounter;
             if (isColCounter)
             {
-                GManager.instance.consumeFoodPoint(consumeValue);
+                //GManager.instance.consumeFoodPoint(consumeValue);
             }
         }
     }

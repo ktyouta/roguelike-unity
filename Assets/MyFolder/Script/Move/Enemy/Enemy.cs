@@ -54,7 +54,7 @@ public class Enemy : MovingObject
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void moveEnemy()
     {
-        if (statusObj.charHp.showHp() <= 0)
+        if (statusObj.charHp.hp <= 0)
         {
             return;
         }
@@ -344,15 +344,32 @@ public class Enemy : MovingObject
         //攻撃の場合はプレイヤーの行動完了を待つ
         yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
         RaycastHit2D hit = Physics2D.Linecast(transform.position, next, playerLayer);
+        animator.Play("EnemyAttack");
         if (hit.transform == null)
         {
+            GManager.instance.enemyActionEndCount++;
             yield break;
         }
-        StatusComponentBase playerStatusObj = hit.transform.GetComponent<player>().statusObj;
-        animator.Play("EnemyAttack");
-        playerStatusObj.charHp.subHp(enemyAttackValue);
-        //GManager.instance.playerHp -= enemyAttackValue;
-        GManager.instance.wrightAttackLog(enemyName, playerStatusObj.charName.showName(), enemyAttackValue);
+        OutAccessComponentBase outAccessObj = hit.transform.gameObject?.GetComponent<OutAccessComponentBase>();
+        if (outAccessObj == null)
+        {
+            GManager.instance.enemyActionEndCount++;
+            yield break;
+        }
+        //ダメージ処理
+        outAccessObj.callCalculateDamage(statusObj.charAttack.attack, statusObj.charName.name);
+
+        //int calDamage = DamageActionComponent.calculateDamage(statusObj.charAttack.attack);
+        //int calHp = DamageActionComponent.subHp(calDamage);
+        //GManager.instance.wrightAttackLog(statusObj.charName.name, DamageActionComponent.statusObj.charName.name, calDamage);
+        //DamageActionComponent.reciveDamageAction(calHp);
+
+        //StatusComponentBase playerStatusObj = hit.transform.GetComponent<player>().statusObj;
+        //animator.Play("EnemyAttack");
+        //playerStatusObj.charHp.subHp(enemyAttackValue);
+        ////GManager.instance.playerHp -= enemyAttackValue;
+        //GManager.instance.wrightAttackLog(playerStatusObj.charName.name, enemyName, enemyAttackValue);
+
         yield return new WaitForSeconds(0.5f);
         GManager.instance.enemyActionEndCount++;
     }
@@ -365,9 +382,9 @@ public class Enemy : MovingObject
         isDefeat = true;
         GManager.instance.wrightDeadLog(enemyName);
         GManager.instance.playerMoney += enemyMoney;
-        GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
-        GManager.instance.nowExprience += experiencePoint;
-        GManager.instance.mostRecentExperience = experiencePoint;
+        //GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
+        //GManager.instance.nowExprience += experiencePoint;
+        //GManager.instance.mostRecentExperience = experiencePoint;
         GManager.instance.removeEnemyToList(enemyNumber);
         Destroy(gameObject, 0.5f);
     }

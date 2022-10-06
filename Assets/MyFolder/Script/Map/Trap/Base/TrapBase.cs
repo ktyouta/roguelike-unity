@@ -23,11 +23,11 @@ public abstract class TrapBase : MonoBehaviour
             return;
         }
         render.enabled = true;
-        stepOnTrap();
+        stepOnTrap(other);
     }
 
     /**
      * ƒgƒ‰ƒbƒv‚ğ“¥‚ñ‚¾Û‚Ìˆ—
      */
-    protected abstract void stepOnTrap();
+    protected abstract void stepOnTrap(Collider2D other);
 }

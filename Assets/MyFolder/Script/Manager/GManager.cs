@@ -25,21 +25,11 @@ public class GManager : MonoBehaviour
     }
 
     //プレイヤーのステータス系
-    [Header("プレイヤーのHP")] public int playerHp;
-    [Header("プレイヤーの現在の上限HP")] public int nowPlayerMaxHp = 100;
-    [Header("プレイヤーの名前")] public string playerName;
     [Header("プレイヤーの所持金")] public int playerMoney;
     [Header("プレイヤーの攻撃力")] public int playerAttack;
     [Header("プレイヤーの防御力")] public int playerDefence;
-    [Header("プレイヤーのレベル")] public int playerLevel = 1;
     [Header("プレイヤーの魅力")] public int playerCharm = 10;
-    [Header("次のレベルまでの経験値")] public int nowMaxExprience;
     [Header("アイテムの所持数制限")] public int nowMaxPosession;
-    [Header("プレイヤーの満腹度")] public int playerFoodPoint;
-    [Header("プレイヤーの満腹度の上限値")] public int playerMaxFoodPoint = 100;
-    [HideInInspector] public int mostRecentExperience;
-    [HideInInspector] public int beforeLevelupExperience;
-    [HideInInspector] public int nowExprience;
     [HideInInspector] public player playerObj;
 
     //パネル制御系
@@ -523,11 +513,11 @@ public class GManager : MonoBehaviour
         }
     }
 
-    public void wrightAttackLog(string attackerName, string enemyName, int damage)
+    public void wrightAttackLog(string attackerName, string targetName, int damage)
     {
         string newMessage;
         deleteLog();
-        newMessage = attackerName + "が" + enemyName + "に" + damage + "のダメージを与えた";
+        newMessage = attackerName + "が" + targetName + "に" + damage + "のダメージを与えた";
         logMessage.Add(newMessage);
     }
 
@@ -546,14 +536,6 @@ public class GManager : MonoBehaviour
         string newMessage;
         deleteLog();
         newMessage = name + "は倒れた";
-        logMessage.Add(newMessage);
-    }
-
-    public void wrightLevelupLog(string name)
-    {
-        string newMessage;
-        deleteLog();
-        newMessage = name + "のレベルが" + playerLevel + "になった";
         logMessage.Add(newMessage);
     }
 
@@ -617,21 +599,21 @@ public class GManager : MonoBehaviour
         statusText.SetActive(true);
         //プレイヤーのステータスを表示
         string status;
-        status = "プレイヤー名 : " + playerObj.statusObj.charName.showName();
+        status = "プレイヤー名 : " + playerObj.statusObj.charName.name;
         status += "\n";
-        status += "レベル : " + playerObj.statusObj.charExperience.showLevel();
+        status += "レベル : " + playerObj.statusObj.charExperience.level;
         status += "\n";
-        status += "HP : " + playerObj.statusObj.charHp.showHp();
+        status += "HP : " + playerObj.statusObj.charHp.hp;
         status += "\n";
-        status += "攻撃力 : " + playerObj.statusObj.charAttack.showAttack();
+        status += "攻撃力 : " + playerObj.statusObj.charAttack.attack;
         status += "\n";
-        status += "防御力 : " + playerObj.statusObj.charDefence.showDefence();
+        status += "防御力 : " + playerObj.statusObj.charDefence.defence;
         status += "\n";
-        status += "満腹度 : " + playerObj.statusObj.charFood.showFoodPoint();
+        status += "満腹度 : " + playerObj.statusObj.charFood.foodPoint;
         status += "\n";
-        status += "所持金 : " + playerObj.statusObj.charWallet.showMoney();
+        status += "所持金 : " + playerObj.statusObj.charWallet.money;
         status += "\n";
-        status += "魅力度 : " + playerObj.statusObj.charCarm.showCharmPoint();
+        status += "魅力度 : " + playerObj.statusObj.charCarm.charmPoint;
         status += "\n";
         status += "武器 : " + weaponName;
         status += "\n";
@@ -782,67 +764,5 @@ public class GManager : MonoBehaviour
 
         itemList.Add(item);
         return true;
-    }
-
-    /**
-     * レベルアップ
-     */
-    public void updateLevel()
-    {
-        nowExprience = mostRecentExperience - (nowMaxExprience - beforeLevelupExperience);
-        playerLevel++;
-        nowMaxExprience = nowMaxExprience + 10 * playerLevel;
-        wrightLevelupLog(playerName);
-    }
-
-    /**
-     * ステータスの更新
-     */
-    public void updateStatus()
-    {
-        playerAttack += 2;
-        playerDefence += 2;
-        playerHp += riseValueHp == 0 ? 10 : riseValueHp;
-        nowPlayerMaxHp += riseValueHp == 0 ? 10 : riseValueHp;
-    }
-
-    /**
-     * HPの回復処理
-     */
-    public void recoveryHp(int recoveryValue)
-    {
-        playerHp += recoveryValue;
-        if (playerHp >= nowPlayerMaxHp)
-        {
-            playerHp = nowPlayerMaxHp;
-        }
-    }
-
-    /**
-     * 満腹度の回復処理
-     */
-    public void recoveryFoodPoint(int recoveryValue)
-    {
-        playerFoodPoint += recoveryValue;
-        if (playerFoodPoint >= playerMaxFoodPoint)
-        {
-            playerFoodPoint = playerMaxFoodPoint;
-        }
-    }
-
-    /**
-     * 満腹度を消費する
-     */
-    public void consumeFoodPoint(int consumeValue)
-    {
-        playerFoodPoint -= consumeValue;
-    }
-
-    /**
-     * プレイヤーのHPを減らす
-     */
-    public void damagePlayerHp(int damagePoint)
-    {
-        playerHp -= damagePoint;
     }
 }

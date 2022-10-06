@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 1121455062457555721}
   - component: {fileID: 8891534301706435478}
   - component: {fileID: -7509380209288686723}
-  - component: {fileID: 7900269983930633122}
   - component: {fileID: -5261036379142713962}
+  - component: {fileID: 5182532374464037030}
   m_Layer: 7
   m_Name: TestBoss
   m_TagString: Enemy
@@ -213,20 +213,6 @@ MonoBehaviour:
     attack: 5
   charDefence:
     defence: 0
---- !u!114 &7900269983930633122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6411965051382903684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22156acd936842549af9889af19610be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statusObj: {fileID: 0}
-  damageActionObj: {fileID: 0}
 --- !u!114 &-5261036379142713962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,3 +225,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8203ad0f315e8440b6edcc7166bb5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5182532374464037030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6411965051382903684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}

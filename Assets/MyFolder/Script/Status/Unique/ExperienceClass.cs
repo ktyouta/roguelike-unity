@@ -20,9 +20,4 @@ public class ExperienceClass
         experience = point - (maxExperience - experience);
         maxExperience += 50;
     }
-
-    public int showLevel()
-    {
-        return level;
-    }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageAtionEnemy : DamageActionBase
+public class DamageActionComponentPlayer : DamageActionComponentBase
 {
     protected bool isDefeat = false;
 
@@ -15,9 +15,7 @@ public class DamageAtionEnemy : DamageActionBase
         if (hp <= 0)
         {
             isDefeat = true;
-            GManager.instance.wrightDeadLog(statusObj.charName.showName());
-            GManager.instance.removeEnemyToList(GetComponent<Enemy>());
-            Destroy(gameObject, 0.5f);
+            GManager.instance.wrightDeadLog(statusObj.charName.name);
         }
     }
 }

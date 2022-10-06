@@ -12,7 +12,14 @@ public class DamageFloor : MonoBehaviour
         {
             return;
         }
-        GManager.instance.damagePlayerHp(consumeValue);
+        //GManager.instance.damagePlayerHp(consumeValue);
+        OutAccessComponentBase outAccessObj = other.transform.gameObject?.GetComponent<OutAccessComponentBase>();
+        if (outAccessObj == null)
+        {
+            return;
+        }
+        //ダメージ処理
+        outAccessObj.callCalculateDamage(consumeValue);
         GManager.instance.wrightLog("フィールドダメージを受けた");
     }
 }

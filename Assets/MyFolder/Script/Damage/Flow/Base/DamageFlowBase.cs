@@ -6,9 +6,9 @@ public class DamageFlowBase
 {
     DamageCalculateBase damageCal;
     HpClass hp;
-    DamageActionBase damageAction;
+    DamageActionComponentBase damageAction;
 
-    public DamageFlowBase(DamageCalculateBase damageCal, HpClass hp, DamageActionBase damageAction)
+    public DamageFlowBase(DamageCalculateBase damageCal, HpClass hp, DamageActionComponentBase damageAction)
     {
         this.damageCal = damageCal;
         this.hp = hp;

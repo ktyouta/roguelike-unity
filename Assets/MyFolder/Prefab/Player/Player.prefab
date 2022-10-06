@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2492329088577154867}
   - component: {fileID: 5744456167437916244}
   - component: {fileID: -3406771577812764858}
+  - component: {fileID: -7002147909350679898}
+  - component: {fileID: 1113586021654200036}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -231,3 +233,29 @@ MonoBehaviour:
   charCarm:
     charmPoint: 100
     maxCharmPoint: 100
+--- !u!114 &-7002147909350679898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2846253646200167766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &1113586021654200036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2846253646200167766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbc9a755702f0845b0e0173ddaea401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

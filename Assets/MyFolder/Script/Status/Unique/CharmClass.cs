@@ -19,9 +19,4 @@ public class CharmClass
         int afterCharmPoint = charmPoint - point;
         charmPoint = afterCharmPoint < 0 ? 0 : afterCharmPoint;
     }
-
-    public int showCharmPoint()
-    {
-        return charmPoint;
-    }
 }

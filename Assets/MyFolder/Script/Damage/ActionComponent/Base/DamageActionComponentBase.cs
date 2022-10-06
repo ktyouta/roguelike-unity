@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class DamageActionBase:MonoBehaviour
+public abstract class DamageActionComponentBase:MonoBehaviour
 {
     protected StatusComponentBase statusObj;
 

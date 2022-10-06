@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 3265061900817104802}
   - component: {fileID: 5336775167875341138}
   - component: {fileID: 2881660655385978786}
+  - component: {fileID: -8333172012612169984}
+  - component: {fileID: -7392031067763030733}
+  - component: {fileID: 9109855758511854633}
   m_Layer: 8
   m_Name: Treasurecheast2
   m_TagString: Untagged
@@ -99,7 +102,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treasureHp: 100
-  isOpen: 0
   lotteryId: 0
 --- !u!61 &3265061900817104802
 BoxCollider2D:
@@ -159,5 +161,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treasureHp: 100
-  isOpen: 0
   lotteryId: 1
+--- !u!114 &-8333172012612169984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3309309428856692085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 50
+    maxHp: 0
+  charName:
+    name: 
+  charAttack:
+    attack: 0
+  charDefence:
+    defence: 0
+--- !u!114 &-7392031067763030733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3309309428856692085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
+  damageActionObj: {fileID: 0}
+--- !u!114 &9109855758511854633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3309309428856692085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aff78e4a701e994fbed60b3687f805e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

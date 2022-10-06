@@ -20,7 +20,7 @@ public class FoodItem : RecoveryItem
         StatusComponentPlayer playerStatusObj = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
         //プレイヤーの満腹度が満タンの場合は回復しない
         //if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
-        if (playerStatusObj.charFood.showFoodPoint() >= playerStatusObj.charFood.showMaxFoodPoint())
+        if (playerStatusObj.charFood.foodPoint >= playerStatusObj.charFood.maxFoodPoint)
         {
             GManager.instance.wrightLog("プレイヤーの満腹度が満タンです。");
             return;

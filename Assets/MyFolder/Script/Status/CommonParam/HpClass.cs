@@ -36,13 +36,11 @@ public class HpClass
         maxHp += addPoint;
     }
 
-    public int showHp()
+    /**
+     * 
+     */
+    public void setHp(int hp)
     {
-        return hp;
-    }
-
-    public int showMaxHp()
-    {
-        return maxHp;
+        this.hp = hp;
     }
 }

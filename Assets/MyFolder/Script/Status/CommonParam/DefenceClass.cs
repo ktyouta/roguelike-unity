@@ -14,9 +14,4 @@ public class DefenceClass
     {
         defence += point;
     }
-
-    public int showDefence()
-    {
-        return defence;
-    }
 }

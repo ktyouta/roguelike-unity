@@ -14,9 +14,4 @@ public class AttackClass
     {
         attack += point;
     }
-
-    public int showAttack()
-    {
-        return attack;
-    }
 }

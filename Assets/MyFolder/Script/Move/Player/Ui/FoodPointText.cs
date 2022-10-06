@@ -13,17 +13,17 @@ public class FoodPointText : MonoBehaviour
     private void Start()
     {
         foodPointText = GetComponent<Text>();
-        playerStatus = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
+        playerStatus = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //if (beforeFoodPoints != GManager.instance.playerFoodPoint)
-        if (beforeFoodPoints != playerStatus.charFood.showFoodPoint())
+        if (beforeFoodPoints != playerStatus.charFood.foodPoint)
         {
-            foodPointText.text = "–ž• “x:" + playerStatus.charFood.showFoodPoint() + " / " + playerStatus.charFood.showMaxFoodPoint();
-            beforeFoodPoints = playerStatus.charFood.showFoodPoint();
+            foodPointText.text = "–ž• “x:" + playerStatus.charFood.foodPoint + " / " + playerStatus.charFood.maxFoodPoint;
+            beforeFoodPoints = playerStatus.charFood.foodPoint;
         }
     }
 }
