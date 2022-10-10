@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class StatusComponentBase : MonoBehaviour
@@ -10,14 +11,9 @@ public class StatusComponentBase : MonoBehaviour
     [Header("攻撃力")] public AttackClass charAttack;
     [Header("防御力")] public DefenceClass charDefence;
 
-    /**
-     * ステータスの更新
-     */
-    public void updateStatus()
+    protected virtual void Start()
     {
-        charHp.addHp(10);
-        charHp.addMaxHp(10);
-        charAttack.addAttack(2);
-        charDefence.adddefence(2);
+        charAttack.initializeTotalAttack();
+        charDefence.initializeTotalDefence();
     }
 }

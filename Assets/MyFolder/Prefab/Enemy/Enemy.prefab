@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 5254936180158176971}
   - component: {fileID: 7685963859210645264}
   - component: {fileID: 6537894078576264053}
-  - component: {fileID: 2564050569386225746}
   - component: {fileID: 2883521248307537509}
   - component: {fileID: 885996860123970958}
+  - component: {fileID: 8985069052628826855}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -192,27 +192,6 @@ MonoBehaviour:
   enemyNumber: 0
   isAction: 0
   sr: {fileID: 0}
---- !u!114 &2564050569386225746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4450068965489674141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charHp:
-    hp: 10
-    maxHp: 0
-  charName:
-    name: "\u30A8\u30CD\u30DF\u30FC1"
-  charAttack:
-    attack: 2
-  charDefence:
-    defence: 0
 --- !u!114 &2883521248307537509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,8 +204,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusObj: {fileID: 0}
-  damageActionObj: {fileID: 0}
 --- !u!114 &885996860123970958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,3 +216,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c68fca0a6518a64db850144fce0c73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusComponentObj: {fileID: 0}
+--- !u!114 &8985069052628826855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450068965489674141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e40ee9c39827f2f439cf44290395b377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 10
+    maxHp: 0
+  charName:
+    name: "\u30A8\u30CD\u30DF\u30FC1"
+  charAttack:
+    attack: 2
+    totalAttack: 0
+  charDefence:
+    defence: 0
+    totalDefence: 0
+  charWallet:
+    money: 100
+    maxMoney: 0
+  experience: 20

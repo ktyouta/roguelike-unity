@@ -218,8 +218,10 @@ MonoBehaviour:
     name: "\u30D7\u30EC\u30A4\u30E4\u30FC"
   charAttack:
     attack: 5
+    totalAttack: 0
   charDefence:
     defence: 0
+    totalDefence: 0
   charWallet:
     money: 0
     maxMoney: 99999
@@ -229,7 +231,7 @@ MonoBehaviour:
   charExperience:
     level: 1
     experience: 0
-    maxExperience: 0
+    maxExperience: 50
   charCarm:
     charmPoint: 100
     maxCharmPoint: 100
@@ -245,8 +247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusObj: {fileID: 0}
-  damageActionObj: {fileID: 0}
 --- !u!114 &1113586021654200036
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -381,7 +381,10 @@ public class Enemy : MovingObject
     {
         isDefeat = true;
         GManager.instance.wrightDeadLog(enemyName);
-        GManager.instance.playerMoney += enemyMoney;
+        //Š‹à‚ğ‘‚â‚·
+        //GManager.instance.playerMoney += enemyMoney;
+        Debug.Log("enemyMoney : "+ enemyMoney);
+        //statusComponentObj?.charWallet.addMoney(enemyMoney);
         //GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
         //GManager.instance.nowExprience += experiencePoint;
         //GManager.instance.mostRecentExperience = experiencePoint;

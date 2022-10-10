@@ -6,7 +6,7 @@ public abstract class DamageActionComponentBase:MonoBehaviour
 {
     protected StatusComponentBase statusObj;
 
-    private void Start()
+    protected virtual void Start()
     {
         this.statusObj = GetComponent<StatusComponentBase>();
     }

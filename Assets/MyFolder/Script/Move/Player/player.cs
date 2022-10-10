@@ -7,7 +7,6 @@ using Common;
 
 public class player : MovingObject
 {
-    //[Header("プレイヤーのステータス")] public PlayerStatusClass playerStatusObj = new PlayerStatusClass();
     [HideInInspector] public StatusComponentPlayer statusObj;
 
     [Header("アイテムレイヤー")] public LayerMask itemLayer;
@@ -44,7 +43,6 @@ public class player : MovingObject
     protected override void Start()
     {
         base.Start();
-        //Debug.Log("statusObj:" + statusObj);
         // 1Fの時のみ取得し、以降は前のシーンから引き継ぐ
         setPlayerStatus();
     }
@@ -71,14 +69,6 @@ public class player : MovingObject
             return;
         }
         CheckIfGameOver();
-
-        //レベルアップ
-        //if (GManager.instance.nowExprience >= GManager.instance.nowMaxExprience)
-        //{
-        //    GManager.instance.updateLevel();
-        //    //playerStatusObj.updateStatus();
-        //    statusObj.updateStatus();
-        //}
 
         //プレイヤーのターンでない、移動中、攻撃中はコマンド入力を受け付けない
         if (!GManager.instance.playersTurn || isMoving || isAttack)
@@ -174,10 +164,7 @@ public class player : MovingObject
         //プレイヤーが移動するたびに、フードポイントの合計から減算
         if (reduceFoodCounter == 5)
         {
-            //playerStatusObj.consumeFoodPoint(1);
             statusObj.charFood.subFoodPoint(1);
-            //playerStatusObj.playerFoodPoint--;
-            //GManager.instance.playerFoodPoint--;
             reduceFoodCounter = 0;
         }
 
@@ -268,43 +255,7 @@ public class player : MovingObject
             return;
         }
         //ダメージ処理
-        outAccessObj.callCalculateDamage(statusObj.charAttack.attack, statusObj.charName.name);
-
-        //int calDamage = outAccessObj.calculateDamage(statusObj.charAttack.attack);
-        //int calHp = outAccessObj.subHp(calDamage);
-        //GManager.instance.wrightAttackLog(statusObj.charName.name, outAccessObj.statusObj.charName.name, calDamage);
-        //outAccessObj.reciveDamageAction(calHp);
-
-        ////敵にヒット
-        //if (hitObj.layer == Define.ENEMY_LAYER)
-        //{
-        //    //enemyObject = hitObj.GetComponent<Enemy>();
-        //    //if (enemyObject == null)
-        //    //{
-        //    //    return;
-        //    //}
-        //    //enemyObject.calculateDamage(playerStatusObj.playerAttack, playerStatusObj.playerName);
-        //}
-        ////宝箱にヒット
-        //else if (hitObj.layer == Define.TREASURE_LAYER)
-        //{
-        //    treasureObject = hitObj.GetComponent<Treasure>();
-        //    if (treasureObject == null)
-        //    {
-        //        return;
-        //    }
-        //    treasureObject.calculateDamage(playerStatusObj.playerAttack);
-        //}
-        ////外壁にヒット
-        //else if (hitObj.layer == Define.BLOCKING_LAYER && hitObj.tag == "OuterWall")
-        //{ 
-        //    OuterWallScript outerWall = hitObj.GetComponent<OuterWallScript>();
-        //    if (outerWall == null)
-        //    {
-        //        return;
-        //    }
-        //    outerWall.calculateWallDamage(playerStatusObj.playerAttack);
-        //}
+        outAccessObj.callCalculateDamage(statusObj.charAttack.totalAttack, statusObj.charName.name);
     }
 
     /*

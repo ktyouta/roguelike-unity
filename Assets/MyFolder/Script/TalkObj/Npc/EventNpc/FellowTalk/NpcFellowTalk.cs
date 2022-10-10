@@ -6,6 +6,14 @@ using Common;
 public class NpcFellowTalk : NpcChoices
 {
     [Header("仲間にするのに必要な魅力度")] public int requiredCharm;
+    [SerializeField, Header("キャラのステータス用コンポーネント")] private StatusComponentPlayer statusComponentObj;
+
+    public override void Start()
+    {
+        base.Start();
+        statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
+    }
+
     protected override void selectMessage(int funcNumber)
     {
         int tempNowIndex = funcNumber;
@@ -56,13 +64,15 @@ public class NpcFellowTalk : NpcChoices
                             tempNowIndex = -100;
                         }
                         //仲間にするための魅力が足りない
-                        else if (GManager.instance.playerCharm < tempRequiredCharm)
+                        //else if (GManager.instance.playerCharm < tempRequiredCharm)
+                        else if(statusComponentObj?.charCarm.charmPoint < tempRequiredCharm)
                         {
                             tempNowIndex = -99;
                         }
                         else
                         {
-                            GManager.instance.playerCharm -= tempRequiredCharm;
+                            //GManager.instance.playerCharm -= tempRequiredCharm;
+                            statusComponentObj?.charCarm.subCharmPoint(tempRequiredCharm);
                             StartCoroutine(becomeFellow());
                         }
                         break;

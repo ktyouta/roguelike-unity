@@ -13,7 +13,7 @@ public class PortionItem : RecoveryItem
 
     public override void useItem()
     {
-        StatusComponentPlayer playerStatusObj = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
+        StatusComponentPlayer playerStatusObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
         //プレイヤーのHPが満タンの場合は回復しない
         //if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
         if (playerStatusObj.charHp.hp >= playerStatusObj.charHp.maxHp)

@@ -13,6 +13,7 @@ public class NpcSales : NpcBase
     [Header("メニューボタン")] public GameObject menuBtn;
     [Header("トレードメニュー")] public GameObject tradeBtn;
     [Header("アイテムボタン")] public GameObject itemBtn;
+    [SerializeField, Header("キャラのステータス用コンポーネント")] private StatusComponentPlayer statusComponentObj;
     private bool leaveShopFlag = false;
     //買いにきた:0、売りにきた:1、やめる:2
     private int shopMode;
@@ -22,6 +23,12 @@ public class NpcSales : NpcBase
     {
         [Header("ショップメニュー")]public string menu;
         [Header("メニュー選択時に実行する関数のインデックス")]public int funcNumber;
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
     protected override IEnumerator TalkEvent()
@@ -95,7 +102,8 @@ public class NpcSales : NpcBase
         //選択肢ボタンをすべて削除
         deleteChildButton(GManager.instance.shopItemListPanel.transform);
         GManager.instance.shopItemListPanel.SetActive(true);
-        GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
+        //GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
+        GManager.instance.playerMoneyText.text = "所持金：" + statusComponentObj?.charWallet.money + " $";
         Vector3 parentPosition = GManager.instance.shopItemListPanel.transform.position;
         RectTransform choisePanelRect = GManager.instance.shopItemListPanel.GetComponent<RectTransform>();
         //ボタンの設置座標を設定するためにpivotを取得
@@ -223,7 +231,8 @@ public class NpcSales : NpcBase
         GameObject buyItem = Instantiate(argItem) as GameObject;
         Item item = buyItem.GetComponent<Item>();
         //所持金の判定
-        if (GManager.instance.playerMoney < item.buyPrice)
+        //if (GManager.instance.playerMoney < item.buyPrice)
+        if(statusComponentObj?.charWallet.money < item.buyPrice)
         {
             showMessage("所持金が足りません。");
             return;
@@ -235,10 +244,12 @@ public class NpcSales : NpcBase
             return;
         }
         //所持金から差し引く
-        GManager.instance.playerMoney -= item.buyPrice;
+        //GManager.instance.playerMoney -= item.buyPrice;
+        statusComponentObj?.charWallet.subMoney(item.buyPrice);
         //購入したアイテムにIDを割り当てる
         //item.assignItemId();
-        GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
+        //GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
+        GManager.instance.playerMoneyText.text = "所持金：" + statusComponentObj?.charWallet.money + " $";
         hideTradePanel();
         showMessage("お買い上げありがとうございます。");
     }
@@ -256,8 +267,10 @@ public class NpcSales : NpcBase
                 GManager.instance.itemList.RemoveAt(i);
                 showMessage("買い取りました。");
                 //所持金を増やす
-                GManager.instance.playerMoney += item.sellPrice;
-                GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
+                //GManager.instance.playerMoney += item.sellPrice;
+                statusComponentObj.charWallet.addMoney(item.sellPrice);
+                //GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
+                GManager.instance.playerMoneyText.text = "所持金：" + statusComponentObj?.charWallet.money + " $";
                 deleteChildButton(GManager.instance.shopItemListPanel.transform);
                 deploymentItemList(GManager.instance.itemList,GManager.instance.shopItemListPanel.transform.position);
                 hideTradePanel();

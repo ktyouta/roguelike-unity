@@ -5,7 +5,19 @@ using UnityEngine;
 public class DamageActionComponentEnemy : DamageActionComponentBase
 {
     protected bool isDefeat = false;
+    private StatusComponentEnemy statusComponentEnemyObj;
+    [SerializeField, Header("キャラのステータス用コンポーネント")] public StatusComponentPlayer statusComponentObj;
 
+    protected override void Start()
+    {
+        base.Start();
+        statusComponentEnemyObj = (StatusComponentEnemy)this.statusObj;
+        statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
+    }
+
+    /**
+     * ダメージを受けた際の共通アクション
+     */
     public override void reciveDamageAction(int hp)
     {
         if (isDefeat)
@@ -15,9 +27,20 @@ public class DamageActionComponentEnemy : DamageActionComponentBase
         if (hp <= 0)
         {
             isDefeat = true;
-            GManager.instance.wrightDeadLog(statusObj.charName.name);
+            //プレイヤーの所持金を追加
+            statusComponentObj?.charWallet.addMoney(statusComponentEnemyObj.charWallet.money);
+            //経験値を追加
+            statusComponentObj?.charExperience.addExperience(statusComponentEnemyObj.experience);
+            GManager.instance.wrightDeadLog(statusComponentEnemyObj.charName.name);
             GManager.instance.removeEnemyToList(GetComponent<Enemy>());
+            //敵ごとの固有アクション
+            specialAction();
             Destroy(gameObject, 0.5f);
         }
     }
+
+    /**
+     * 敵ごとの固有アクション
+     */
+    protected virtual void specialAction() { }
 }

@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3303243564863466194}
   - component: {fileID: 1121455062457555721}
   - component: {fileID: 8891534301706435478}
-  - component: {fileID: -7509380209288686723}
   - component: {fileID: -5261036379142713962}
   - component: {fileID: 5182532374464037030}
+  - component: {fileID: 8335463770138350297}
   m_Layer: 7
   m_Name: TestBoss
   m_TagString: Enemy
@@ -192,27 +192,6 @@ MonoBehaviour:
   enemyNumber: 0
   isAction: 0
   sr: {fileID: 0}
---- !u!114 &-7509380209288686723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6411965051382903684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fc6fd0b38719de4dad5e9e6730e7e81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charHp:
-    hp: 10
-    maxHp: 0
-  charName:
-    name: "\u30DC\u30B9(\u30C6\u30B9\u30C8)"
-  charAttack:
-    attack: 5
-  charDefence:
-    defence: 0
 --- !u!114 &-5261036379142713962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8203ad0f315e8440b6edcc7166bb5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusComponentObj: {fileID: -3406771577812764858, guid: f850c3c5570f80b488b689128409fcfa, type: 3}
 --- !u!114 &5182532374464037030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,5 +217,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusObj: {fileID: 0}
-  damageActionObj: {fileID: 0}
+--- !u!114 &8335463770138350297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6411965051382903684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e40ee9c39827f2f439cf44290395b377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charHp:
+    hp: 10
+    maxHp: 0
+  charName:
+    name: "\u30DC\u30B9(\u30C6\u30B9\u30C8)"
+  charAttack:
+    attack: 5
+    totalAttack: 0
+  charDefence:
+    defence: 0
+    totalDefence: 0
+  charWallet:
+    money: 500
+    maxMoney: 0
+  experience: 100

@@ -25,12 +25,9 @@ public class GManager : MonoBehaviour
     }
 
     //プレイヤーのステータス系
-    [Header("プレイヤーの所持金")] public int playerMoney;
-    [Header("プレイヤーの攻撃力")] public int playerAttack;
-    [Header("プレイヤーの防御力")] public int playerDefence;
-    [Header("プレイヤーの魅力")] public int playerCharm = 10;
     [Header("アイテムの所持数制限")] public int nowMaxPosession;
     [HideInInspector] public player playerObj;
+    [HideInInspector] public StatusComponentPlayer statusComponentPlayer;
 
     //パネル制御系
     [Header("インベントリーに展開されるアイテムボタン")] public GameObject itemBtn;
@@ -256,6 +253,7 @@ public class GManager : MonoBehaviour
         // 生成された敵オブジェクトを取得
         GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
+        statusComponentPlayer = playerObj.GetComponent<StatusComponentPlayer>();
         //作成したエネミーにidを割り振り、リストに格納する
         for (var i = 0; i < enemyObjects.Length; i++)
         {
@@ -599,21 +597,21 @@ public class GManager : MonoBehaviour
         statusText.SetActive(true);
         //プレイヤーのステータスを表示
         string status;
-        status = "プレイヤー名 : " + playerObj.statusObj.charName.name;
+        status = "プレイヤー名 : " + statusComponentPlayer.charName.name;
         status += "\n";
-        status += "レベル : " + playerObj.statusObj.charExperience.level;
+        status += "レベル : " + statusComponentPlayer.charExperience.level;
         status += "\n";
-        status += "HP : " + playerObj.statusObj.charHp.hp;
+        status += "HP : " + statusComponentPlayer.charHp.hp;
         status += "\n";
-        status += "攻撃力 : " + playerObj.statusObj.charAttack.attack;
+        status += "攻撃力 : " + statusComponentPlayer.charAttack.attack;
         status += "\n";
-        status += "防御力 : " + playerObj.statusObj.charDefence.defence;
+        status += "防御力 : " + statusComponentPlayer.charDefence.defence;
         status += "\n";
-        status += "満腹度 : " + playerObj.statusObj.charFood.foodPoint;
+        status += "満腹度 : " + statusComponentPlayer.charFood.foodPoint;
         status += "\n";
-        status += "所持金 : " + playerObj.statusObj.charWallet.money;
+        status += "所持金 : " + statusComponentPlayer.charWallet.money;
         status += "\n";
-        status += "魅力度 : " + playerObj.statusObj.charCarm.charmPoint;
+        status += "魅力度 : " + statusComponentPlayer.charCarm.charmPoint;
         status += "\n";
         status += "武器 : " + weaponName;
         status += "\n";

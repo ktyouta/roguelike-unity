@@ -11,13 +11,13 @@ public class FoodItem : RecoveryItem
     // Start is called before the first frame update
     protected override void Start()
     {
-        foodText = GameObject.Find("Food").GetComponent<Text>();
         base.Start();
+        foodText = GameObject.Find("Food").GetComponent<Text>();
     }
-   
+
     public override void useItem()
     {
-        StatusComponentPlayer playerStatusObj = (StatusComponentPlayer)GameObject.FindGameObjectWithTag("Player").GetComponent<player>().statusObj;
+        StatusComponentPlayer playerStatusObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
         //プレイヤーの満腹度が満タンの場合は回復しない
         //if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
         if (playerStatusObj.charFood.foodPoint >= playerStatusObj.charFood.maxFoodPoint)
