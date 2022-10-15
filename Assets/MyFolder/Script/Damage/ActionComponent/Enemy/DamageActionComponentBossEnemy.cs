@@ -8,6 +8,7 @@ public class DamageActionComponentBossEnemy : DamageActionComponentEnemy
     protected override void specialAction() {
         BoardManager boardObj = GManager.instance.gameObject.GetComponent<BoardManager>();
         boardObj.LayoutStairsAtRandom(transform.position);
-        GManager.instance.wrightLog("階段が出現した。");
+        //GManager.instance.wrightLog("階段が出現した。");
+        GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("5"));
     }
 }

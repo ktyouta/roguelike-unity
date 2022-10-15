@@ -11,13 +11,4 @@ public class BossScript : Enemy
         boardObj = GManager.instance.gameObject.GetComponent<BoardManager>();
         base.Start();
     }
-
-    /**
-     * “G‚ÌHP‚ª0ˆÈ‰º‚É‚È‚Á‚½Œã‚ÉŠK’i‚ğİ’u‚·‚é
-     */
-    protected override void enemyDefeat()
-    {
-        boardObj.LayoutStairsAtRandom(transform.position);
-        base.enemyDefeat();
-    }
 }

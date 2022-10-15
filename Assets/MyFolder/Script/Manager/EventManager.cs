@@ -183,7 +183,7 @@ public class EventManager : MonoBehaviour
         GameObject enemyObj = Instantiate(appearanceEnemyObj, enemyCandidatePositionList[randomIndex], Quaternion.identity);
         //敵の生成とリストへの追加
         GManager.instance.AddEnemyToList(enemyObj, GManager.instance.latestEnemyNumber);
-        GManager.instance.wrightLog(enemyObj.GetComponent<Enemy>().enemyName + "が出現した。");
+        //GManager.instance.wrightLog(enemyObj.GetComponent<Enemy>().enemyName + "が出現した。");
      }
 
     /**

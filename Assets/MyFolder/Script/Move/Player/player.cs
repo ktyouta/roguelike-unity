@@ -222,7 +222,8 @@ public class player : MovingObject
         if (statusObj.charFood.foodPoint <= 0 || statusObj.charHp.hp <= 0)
         {
             //GManager.instance.wrightDeadLog(playerStatusObj.playerName);
-            GManager.instance.wrightDeadLog(statusObj.charName.name);
+            //GManager.instance.wrightDeadLog(statusObj.charName.name);
+            GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("6", statusObj.charName.name));
             //GameManagerのGameOver関数を呼び出します。
             GManager.instance.GameOver();
             isDefeat = true;
@@ -255,7 +256,8 @@ public class player : MovingObject
             return;
         }
         //ダメージ処理
-        outAccessObj.callCalculateDamage(statusObj.charAttack.totalAttack, statusObj.charName.name);
+        outAccessObj.callCalculateDamage(statusObj.charAttack.totalAttack, 
+            GManager.instance.messageManager.createMessage("1", statusObj.charName.name, outAccessObj.statusObj.charName.name, statusObj.charAttack.totalAttack.ToString()));
     }
 
     /*
@@ -324,7 +326,10 @@ public class player : MovingObject
         Item throwItem = newThrownItemObj.GetComponent<Item>();
         //インベントリーから削除
         tempItem.deleteSelectedItem(tempItem.id);
+        //攻撃の場合は現在地を追加
+        GManager.instance.enemyNextPosition.Add(transform.position);
         StartCoroutine(movingItem(th));
+        isAttack = true;
     }
 
     /**
@@ -336,6 +341,7 @@ public class player : MovingObject
         //アイテムが画面外に出るか、障害物に当たるまで行動不可
         setPlayerState(playerState.Normal);
         GManager.instance.playersTurn = false;
+        GManager.instance.isEndPlayerAction = true;
         yield break;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OutAccessComponentBase : MonoBehaviour
 {
-    private StatusComponentBase statusObj;
+    public StatusComponentBase statusObj;
     private DamageCalculateBase damageCalculateObj;
     private DamageActionComponentBase damageActionObj;
 
@@ -32,16 +32,16 @@ public class OutAccessComponentBase : MonoBehaviour
     /**
      * ダメージ処理
      */
-    public void callCalculateDamage(int attack,string actionCharName)
+    public void callCalculateDamage(int attack,string message)
     {
         //ダメージ量の計算処理
         int calDamage = damageCalculateObj.calculateDamage(attack);
         //HPの減算処理
         int calHp = statusObj.charHp.subHp(calDamage);
         //ログ出力
-        if (!string.IsNullOrEmpty(actionCharName) && !string.IsNullOrEmpty(statusObj.charName.name))
+        if (!string.IsNullOrEmpty(message))
         {
-            GManager.instance.wrightAttackLog(actionCharName, statusObj.charName.name, calDamage);
+            GManager.instance.wrightLog(message);
         }
         //ダメージを受けた際のアクション
         damageActionObj.reciveDamageAction(calHp);
@@ -52,6 +52,20 @@ public class OutAccessComponentBase : MonoBehaviour
      */
     public void callCalculateRecoveryHp(int recovery)
     {
+        callCalculateRecoveryHp(recovery,null);
+    }
+
+    /**
+     * HPの回復処理
+     */
+    public void callCalculateRecoveryHp(int recovery,string message)
+    {
         statusObj.charHp.addHp(recovery);
+        //ログ出力
+        if (!string.IsNullOrEmpty(message))
+        {
+            GManager.instance.wrightLog(message);
+
+        }
     }
 }

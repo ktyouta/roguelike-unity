@@ -31,7 +31,8 @@ public class DamageActionComponentEnemy : DamageActionComponentBase
             statusComponentObj?.charWallet.addMoney(statusComponentEnemyObj.charWallet.money);
             //経験値を追加
             statusComponentObj?.charExperience.addExperience(statusComponentEnemyObj.experience);
-            GManager.instance.wrightDeadLog(statusComponentEnemyObj.charName.name);
+            //GManager.instance.wrightDeadLog(statusComponentEnemyObj.charName.name);
+            GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("6", statusComponentEnemyObj.charName.name));
             GManager.instance.removeEnemyToList(GetComponent<Enemy>());
             //敵ごとの固有アクション
             specialAction();

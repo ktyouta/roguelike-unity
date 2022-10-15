@@ -13,7 +13,18 @@ public class StatusComponentBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        charAttack.initializeTotalAttack();
-        charDefence.initializeTotalDefence();
+        // ‰Šú’l‚ªİ’è‚³‚ê‚Ä‚¢‚Èê‡‚É‰Šú‰»
+        if (charHp.maxHp == 0)
+        {
+            charHp.initializeMaxHp();
+        }
+        if (charAttack.totalAttack == 0)
+        {
+            charAttack.initializeTotalAttack();
+        }
+        if (charDefence.totalDefence == 0)
+        {
+            charDefence.initializeTotalDefence();
+        }
     }
 }

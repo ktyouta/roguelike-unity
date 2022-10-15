@@ -17,6 +17,14 @@ public class BookBase : Consumption
     public override void collisionItem(Enemy enemy)
     {
         int point = damagePoint != 0 ? damagePoint : 10;
-        enemy.enemyHp += point;
+        //enemy.enemyHp += point;
+        //対象オブジェクトの回復処理を行う
+        OutAccessComponentBase outAccessObj = enemy?.GetComponent<OutAccessComponentBase>();
+        if (outAccessObj == null)
+        {
+            return;
+        }
+        //回復処理
+        outAccessObj.callCalculateRecoveryHp(point, GManager.instance.messageManager.createMessage("2", outAccessObj.statusObj.charName.name, point.ToString()));
     }
 }

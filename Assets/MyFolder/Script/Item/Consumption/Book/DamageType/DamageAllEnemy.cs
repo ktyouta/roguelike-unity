@@ -19,7 +19,8 @@ public class DamageAllEnemy : BookBase
             SpriteRenderer sr = GManager.instance.enemies[i].GetComponent<SpriteRenderer>();
             if (sr.isVisible)
             {
-                GManager.instance.enemies[i].calculateDamage(damageValue);
+                //GManager.instance.enemies[i].calculateDamage(damageValue);
+                GManager.instance.enemies[i].GetComponent<OutAccessComponentBase>().callCalculateDamage(damageValue);
             }
         }
         base.useItem();

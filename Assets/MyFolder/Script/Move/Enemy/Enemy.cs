@@ -14,16 +14,8 @@ public class Enemy : MovingObject
         public int hCost;
     }
 
-    [Header("エネミーの攻撃力")] public int enemyAttackValue;
-    [Header("エネミーの所持金")] public int enemyMoney;
-    [Header("エネミーを倒した際の経験値")] public int experiencePoint;
-    [Header("エネミーのHP")] public int enemyHp = 10;
-    [HideInInspector] public string enemyName;
-    [HideInInspector] public int enemyNumber;            //敵に付与される連番
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
-    protected bool isDefeat = false;
-    private Transform target;                            //各ターンに移動しようとする目的object
     List<Vector2> trackingNodeList = new List<Vector2>();
     protected StatusComponentBase statusObj;
 
@@ -37,8 +29,6 @@ public class Enemy : MovingObject
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
     protected override void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-
         sr = GetComponent<SpriteRenderer>();
 
         this.statusObj = GetComponent<StatusComponentBase>();
@@ -56,6 +46,7 @@ public class Enemy : MovingObject
     {
         if (statusObj.charHp.hp <= 0)
         {
+            GManager.instance.enemyActionEndCount++;
             return;
         }
         //画面内にいる場合のみ移動
@@ -64,6 +55,7 @@ public class Enemy : MovingObject
             GManager.instance.enemyActionEndCount++;
             return;
         }
+
         isAction = true;
         int xDir = 0;
         int yDir = 0;
@@ -107,6 +99,7 @@ public class Enemy : MovingObject
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
         //移動先がプレイヤーの移動先と被った場合は攻撃
+
         if (next == GManager.instance.enemyNextPosition[0])
         {
             StartCoroutine(enemyAttack(next));
@@ -357,66 +350,8 @@ public class Enemy : MovingObject
             yield break;
         }
         //ダメージ処理
-        outAccessObj.callCalculateDamage(statusObj.charAttack.attack, statusObj.charName.name);
-
-        //int calDamage = DamageActionComponent.calculateDamage(statusObj.charAttack.attack);
-        //int calHp = DamageActionComponent.subHp(calDamage);
-        //GManager.instance.wrightAttackLog(statusObj.charName.name, DamageActionComponent.statusObj.charName.name, calDamage);
-        //DamageActionComponent.reciveDamageAction(calHp);
-
-        //StatusComponentBase playerStatusObj = hit.transform.GetComponent<player>().statusObj;
-        //animator.Play("EnemyAttack");
-        //playerStatusObj.charHp.subHp(enemyAttackValue);
-        ////GManager.instance.playerHp -= enemyAttackValue;
-        //GManager.instance.wrightAttackLog(playerStatusObj.charName.name, enemyName, enemyAttackValue);
-
+        outAccessObj.callCalculateDamage(statusObj.charAttack.totalAttack, GManager.instance.messageManager.createMessage("1", statusObj.charName.name, outAccessObj.statusObj.charName.name, statusObj.charAttack.totalAttack.ToString()));
         yield return new WaitForSeconds(0.5f);
         GManager.instance.enemyActionEndCount++;
-    }
-
-    /**
-     * 敵が倒された時の処理
-     */
-    protected virtual void enemyDefeat()
-    {
-        isDefeat = true;
-        GManager.instance.wrightDeadLog(enemyName);
-        //所持金を増やす
-        //GManager.instance.playerMoney += enemyMoney;
-        Debug.Log("enemyMoney : "+ enemyMoney);
-        //statusComponentObj?.charWallet.addMoney(enemyMoney);
-        //GManager.instance.beforeLevelupExperience = GManager.instance.nowExprience;
-        //GManager.instance.nowExprience += experiencePoint;
-        //GManager.instance.mostRecentExperience = experiencePoint;
-        GManager.instance.removeEnemyToList(enemyNumber);
-        Destroy(gameObject, 0.5f);
-    }
-
-    /**
-     * 敵のダメージ計算(ログ出力なし)
-     */
-    public void calculateDamage(int damage)
-    {
-        calculateDamage(damage,null);
-    }
-
-    /**
-     * 敵のダメージ計算(ログ出力あり)
-     */
-    public void calculateDamage(int damage,string name)
-    {
-        if (isDefeat)
-        {
-            return;
-        }
-        enemyHp -= damage;
-        if (name != null)
-        {
-            GManager.instance.wrightAttackLog(name, enemyName, damage);
-        }
-        if (enemyHp <= 0)
-        {
-            enemyDefeat();
-        }
     }
 }

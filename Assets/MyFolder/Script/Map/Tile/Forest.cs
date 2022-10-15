@@ -23,8 +23,8 @@ public class Forest : TileBase
                 {
                     return;
                 }
-                //ƒ_ƒ[ƒWˆ—
-                outAccessObj.callCalculateRecoveryHp(recoveryValue);
+                //‰ñ•œˆ—
+                outAccessObj.callCalculateRecoveryHp(recoveryValue, GManager.instance.messageManager.createMessage("2", outAccessObj.statusObj.charName.name, recoveryValue.ToString()));
             }
         }
     }

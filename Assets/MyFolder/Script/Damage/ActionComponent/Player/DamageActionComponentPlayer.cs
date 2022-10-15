@@ -15,7 +15,8 @@ public class DamageActionComponentPlayer : DamageActionComponentBase
         if (hp <= 0)
         {
             isDefeat = true;
-            GManager.instance.wrightDeadLog(statusObj.charName.name);
+            //GManager.instance.wrightDeadLog(statusObj.charName.name);
+            GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("6",statusObj.charName.name));
         }
     }
 }

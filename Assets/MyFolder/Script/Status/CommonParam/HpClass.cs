@@ -37,10 +37,10 @@ public class HpClass
     }
 
     /**
-     * 
+     * MAXHP‚ğŠî€’l‚É–ß‚·
      */
-    public void setHp(int hp)
+    public void initializeMaxHp()
     {
-        this.hp = hp;
+        maxHp = hp;
     }
 }

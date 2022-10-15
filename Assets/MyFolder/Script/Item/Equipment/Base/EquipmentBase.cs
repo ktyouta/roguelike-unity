@@ -64,6 +64,14 @@ public class EquipmentBase : Item
     public override void collisionItem(Enemy enemy)
     {
         int point = damagePoint != 0 ? damagePoint :10;
-        enemy.enemyHp -= point;
+        //enemy.enemyHp -= point;
+        //対象オブジェクトのダメージ処理を行う
+        OutAccessComponentBase outAccessObj = enemy?.GetComponent<OutAccessComponentBase>();
+        if (outAccessObj == null)
+        {
+            return;
+        }
+        //ダメージ処理
+        //outAccessObj.callCalculateDamage(point, statusObj.charName.name);
     }
 }

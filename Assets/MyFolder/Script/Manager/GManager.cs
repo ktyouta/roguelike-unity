@@ -77,6 +77,8 @@ public class GManager : MonoBehaviour
 
     //ゲーム内イベント用
     EventManager eManager;
+    //メッセージ用
+    [HideInInspector] public MessageManager messageManager;
 
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
@@ -188,6 +190,7 @@ public class GManager : MonoBehaviour
         nowStairs = GameObject.Find("NowStairs").GetComponent<Text>();
         manualButton = GameObject.Find("ManualButton").GetComponent<Button>();
         manualButton.onClick.AddListener(() => openManual());
+        messageManager = GetComponent<MessageManager>();
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -340,23 +343,6 @@ public class GManager : MonoBehaviour
     }
 
     //hpが0になった敵をリストから削除
-    public void removeEnemyToList(int index)
-    {
-        int listIndex = -1;
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            if (enemies[i].enemyNumber == index)
-            {
-                listIndex = i;
-            }
-        }
-        if (listIndex != -1)
-        {
-            enemies.RemoveAt(listIndex);
-        }
-    }
-
-    //hpが0になった敵をリストから削除
     public void removeEnemyToList(Enemy targetEnemy)
     {
         enemies.Remove(targetEnemy);
@@ -366,8 +352,9 @@ public class GManager : MonoBehaviour
     public void AddEnemyToList(GameObject enemy,int enemyNumber)
     {
         Enemy enemyObj = enemy.GetComponent<Enemy>();
-        enemyObj.enemyNumber = enemyNumber;
-        enemyObj.enemyName = "エネミー" + (enemyNumber + 1);
+        //enemyObj.enemyNumber = enemyNumber;
+        enemy.GetComponent<StatusComponentBase>().charName.name = "エネミー" + (enemyNumber + 1);
+        //enemyObj.enemyName = "エネミー" + (enemyNumber + 1);
         //Listにエネミーを追加する
         enemies.Add(enemyObj);
         latestEnemyNumber++;
@@ -509,40 +496,6 @@ public class GManager : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-    }
-
-    public void wrightAttackLog(string attackerName, string targetName, int damage)
-    {
-        string newMessage;
-        deleteLog();
-        newMessage = attackerName + "が" + targetName + "に" + damage + "のダメージを与えた";
-        logMessage.Add(newMessage);
-    }
-
-    public void wrightUseFoodLog(string foodName, string name, int foodPoint)
-    {
-        string newMessage;
-        deleteLog();
-        newMessage = foodName + "を使用した";
-        newMessage += "\n";
-        newMessage += name + "の満腹度が" + foodPoint + "回復した";
-        logMessage.Add(newMessage);
-    }
-
-    public void wrightDeadLog(string name)
-    {
-        string newMessage;
-        deleteLog();
-        newMessage = name + "は倒れた";
-        logMessage.Add(newMessage);
-    }
-
-    public void wrightInventoryFullLog()
-    {
-        string newMessage;
-        deleteLog();
-        newMessage = "荷物がいっぱいです。";
-        logMessage.Add(newMessage);
     }
 
     public void wrightLog(string message)
@@ -751,7 +704,7 @@ public class GManager : MonoBehaviour
         //アイテムの所持制限を超えている場合
         if (itemList.Count + 1 > nowMaxPosession)
         {
-            wrightInventoryFullLog();
+            wrightLog(GManager.instance.messageManager.createMessage("3"));
             return false;
         }
         //インベントリーが空の状態なら0を割り当てる

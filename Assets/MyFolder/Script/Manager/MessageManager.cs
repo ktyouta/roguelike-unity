@@ -1,0 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MessageManager : MonoBehaviour
+{
+    public class MessageJsonArrayClass
+    {
+        public MessageInfoClass[] messageInfos;
+    }
+
+    [System.Serializable]
+    public class MessageInfoClass
+    {
+        public string id;
+        public string message;
+    }
+    // メッセージを格納
+    [HideInInspector] public MessageJsonArrayClass messageJsonData;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        string loadjson = Resources.Load<TextAsset>("json/RoguelikeMessage").ToString();
+        messageJsonData = new MessageJsonArrayClass();
+        JsonUtility.FromJsonOverwrite(loadjson, messageJsonData);
+    }
+
+    /**
+     * メッセージを作成
+     */
+    public string createMessage(string id, params string[] args)
+    {
+        foreach (var messageInfo in messageJsonData.messageInfos)
+        {
+            // メッセージが見つかった場合
+            if (messageInfo.id == id)
+            {
+                return string.Format(messageInfo.message, args);
+            }
+        }
+        return "";
+    }
+}

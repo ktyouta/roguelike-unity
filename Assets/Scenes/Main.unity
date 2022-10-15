@@ -4465,6 +4465,7 @@ GameObject:
   - component: {fileID: 1483692204}
   - component: {fileID: 1483692206}
   - component: {fileID: 1483692207}
+  - component: {fileID: 1483692208}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -4848,20 +4849,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0884fd9f77cd9284cbef598c365428f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: "\u30D7\u30EC\u30A4\u30E4\u30FC"
-  playerMoney: 300
-  playerAttack: 5
-  playerDefence: 0
-  playerLevel: 1
-  playerCharm: 10
-  nowMaxExprience: 100
   nowMaxPosession: 3
-  playerFoodPoint: 100
-  playerMaxFoodPoint: 100
-  mostRecentExperience: 0
-  beforeLevelupExperience: 0
-  nowExprience: 0
   playerObj: {fileID: 0}
+  statusComponentPlayer: {fileID: 0}
   itemBtn: {fileID: 725165651287123956, guid: 6bf867a6b0c37a04bb426e340e81a662, type: 3}
   itemPanel: {fileID: 1657887070}
   levelText: {fileID: 0}
@@ -4926,6 +4916,18 @@ MonoBehaviour:
   ghostAppearanceFlg: 0
   ghostAppearanceEventTurnNum: 0
   nomalEnemyAppearanceTurnNum: 0
+--- !u!114 &1483692208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483692203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c4da0a304bbc04491d937d2f5e196b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1530178040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5396,7 +5398,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26987}
+  m_AnchoredPosition: {x: 142.74, y: -116.26999}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070
