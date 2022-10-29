@@ -19,12 +19,8 @@ public class ThornScript : TrapBase
     {
         //GManager.instance.playerHp -= damegePoint;
         OutAccessComponentBase outAccessObj = other.transform.gameObject?.GetComponent<OutAccessComponentBase>();
-        if (outAccessObj == null)
-        {
-            return;
-        }
         //ダメージ処理
-        outAccessObj.callCalculateDamage(damegePoint);
-        GManager.instance.wrightLog("棘トラップを踏んだ");
+        outAccessObj?.callCalculateDamage(damegePoint,
+            GManager.instance.messageManager.createMessage("7"));
     }
 }

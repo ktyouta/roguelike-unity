@@ -19,6 +19,9 @@ public class Enemy : MovingObject
     List<Vector2> trackingNodeList = new List<Vector2>();
     protected StatusComponentBase statusObj;
 
+    // 機能コンポーネント
+    [HideInInspector] public AttackComponentBase attackComponentObj;
+
 
     struct EnemyNextPosition
     {
@@ -29,16 +32,16 @@ public class Enemy : MovingObject
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
     protected override void Start()
     {
+        //スタート関数を抽象クラスから呼ぶ
+        base.Start();
         sr = GetComponent<SpriteRenderer>();
-
         this.statusObj = GetComponent<StatusComponentBase>();
         if (this.statusObj == null)
         {
             Destroy(gameObject);
             GManager.instance.removeEnemyToList(GetComponent<Enemy>());
         }
-        //スタート関数を抽象クラスから呼ぶ
-        base.Start();
+        attackComponentObj = GetComponent<AttackComponentBase>();
     }
 
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
@@ -102,7 +105,8 @@ public class Enemy : MovingObject
 
         if (next == GManager.instance.enemyNextPosition[0])
         {
-            StartCoroutine(enemyAttack(next));
+            //StartCoroutine(enemyAttack(next));
+            attackComponentObj?.attack(xDir, yDir);
             return;
         }
         //移動点が他の敵と被れば移動できない
@@ -326,32 +330,6 @@ public class Enemy : MovingObject
     protected IEnumerator enemySmoothMovement(Vector3 end)
     {
         yield return StartCoroutine(SmoothMovement(end));
-        GManager.instance.enemyActionEndCount++;
-    }
-
-    /**
-     * 敵の攻撃処理
-     */
-    protected IEnumerator enemyAttack(Vector2 next)
-    {
-        //攻撃の場合はプレイヤーの行動完了を待つ
-        yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
-        RaycastHit2D hit = Physics2D.Linecast(transform.position, next, playerLayer);
-        animator.Play("EnemyAttack");
-        if (hit.transform == null)
-        {
-            GManager.instance.enemyActionEndCount++;
-            yield break;
-        }
-        OutAccessComponentBase outAccessObj = hit.transform.gameObject?.GetComponent<OutAccessComponentBase>();
-        if (outAccessObj == null)
-        {
-            GManager.instance.enemyActionEndCount++;
-            yield break;
-        }
-        //ダメージ処理
-        outAccessObj.callCalculateDamage(statusObj.charAttack.totalAttack, GManager.instance.messageManager.createMessage("1", statusObj.charName.name, outAccessObj.statusObj.charName.name, statusObj.charAttack.totalAttack.ToString()));
-        yield return new WaitForSeconds(0.5f);
         GManager.instance.enemyActionEndCount++;
     }
 }

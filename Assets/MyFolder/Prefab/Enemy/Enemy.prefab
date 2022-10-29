@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2883521248307537509}
   - component: {fileID: 885996860123970958}
   - component: {fileID: 8985069052628826855}
+  - component: {fileID: 1780452443236932895}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -184,14 +185,9 @@ MonoBehaviour:
     m_Bits: 3072
   isMoving: 0
   rb2D: {fileID: 0}
-  enemyAttackValue: 2
-  enemyMoney: 100
-  experiencePoint: 50
-  enemyHp: 10
-  enemyName: 
-  enemyNumber: 0
   isAction: 0
   sr: {fileID: 0}
+  attackComponentObj: {fileID: 0}
 --- !u!114 &2883521248307537509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
 --- !u!114 &885996860123970958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,3 +241,19 @@ MonoBehaviour:
     money: 100
     maxMoney: 0
   experience: 20
+--- !u!114 &1780452443236932895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450068965489674141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145b1a7f62283214c8cfb162c99c062d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  statusObj: {fileID: 0}

@@ -1664,8 +1664,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -297, y: 20}
-  m_SizeDelta: {x: 339.48, y: 108.33}
+  m_AnchoredPosition: {x: -285.4, y: 20}
+  m_SizeDelta: {x: 362.67, y: 108.33}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &416782593
 MonoBehaviour:
@@ -4882,6 +4882,7 @@ MonoBehaviour:
   itemList: []
   logMessage: []
   unmovableList: []
+  messageManager: {fileID: 0}
   riseValueHp: 0
   enemyNextPosition: []
   isCloseCommand: 1
@@ -5398,7 +5399,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26999}
+  m_AnchoredPosition: {x: 142.74, y: -116.26997}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

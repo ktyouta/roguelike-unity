@@ -18,6 +18,10 @@ public class StatusComponentBase : MonoBehaviour
         {
             charHp.initializeMaxHp();
         }
+        if (string.IsNullOrEmpty(charName.name))
+        {
+            charName.initializeName();
+        }
         if (charAttack.totalAttack == 0)
         {
             charAttack.initializeTotalAttack();

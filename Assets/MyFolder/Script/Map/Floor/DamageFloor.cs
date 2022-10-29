@@ -19,7 +19,7 @@ public class DamageFloor : MonoBehaviour
             return;
         }
         //ダメージ処理
-        outAccessObj.callCalculateDamage(consumeValue);
+        outAccessObj?.callCalculateDamage(consumeValue);
         GManager.instance.wrightLog("フィールドダメージを受けた");
     }
 }

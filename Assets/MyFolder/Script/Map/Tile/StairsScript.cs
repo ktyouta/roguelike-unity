@@ -37,9 +37,10 @@ public class StairsScript : MonoBehaviour
         {
             DontDestroyOnLoad(GManager.instance.fellows[i]);
         }
-        
+        //次のシーンにデータを引き渡すメソッドをセット
         SceneManager.sceneLoaded += handoverData;
         GManager.instance.nowStairs.text = "";
+        //次の階数を表示
         GManager.instance.mapLoadingText.text = ++GManager.instance.hierarchyLevel + " F";
         GManager.instance.mapLoadingImage.SetActive(true);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);

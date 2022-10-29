@@ -61,15 +61,15 @@ public class GManager : MonoBehaviour
 
     //リスト
     //敵ユニットのリスト。
-    public List<Enemy> enemies = new List<Enemy>();
+    [HideInInspector] public List<Enemy> enemies = new List<Enemy>();
     //NPC用のリスト
-    public List<NpcFellow> fellows = new List<NpcFellow>();
+    [HideInInspector] public List<NpcFellow> fellows = new List<NpcFellow>();
     //宝箱用のアイテムリスト
-    public List<Item> treasureItemList = new List<Item>();
+    [HideInInspector] public List<Item> treasureItemList = new List<Item>();
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
-    public List<List<GameObject>> lotteryitemList = new List<List<GameObject>>();
+    [HideInInspector] public List<List<GameObject>> lotteryitemList = new List<List<GameObject>>();
     //インベントリー内のリスト
-    public List<GameObject> itemList = new List<GameObject>();
+    [HideInInspector] public List<GameObject> itemList = new List<GameObject>();
     //ログ
     [HideInInspector] public List<string> logMessage = new List<string>();
     //移動不可オブジェクトの座標を格納するリスト
@@ -90,6 +90,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public int latestNpcId = 0;
     [HideInInspector] public int enemyActionEndCount;
     [HideInInspector] public bool isEndPlayerAction = false;
+    [HideInInspector] public bool isEndPlayerMoving = false;
     [HideInInspector] public int latestEnemyNumber = 0;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
@@ -124,12 +125,11 @@ public class GManager : MonoBehaviour
         if (!instance.loadFlg)
         {
             //シーンをリロードするときにこれが破棄されないように設定します
-
             InitGame();
             instance.loadFlg = true;
         }
-
     }
+
     //これは1回だけ呼び出され、パラメータはシーンがロードされた後にのみ呼び出されるように指示します//（そうでない場合、Scene Loadコールバックは最初のロードと呼ばれ、必要ありません）
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static public void CallbackInitialization()
@@ -137,7 +137,9 @@ public class GManager : MonoBehaviour
         //シーンが読み込まれるたびに呼び出されるコールバックを登録します
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
     //This is called each time a scene is loaded.
+    //2F以降のシーン読み込みで実行される
     static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         instance.InitGame();
@@ -149,7 +151,6 @@ public class GManager : MonoBehaviour
         //リストのリセット
         unmovableList.Clear();
         enemies.Clear();
-
         doingSetup = true;
         StartCoroutine(settingMapAndEnemies());
     }
@@ -165,7 +166,7 @@ public class GManager : MonoBehaviour
         {
             //現在の階数を画面に表示
             mapLoadingText = GameObject.Find("MapLoadingText").GetComponent<Text>();
-            mapLoadingText.text = hierarchyLevel + " F";
+            mapLoadingText.text = instance.hierarchyLevel + " F";
         }
         levelText = GameObject.Find("LevelText");
         commandPanel = GameObject.Find("CommandPanel");
@@ -282,6 +283,11 @@ public class GManager : MonoBehaviour
     //更新はフレームごとに呼び出されます。
     void Update()
     {
+        // セットアップ中
+        if (doingSetup)
+        {
+            return;
+        }
         if (playerObj.plState != player.playerState.Normal)
         {
             return;
@@ -295,8 +301,8 @@ public class GManager : MonoBehaviour
             coroutine = deploymentMyCommandPanel();
             StartCoroutine(coroutine);
         }
-
-        if (playersTurn || enemiesMoving || doingSetup)
+        // プレイヤーのターンまたは敵の行動中
+        if (playersTurn || enemiesMoving)
         {
             //NPCおよび敵の移動を開始しない。
             return;
@@ -353,7 +359,12 @@ public class GManager : MonoBehaviour
     {
         Enemy enemyObj = enemy.GetComponent<Enemy>();
         //enemyObj.enemyNumber = enemyNumber;
-        enemy.GetComponent<StatusComponentBase>().charName.name = "エネミー" + (enemyNumber + 1);
+        string enemyName = enemy.GetComponent<StatusComponentBase>().charName.name;
+        if (string.IsNullOrEmpty(enemyName))
+        {
+            enemyName = "エネミー";
+        }
+        enemy.GetComponent<StatusComponentBase>().charName.name = enemyName + (enemyNumber + 1);
         //enemyObj.enemyName = "エネミー" + (enemyNumber + 1);
         //Listにエネミーを追加する
         enemies.Add(enemyObj);
@@ -379,36 +390,36 @@ public class GManager : MonoBehaviour
     /**
      *敵を順番に動かすコルーチン 
      */
-    IEnumerator MoveEnemies()
-    {
-        //プレイヤーは移動できない。
-        enemiesMoving = true;
-        //移動点を空にする
-        enemyNextPosition.Clear();
-        //turnDelay秒待機します。デフォルトは.1（100ミリ秒）です。
-        yield return new WaitForSeconds(0.6f);
+    //IEnumerator MoveEnemies()
+    //{
+    //    //プレイヤーは移動できない。
+    //    enemiesMoving = true;
+    //    //移動点を空にする
+    //    enemyNextPosition.Clear();
+    //    //turnDelay秒待機します。デフォルトは.1（100ミリ秒）です。
+    //    yield return new WaitForSeconds(0.6f);
 
-        //スポーンされた敵がいない場合
-        if (enemies.Count == 0)
-        {
-            //移動の間にturnDelay秒待機し、何もないときに移動する敵によって引き起こされる遅延を置き換えます。
-            yield return new WaitForSeconds(turnDelay);
-        }
-        //敵オブジェクトのリストをループ
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            //敵のmoveTimeを待ってから、次の敵を移動
-            yield return new WaitForSeconds(turnDelay);
+    //    //スポーンされた敵がいない場合
+    //    if (enemies.Count == 0)
+    //    {
+    //        //移動の間にturnDelay秒待機し、何もないときに移動する敵によって引き起こされる遅延を置き換えます。
+    //        yield return new WaitForSeconds(turnDelay);
+    //    }
+    //    //敵オブジェクトのリストをループ
+    //    for (int i = 0; i < enemies.Count; i++)
+    //    {
+    //        //敵のmoveTimeを待ってから、次の敵を移動
+    //        yield return new WaitForSeconds(turnDelay);
 
-            //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す。
-            enemies[i].moveEnemy();
-        }
-        //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする。
-        playersTurn = true;
+    //        //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す。
+    //        enemies[i].moveEnemy();
+    //    }
+    //    //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする。
+    //    playersTurn = true;
 
-        //敵の移動が完了したら、enemiesMovingをfalseに設定
-        enemiesMoving = false;
-    }
+    //    //敵の移動が完了したら、enemiesMovingをfalseに設定
+    //    enemiesMoving = false;
+    //}
 
     /**
      * 敵を順番に動かすコルーチン(現在使用中)
@@ -556,9 +567,9 @@ public class GManager : MonoBehaviour
         status += "\n";
         status += "HP : " + statusComponentPlayer.charHp.hp;
         status += "\n";
-        status += "攻撃力 : " + statusComponentPlayer.charAttack.attack;
+        status += "攻撃力 : " + statusComponentPlayer.charAttack.totalAttack;
         status += "\n";
-        status += "防御力 : " + statusComponentPlayer.charDefence.defence;
+        status += "防御力 : " + statusComponentPlayer.charDefence.totalDefence;
         status += "\n";
         status += "満腹度 : " + statusComponentPlayer.charFood.foodPoint;
         status += "\n";

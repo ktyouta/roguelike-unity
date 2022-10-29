@@ -82,12 +82,8 @@ public class NpcFellow : MovingObject
         //GManager.instance.wrightAttackLog(npcName, playerObj.enemyObject.enemyName, tempNpcAttack);
 
         OutAccessComponentBase outAccessObj = playerObj.enemyObject.GetComponent<OutAccessComponentBase>();
-        if (outAccessObj == null)
-        {
-            return;
-        }
         //É_ÉÅÅ[ÉWèàóù
-        outAccessObj.callCalculateDamage(tempNpcAttack,
+        outAccessObj?.callCalculateDamage(tempNpcAttack,
                     GManager.instance.messageManager.createMessage("1", npcName, outAccessObj.statusObj.charName.name, tempNpcAttack.ToString()));
     }
 

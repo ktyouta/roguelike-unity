@@ -7,6 +7,7 @@ using Common;
 
 public class player : MovingObject
 {
+    // プレイヤーのステータス用オブジェクト
     [HideInInspector] public StatusComponentPlayer statusObj;
 
     [Header("アイテムレイヤー")] public LayerMask itemLayer;
@@ -24,6 +25,9 @@ public class player : MovingObject
     private Treasure treasureObject;
     private bool isDefeat = false;
     private int reduceFoodCounter = 0;
+
+    // 機能コンポーネント
+    [HideInInspector] public AttackComponentBase attackComponentObj;
 
     public enum playerState
     {
@@ -45,6 +49,7 @@ public class player : MovingObject
         base.Start();
         // 1Fの時のみ取得し、以降は前のシーンから引き継ぐ
         setPlayerStatus();
+        attackComponentObj = GetComponent<AttackComponentBase>();
     }
 
     /**
@@ -106,15 +111,14 @@ public class player : MovingObject
         //水平または垂直にゼロ以外の値があるかどうかを確認します
         if (inHorizontal != 0 || inVertical != 0)
         {
-            //Debug.Log("inHorizontal" + inHorizontal);
-            //Debug.Log("inVertical" + inVertical);
             //プレーヤーを移動する方向を指定するパラメーターとして、水平方向と垂直方向に渡します。
             AttemptMove(inHorizontal, inVertical);
         }
         //攻撃
         else if (inLeftShift)
         {
-            Attack();
+            //Attack();
+            attackComponentObj?.attack(nextHorizontalKey, nextVerticalkey);
         }
     }
 
@@ -176,44 +180,6 @@ public class player : MovingObject
         GManager.instance.playersTurn = false;
     }
 
-    //Playerとトリガーがぶつかった時
-    //OnTriggerEnter2Dは、トリガー設定したオブジェクトとぶつかると呼び出される
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        //衝突したトリガーのタグがExitであるか確認してください。
-        if (other.tag == "Exit")
-        {
-            //Debug.Log(levelText);
-            //levelText.SetActive(true);
-            //1秒後に次のレベル（ステージ）を開始するために、Restart関数を呼び出します。
-            Invoke("Restart", restartLevelDelay);
-
-            //レベルが終わったので、プレーヤーオブジェクトを無効にします。
-            enabled = false;
-        }
-    }
-
-    //Restartは呼び出されたときにシーンをリロードします。
-    private void Restart()
-    {
-        //最後にロードされたシーンをロードします。この場合はMain、ゲーム内の唯一のシーンです。 そして、それを「シングル」モードでロードして、既存のものを置き換えます
-        //現在のシーンのすべてのシーンオブジェクトをロードしません。
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-        //SceneManager.LoadScene("Main");
-    }
-
-
-    //LoseFoodは、敵がプレイヤーを攻撃したときに呼び出されます。
-    //失うポイントの数を指定するパラメーター損失をとります。
-    public void LoseFood(int loss)
-    {
-        //プレーヤーアニメーターのトリガーを設定して、playerHitアニメーションに遷移します。
-        animator.SetTrigger("hit");
-        //ゲームが終了したかどうかを確認します
-        CheckIfGameOver();
-    }
-
-
     //CheckIfGameOverは、プレーヤーがフードポイントを超えているかどうかをチェックし、足りない場合はゲームを終了します。
     private void CheckIfGameOver()
     {
@@ -221,54 +187,10 @@ public class player : MovingObject
         //if (playerStatusObj.playerFoodPoint <= 0 || playerStatusObj.playerHp <= 0)
         if (statusObj.charFood.foodPoint <= 0 || statusObj.charHp.hp <= 0)
         {
-            //GManager.instance.wrightDeadLog(playerStatusObj.playerName);
-            //GManager.instance.wrightDeadLog(statusObj.charName.name);
             GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("6", statusObj.charName.name));
-            //GameManagerのGameOver関数を呼び出します。
             GManager.instance.GameOver();
             isDefeat = true;
         }
-    }
-
-    /**
-     * プレイヤーの攻撃
-     */
-    public void Attack()
-    {
-        animator.Play("PlayerAttack");
-        Vector2 start = transform.position;
-        Vector2 end = start + new Vector2(nextHorizontalKey, nextVerticalkey);
-        RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer | blockingLayer);
-        //攻撃の場合は現在地を追加
-        GManager.instance.enemyNextPosition.Add(transform.position);
-        //時間差で実行されるフラグをオンにする処理
-        StartCoroutine(waitAttackEnemy());
-        isAttack = true;
-        //ヒットしていない場合
-        if (hit.transform == null)
-        {
-            return;
-        }
-        //対象オブジェクトのダメージ処理を行う
-        OutAccessComponentBase outAccessObj = hit.transform.gameObject?.GetComponent<OutAccessComponentBase>();
-        if (outAccessObj == null)
-        {
-            return;
-        }
-        //ダメージ処理
-        outAccessObj.callCalculateDamage(statusObj.charAttack.totalAttack, 
-            GManager.instance.messageManager.createMessage("1", statusObj.charName.name, outAccessObj.statusObj.charName.name, statusObj.charAttack.totalAttack.ToString()));
-    }
-
-    /*
-     * 攻撃コマンド入力後に一定時間待ってターンを終了する
-     */
-    private IEnumerator waitAttackEnemy()
-    {
-        //攻撃に関しては攻撃後にターンを終了する
-        yield return new WaitForSeconds(0.3f);
-        GManager.instance.isEndPlayerAction = true;
-        GManager.instance.playersTurn = false;
     }
 
     /**

@@ -20,7 +20,7 @@ public class DamageAllEnemy : BookBase
             if (sr.isVisible)
             {
                 //GManager.instance.enemies[i].calculateDamage(damageValue);
-                GManager.instance.enemies[i].GetComponent<OutAccessComponentBase>().callCalculateDamage(damageValue);
+                GManager.instance.enemies[i].GetComponent<OutAccessComponentBase>()?.callCalculateDamage(damageValue);
             }
         }
         base.useItem();

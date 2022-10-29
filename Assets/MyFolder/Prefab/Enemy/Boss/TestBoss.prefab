@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -5261036379142713962}
   - component: {fileID: 5182532374464037030}
   - component: {fileID: 8335463770138350297}
+  - component: {fileID: -5294158613650809870}
   m_Layer: 7
   m_Name: TestBoss
   m_TagString: Enemy
@@ -184,14 +185,9 @@ MonoBehaviour:
     m_Bits: 3072
   isMoving: 0
   rb2D: {fileID: 0}
-  enemyAttackValue: 2
-  enemyMoney: 100
-  experiencePoint: 50
-  enemyHp: 10
-  enemyName: 
-  enemyNumber: 0
   isAction: 0
   sr: {fileID: 0}
+  attackComponentObj: {fileID: 0}
 --- !u!114 &-5261036379142713962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusObj: {fileID: 0}
 --- !u!114 &8335463770138350297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,3 +241,19 @@ MonoBehaviour:
     money: 500
     maxMoney: 0
   experience: 100
+--- !u!114 &-5294158613650809870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6411965051382903684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145b1a7f62283214c8cfb162c99c062d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  statusObj: {fileID: 0}
