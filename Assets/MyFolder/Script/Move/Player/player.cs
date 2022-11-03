@@ -28,6 +28,7 @@ public class player : MovingObject
 
     // 機能コンポーネント
     [HideInInspector] public AttackComponentBase attackComponentObj;
+    [HideInInspector] public ThrowComponentBase throwComponentObj;
 
     public enum playerState
     {
@@ -49,7 +50,10 @@ public class player : MovingObject
         base.Start();
         // 1Fの時のみ取得し、以降は前のシーンから引き継ぐ
         setPlayerStatus();
+        // 攻撃用コンポーネント
         attackComponentObj = GetComponent<AttackComponentBase>();
+        // アイテムの投擲用コンポーネント
+        throwComponentObj = GetComponent<ThrowComponentBase>();
     }
 
     /**
@@ -225,33 +229,8 @@ public class player : MovingObject
      */
     public void throwItem(GameObject item)
     {
-        if (item.GetComponent<ThrowObject>() == null)
-        {
-            return;
-        }
-        if (item.GetComponent<Rigidbody2D>() == null)
-        {
-            return;
-        }
-        setPlayerState(playerState.Wait);
-        Item tempItem = item.GetComponent<Item>();
-        //投げられるアイテムを生成
-        GameObject newThrownItemObj = Instantiate(item, new Vector3(transform.position.x, transform.position.y, 0.0f), Quaternion.identity) as GameObject;
-        newThrownItemObj.SetActive(true);
-        newThrownItemObj.GetComponent<Item>().isEnter = true;
-        ThrowObject th = newThrownItemObj.GetComponent<ThrowObject>();
-        //プレイヤーが向いている方向をセット
-        th.playerHorizontalKey = nextHorizontalKey;
-        th.playerVerticalKey = nextVerticalkey;
-        //ThrowObjectのupdateが走る(アイテムが移動する)
-        th.isThrownObj = true;
-        Item throwItem = newThrownItemObj.GetComponent<Item>();
-        //インベントリーから削除
-        tempItem.deleteSelectedItem(tempItem.id);
-        //攻撃の場合は現在地を追加
-        GManager.instance.enemyNextPosition.Add(transform.position);
-        StartCoroutine(movingItem(th));
-        isAttack = true;
+        StartCoroutine(throwComponentObj.throwObject(nextVerticalkey, nextHorizontalKey, item));
+        //throwComponentObj.throwObject(nextVerticalkey, nextHorizontalKey,item);
     }
 
     /**

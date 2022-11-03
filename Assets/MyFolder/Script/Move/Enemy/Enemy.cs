@@ -102,7 +102,6 @@ public class Enemy : MovingObject
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
         //ˆÚ“®æ‚ªƒvƒŒƒCƒ„[‚ÌˆÚ“®æ‚Æ”í‚Á‚½ê‡‚ÍUŒ‚
-
         if (next == GManager.instance.enemyNextPosition[0])
         {
             //StartCoroutine(enemyAttack(next));

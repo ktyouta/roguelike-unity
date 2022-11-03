@@ -104,7 +104,6 @@ public class GManager : MonoBehaviour
     private bool doingSetup;
     private bool loadFlg = false;
     private IEnumerator coroutine;
-    private bool isSwitchPlayerStatus;
 
     //Start is called before the first frame update
     void Awake()
@@ -328,7 +327,6 @@ public class GManager : MonoBehaviour
      */
     IEnumerator deploymentMyCommandPanel()
     {
-        isSwitchPlayerStatus = true;
         commandPanel.SetActive(true);
         yield return null;
         //閉じるボタンが押下されるか、スペースキーが押下された場合にメニューを閉じる
@@ -342,10 +340,7 @@ public class GManager : MonoBehaviour
         itemUsePanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
         itemPanel.enabled = false;
-        if (isSwitchPlayerStatus)
-        {
-            playerObj.setPlayerState(player.playerState.Normal);
-        }
+        playerObj.setPlayerState(player.playerState.Normal);
     }
 
     //hpが0になった敵をリストから削除
@@ -703,8 +698,7 @@ public class GManager : MonoBehaviour
     public void addThrowItem(GameObject item)
     {
         playerObj.throwItem(item);
-        isSwitchPlayerStatus = false;
-        isCloseCommand = true;
+        //isCloseCommand = true;
     }
 
     /**

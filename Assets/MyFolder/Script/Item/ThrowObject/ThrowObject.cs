@@ -10,7 +10,7 @@ public class ThrowObject : MonoBehaviour
     [HideInInspector] public float itemXSpeed = 10.0f;
     [HideInInspector] public float itemYSpeed = 10.0f;
     private SpriteRenderer sr;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private Item it;
 
     // Start is called before the first frame update
@@ -33,32 +33,16 @@ public class ThrowObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isThrownObj)
+        //フラグがtrueの場合に移動する
+        if (!isThrownObj)
         {
-            float xSpeed = 0.0f;
-            float ySpeed = 0.0f;
-            if (playerHorizontalKey > 0)
-            {
-                xSpeed = itemXSpeed;
-            }
-            else if (playerHorizontalKey < 0)
-            {
-                xSpeed = (-1) * itemXSpeed;
-            }
-            if (playerVerticalKey > 0)
-            {
-                ySpeed = itemYSpeed;
-            }
-            else if (playerVerticalKey < 0)
-            {
-                ySpeed = (-1) * itemYSpeed;
-            }
-            rb.velocity = new Vector2(xSpeed, ySpeed);
-            if (!sr.isVisible)
-            {
-                rb.velocity = new Vector2(0.0f, 0.0f);
-                isThrownObj = false;
-            }
+            return;
+        }
+        //画面外に出た場合は停止する
+        if (!sr.isVisible)
+        {
+            rb.velocity = new Vector2(0.0f, 0.0f);
+            isThrownObj = false;
         }
     }
 
@@ -67,7 +51,7 @@ public class ThrowObject : MonoBehaviour
      */
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player" || other.tag == "Forest" || other.tag == "Floor" || other.tag == "Untagged")
+        if (other.tag == "Forest" || other.tag == "Floor" || other.tag == "Untagged")
         {
             return;
         }
@@ -77,13 +61,10 @@ public class ThrowObject : MonoBehaviour
             Enemy enemy = other.GetComponent<Enemy>();
             //enemy.enemyHp -= 10;
             it.collisionItem(enemy);
+            it.deleteSelectedItem(it.id);
             Destroy(this.gameObject);
         }
-        else
-        {
-            rb.velocity = new Vector2(0.0f, 0.0f);
-        }
+        rb.velocity = new Vector2(0.0f, 0.0f);
         isThrownObj = false;
-        it.deleteSelectedItem(it.id);
     }
 }
