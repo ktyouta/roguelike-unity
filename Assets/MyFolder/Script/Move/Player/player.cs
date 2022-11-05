@@ -15,8 +15,8 @@ public class player : MovingObject
     [HideInInspector] public playerState plState = playerState.Normal;
     [HideInInspector] public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
     [HideInInspector] public GameObject levelText;
-    [HideInInspector] public int nextHorizontalKey = 1;
-    [HideInInspector] public int nextVerticalkey = 0;
+    [HideInInspector] public int nextHorizontalKey;
+    [HideInInspector] public int nextVerticalkey;
     [HideInInspector] public bool isAttack = false;
     [HideInInspector] public Enemy enemyObject;
     [HideInInspector] public int horizontal = 0;
@@ -54,6 +54,8 @@ public class player : MovingObject
         attackComponentObj = GetComponent<AttackComponentBase>();
         // アイテムの投擲用コンポーネント
         throwComponentObj = GetComponent<ThrowComponentBase>();
+        nextHorizontalKey = 0;
+        nextVerticalkey = -1;
     }
 
     /**
@@ -67,6 +69,25 @@ public class player : MovingObject
 
     private void Update()
     {
+        if (!isAttack)
+        {
+            if (nextHorizontalKey > 0)
+            {
+                animator?.Play("PlayerRightWalk");
+            }
+            else if (nextHorizontalKey < 0)
+            {
+                animator?.Play("PlayerLeftWalk");
+            }
+            else if (nextVerticalkey > 0)
+            {
+                animator?.Play("PlayerUpWalk");
+            }
+            else if (nextVerticalkey < 0)
+            {
+                animator?.Play("PlayerDownWalk");
+            }
+        }
         //プレイヤーの状態が通常以外
         if (plState != playerState.Normal)
         {
@@ -121,7 +142,6 @@ public class player : MovingObject
         //攻撃
         else if (inLeftShift)
         {
-            //Attack();
             attackComponentObj?.attack(nextHorizontalKey, nextVerticalkey);
         }
     }
@@ -230,19 +250,5 @@ public class player : MovingObject
     public void throwItem(GameObject item)
     {
         StartCoroutine(throwComponentObj.throwObject(nextVerticalkey, nextHorizontalKey, item));
-        //throwComponentObj.throwObject(nextVerticalkey, nextHorizontalKey,item);
-    }
-
-    /**
-     * アイテムを投げた際のコルーチン
-     */
-    IEnumerator movingItem(ThrowObject th)
-    {
-        yield return new WaitUntil(() => !th.isThrownObj);
-        //アイテムが画面外に出るか、障害物に当たるまで行動不可
-        setPlayerState(playerState.Normal);
-        GManager.instance.playersTurn = false;
-        GManager.instance.isEndPlayerAction = true;
-        yield break;
     }
 }

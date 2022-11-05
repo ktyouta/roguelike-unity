@@ -9,7 +9,8 @@ public class AttackComponentPlayer : AttackComponentPlayerBase
     */
     public override IEnumerator attackAction(Vector2 start, Vector2 end)
     {
-        animator.Play("PlayerAttack");
+        playerObj.isAttack = true;
+        animator?.Play("PlayerAttack");
         RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer | blockingLayer);
         //UŒ‚‚Ìê‡‚ÍŒ»İ’n‚ğ’Ç‰Á
         GManager.instance.enemyNextPosition.Add(transform.position);

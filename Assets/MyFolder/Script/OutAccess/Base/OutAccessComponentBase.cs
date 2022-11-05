@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OutAccessComponentBase : MonoBehaviour
 {
-    public StatusComponentBase statusObj;
+    [HideInInspector] public StatusComponentBase statusObj;
     private DamageCalculateBase damageCalculateObj;
     private DamageActionComponentBase damageActionObj;
 

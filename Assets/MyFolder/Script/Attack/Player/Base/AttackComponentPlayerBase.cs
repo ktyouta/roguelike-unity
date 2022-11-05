@@ -8,6 +8,7 @@ public abstract class AttackComponentPlayerBase : AttackComponentBase
     [Header("敵レイヤー")] public LayerMask enemyLayer;
     [Header("チェストレイヤー")] public LayerMask treasureLayer;
     [HideInInspector] public StatusComponentPlayer statusObj;
+    protected player playerObj;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -15,5 +16,6 @@ public abstract class AttackComponentPlayerBase : AttackComponentBase
         base.Start();
         // キャストする型をキャラクターごとに変える
         statusObj = (StatusComponentPlayer)GetComponent<StatusComponentBase>();
+        playerObj = GetComponent<player>();
     }
 }

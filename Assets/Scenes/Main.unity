@@ -4516,7 +4516,7 @@ MonoBehaviour:
   shield: {fileID: 536904824204777345, guid: 584707e07a348de47a1f47d14f36ae02, type: 3}
   bag: {fileID: 6060693476235400937, guid: e5b7e110ee5117948a50ddd50fb5b41b, type: 3}
   eventTestItem: {fileID: 1851555864639135366, guid: 2927f2334d42cb54d8b06af754862b90, type: 3}
-  player: {fileID: 2846253646200167766, guid: f850c3c5570f80b488b689128409fcfa, type: 3}
+  player: {fileID: 5587551642981322463, guid: dcf398677c1133c479e864702a3ae1b6, type: 3}
   castleObj: {fileID: 7848795257983402512, guid: 456cc6311cd183a4ba760488c7c15afd, type: 3}
   buildingObj: {fileID: 8645085169757023432, guid: 6c7d78b9695670e4ab71fb835b8ec648, type: 3}
   grassDivisionAttribute:
@@ -4891,6 +4891,7 @@ MonoBehaviour:
   latestNpcId: 0
   enemyActionEndCount: 0
   isEndPlayerAction: 0
+  isEndPlayerMoving: 0
   latestEnemyNumber: 0
   levelStartDelay: 2
   turnDelay: 0.1
