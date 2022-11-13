@@ -13,7 +13,7 @@ public class AttackComponentPlayer : AttackComponentPlayerBase
         animator?.Play("PlayerAttack");
         RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer | blockingLayer);
         //攻撃の場合は現在地を追加
-        GManager.instance.enemyNextPosition.Add(transform.position);
+        GManager.instance.charsNextPosition.Add(transform.position);
         //時間差で実行されるフラグをオンにする処理
         yield return new WaitForSeconds(0.3f);
         GManager.instance.isEndPlayerAction = true;

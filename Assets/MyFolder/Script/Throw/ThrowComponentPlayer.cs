@@ -22,7 +22,7 @@ public class ThrowComponentPlayer : ThrowComponentBase
         yield return new WaitUntil(() => !throwObj.isThrownObj);
         //インベントリーから削除
         item.deleteSelectedItem(item.id);
-        GManager.instance.enemyNextPosition.Add(transform.position);
+        GManager.instance.charsNextPosition.Add(transform.position);
         GManager.instance.playersTurn = false;
         GManager.instance.isEndPlayerAction = true;
         playerObj.setPlayerState(playerState.Normal);

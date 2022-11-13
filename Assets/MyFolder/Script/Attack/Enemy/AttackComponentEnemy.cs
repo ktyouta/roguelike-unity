@@ -11,9 +11,8 @@ public class AttackComponentEnemy : AttackComponentEnemyBase
     {
         //攻撃の場合はプレイヤーの行動完了を待つ
         yield return new WaitUntil(() => GManager.instance.isEndPlayerAction);
-        RaycastHit2D hit = Physics2D.Linecast(start, end, playerLayer);
         animator.Play("EnemyAttack");
-
+        RaycastHit2D hit = Physics2D.Linecast(start, end, playerLayer);
         //対象オブジェクトのダメージ処理を行う
         OutAccessComponentBase outAccessObj = hit.transform?.gameObject?.GetComponent<OutAccessComponentBase>();
         //ダメージ処理

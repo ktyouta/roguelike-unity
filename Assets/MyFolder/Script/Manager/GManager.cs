@@ -83,7 +83,7 @@ public class GManager : MonoBehaviour
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
     //敵が動く際に次の移動点を保持する
-    [HideInInspector] public List<Vector2> enemyNextPosition = new List<Vector2>();
+    [HideInInspector] public List<Vector2> charsNextPosition = new List<Vector2>();
     [HideInInspector] public bool isCloseCommand = true;
     [HideInInspector] public int hierarchyLevel = 1;
     [HideInInspector] public bool playersTurn = true;
@@ -455,7 +455,7 @@ public class GManager : MonoBehaviour
         //敵の移動が完了したら、enemiesMovingをfalseに設定
         enemiesMoving = false;
         //移動点を空にする
-        enemyNextPosition.Clear();
+        charsNextPosition.Clear();
         //ゲーム内イベント制御
         if (eManager.skeltonAppearanceFlg)
         {

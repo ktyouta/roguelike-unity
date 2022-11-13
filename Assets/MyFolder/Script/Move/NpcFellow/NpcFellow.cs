@@ -67,7 +67,7 @@ public class NpcFellow : MovingObject
      */
     protected void attack()
     {
-        GManager.instance.enemyNextPosition.Add(transform.position);
+        GManager.instance.charsNextPosition.Add(transform.position);
         //ƒvƒŒƒCƒ„[‚ª“G‚ğ“|‚µ‚Ä‚¢‚é‚©A“GˆÈŠO‚É‘Î‚µ‚ÄUŒ‚‚µ‚½ê‡
         if (playerObj.enemyObject == null)
         {
@@ -99,7 +99,7 @@ public class NpcFellow : MovingObject
             return;
         }
         npcBeforePosition = transform.position;
-        GManager.instance.enemyNextPosition.Add(end);
+        GManager.instance.charsNextPosition.Add(end);
         StartCoroutine(SmoothMovement(end));
     }
 }

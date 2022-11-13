@@ -175,7 +175,7 @@ public class player : MovingObject
 
     private IEnumerator playerSmoothMovement(Vector2 end)
     {
-        yield return SmoothMovement(end);
+        yield return StartCoroutine(SmoothMovement(end));
         //移動完了後にフラグをオンにする
         GManager.instance.isEndPlayerAction = true;
     }
@@ -199,7 +199,7 @@ public class player : MovingObject
         //プレイヤーが移動してフードポイントを失ったので、ゲームが終了したかどうかを確認。
         CheckIfGameOver();
         //プレイヤーの位置情報は必ずリストの先頭になる
-        GManager.instance.enemyNextPosition.Add(end);
+        GManager.instance.charsNextPosition.Add(end);
         //プレーヤーのターンを終了させる
         GManager.instance.playersTurn = false;
     }
