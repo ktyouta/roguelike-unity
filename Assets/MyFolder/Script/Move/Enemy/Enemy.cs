@@ -8,7 +8,6 @@ public class Enemy : MovingObject
 {
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
-    List<Vector2> trackingNodeList = new List<Vector2>();
     protected StatusComponentBase statusObj;
     //ŽŸ‚ÌˆÚ“®“_
     List<NextMovePositionClass> nextMovePosition = new List<NextMovePositionClass>();
@@ -112,7 +111,7 @@ public class Enemy : MovingObject
         if (otherEnemy == null)
         {
             Debug.Log("failed hitname:" + hit.transform.name);
-            trackingNodeList.Clear();
+            nextMovePosition.Clear();
             return;
         }
         bool isAbleToMove = false;
@@ -139,7 +138,6 @@ public class Enemy : MovingObject
         if (!isAbleToMove)
         {
             GManager.instance.enemyActionEndCount++;
-            trackingNodeList.Clear();
             nextMovePosition.Clear();
             return;
         }

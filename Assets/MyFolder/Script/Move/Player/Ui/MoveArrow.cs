@@ -7,7 +7,7 @@ public class MoveArrow : MonoBehaviour
 {
     private player playerObj;
     private bool isPushTop = false;
-    private bool isPushBottom = false;
+    private bool isPushDown = false;
     private bool isPushRight = false;
     private bool isPushLeft = false;
     [Header("方向")] public Direction direction;
@@ -66,21 +66,11 @@ public class MoveArrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //プレイヤーの状態が通常以外
-        if (playerObj.plState != player.playerState.Normal)
-        {
-            return;
-        }
-        //プレイヤーのターンでない、移動中、攻撃中はコマンド入力を受け付けない
-        if (!GManager.instance.playersTurn || playerObj.isMoving || playerObj.isAttack)
-        {
-            return;
-        }
         if (isPushTop)
         {
             playerObj.playerMove(0, 1, false);
         }
-        else if (isPushBottom)
+        else if (isPushDown)
         {
             playerObj.playerMove(0, -1, false);
         }
@@ -107,7 +97,7 @@ public class MoveArrow : MonoBehaviour
      */
     public void clickBottomArrowBtn()
     {
-        isPushBottom = true;
+        isPushDown = true;
     }
 
     /**
@@ -132,7 +122,7 @@ public class MoveArrow : MonoBehaviour
     public void buttonUp()
     {
         isPushTop = false;
-        isPushBottom = false;
+        isPushDown = false;
         isPushRight = false;
         isPushLeft = false;
     }

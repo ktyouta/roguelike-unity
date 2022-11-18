@@ -69,6 +69,8 @@ public class player : MovingObject
 
     private void Update()
     {
+        CheckIfGameOver();
+
         if (!isAttack)
         {
             if (nextHorizontalKey > 0)
@@ -88,24 +90,7 @@ public class player : MovingObject
                 animator?.Play("PlayerDownWalk");
             }
         }
-        //プレイヤーの状態が通常以外
-        if (plState != playerState.Normal)
-        {
-            return;
-        }
-        //ゲームオーバーまたはメニューオープン時
-        if (isDefeat || !GManager.instance.isCloseCommand)
-        {
-            return;
-        }
-        CheckIfGameOver();
-
-        //プレイヤーのターンでない、移動中、攻撃中はコマンド入力を受け付けない
-        if (!GManager.instance.playersTurn || isMoving || isAttack)
-        {
-            return;
-        }
-        GManager.instance.isEndPlayerAction = false;
+        
         horizontal = 0;      //水平移動方向を格納するために使用されます
         vertical = 0;        //垂直移動方向を格納するために使用されます。
         leftShift = false;       //攻撃
@@ -122,6 +107,23 @@ public class player : MovingObject
 
     public void playerMove(int inHorizontal,int inVertical,bool inLeftShift)
     {
+        //プレイヤーの状態が通常以外
+        if (plState != playerState.Normal)
+        {
+            return;
+        }
+        //ゲームオーバーまたはメニューオープン時
+        if (isDefeat || !GManager.instance.isCloseCommand)
+        {
+            return;
+        }
+        //プレイヤーのターンでない、移動中、攻撃中は行動不可
+        if (!GManager.instance.playersTurn || isMoving || isAttack)
+        {
+            return;
+        }
+
+        GManager.instance.isEndPlayerAction = false;
         //水平に移動するかどうかを確認し、移動する場合は垂直にゼロに設定します。(ズレ防止)
         if (inHorizontal != 0)
         {
