@@ -190,6 +190,7 @@ MonoBehaviour:
   sr: {fileID: 0}
   attackComponentObj: {fileID: 0}
   moveActionComponentObj: {fileID: 0}
+  sensorComponentObj: {fileID: 0}
 --- !u!114 &-5261036379142713962
 MonoBehaviour:
   m_ObjectHideFlags: 0

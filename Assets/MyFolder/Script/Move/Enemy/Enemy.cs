@@ -17,6 +17,8 @@ public class Enemy : MovingObject
     [HideInInspector] public AttackComponentBase attackComponentObj;
     //移動アクション
     [HideInInspector] public MoveActionComponentBase moveActionComponentObj;
+    //センサー
+    [HideInInspector] public SensorComponentBase sensorComponentObj;
 
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
@@ -31,29 +33,43 @@ public class Enemy : MovingObject
             Destroy(gameObject);
             GManager.instance.removeEnemyToList(GetComponent<Enemy>());
         }
-        // 機能コンポーネントを取得
+        //機能コンポーネントを取得
+        //攻撃アクションコンポーネント
         attackComponentObj = GetComponent<AttackComponentBase>();
+        if (attackComponentObj == null)
+        {
+            gameObject.AddComponent<AttackComponentEnemy>();
+            attackComponentObj = GetComponent<AttackComponentBase>();
+        }
+        //移動点取得コンポーネント
         moveActionComponentObj = GetComponent<MoveActionComponentBase>();
+        if (moveActionComponentObj == null)
+        {
+            gameObject.AddComponent<MoveActionComponentAstar>();
+            moveActionComponentObj = GetComponent<MoveActionComponentAstar>();
+        }
+        //センサーコンポーネント
+        sensorComponentObj = GetComponent<SensorComponentBase>();
+        if (sensorComponentObj == null)
+        {
+            gameObject.AddComponent<SensorComponentNext>();
+            sensorComponentObj = GetComponent<SensorComponentBase>();
+        }
     }
 
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
     public void moveEnemy()
     {
-        if (statusObj.charHp.hp <= 0)
-        {
-            GManager.instance.enemyActionEndCount++;
-            return;
-        }
-        //画面内にいる場合のみ移動
-        if (!sr.isVisible)
+        //倒されていないまたは画面内にいる場合のみ移動
+        if (statusObj.charHp.hp <= 0 || !sr.isVisible)
         {
             GManager.instance.enemyActionEndCount++;
             return;
         }
 
         isAction = true;
-        int xDir = 0;
-        int yDir = 0;
+        int xDir;
+        int yDir;
         //キャッシュした移動先が存在しない場合は新たに移動先を取得
         if (GManager.instance.charsNextPosition.Count > 0 && nextMovePosition.Count < 1)
         {
@@ -71,9 +87,8 @@ public class Enemy : MovingObject
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
         //移動先がプレイヤーの移動先と被った場合は攻撃
-        if (next == GManager.instance.charsNextPosition[0])
+        if (sensorComponentObj != null && sensorComponentObj.searchTarget(next, GManager.instance.charsNextPosition[0]))
         {
-            //StartCoroutine(enemyAttack(next));
             attackComponentObj?.attack(xDir, yDir);
             return;
         }

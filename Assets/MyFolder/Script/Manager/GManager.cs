@@ -309,11 +309,13 @@ public class GManager : MonoBehaviour
         //仲間のNPCが存在する場合
         if (fellows.Count > 0)
         {
+            Vector2 tmpRefPosition = playerObj.playerBeforePosition;
             for (int i = 0; i < fellows.Count; i++)
             {
                 //前方のキャラの位置を代入(先頭の場合はプレイヤーの位置)
-                Vector2 refPosition = i == 0 ? playerObj.playerBeforePosition : fellows[i - 1].npcBeforePosition;
+                Vector2 refPosition = tmpRefPosition;
                 fellows[i].fellowAction(refPosition);
+                tmpRefPosition = fellows[i].npcBeforePosition;
             }
 
         }
@@ -381,40 +383,6 @@ public class GManager : MonoBehaviour
         //このGameManagerを無効にします。
         enabled = false;
     }
-
-    /**
-     *敵を順番に動かすコルーチン 
-     */
-    //IEnumerator MoveEnemies()
-    //{
-    //    //プレイヤーは移動できない。
-    //    enemiesMoving = true;
-    //    //移動点を空にする
-    //    enemyNextPosition.Clear();
-    //    //turnDelay秒待機します。デフォルトは.1（100ミリ秒）です。
-    //    yield return new WaitForSeconds(0.6f);
-
-    //    //スポーンされた敵がいない場合
-    //    if (enemies.Count == 0)
-    //    {
-    //        //移動の間にturnDelay秒待機し、何もないときに移動する敵によって引き起こされる遅延を置き換えます。
-    //        yield return new WaitForSeconds(turnDelay);
-    //    }
-    //    //敵オブジェクトのリストをループ
-    //    for (int i = 0; i < enemies.Count; i++)
-    //    {
-    //        //敵のmoveTimeを待ってから、次の敵を移動
-    //        yield return new WaitForSeconds(turnDelay);
-
-    //        //敵リストのインデックスiにある敵のmoveEnemy関数を呼び出す。
-    //        enemies[i].moveEnemy();
-    //    }
-    //    //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする。
-    //    playersTurn = true;
-
-    //    //敵の移動が完了したら、enemiesMovingをfalseに設定
-    //    enemiesMoving = false;
-    //}
 
     /**
      * 敵を順番に動かすコルーチン(現在使用中)
