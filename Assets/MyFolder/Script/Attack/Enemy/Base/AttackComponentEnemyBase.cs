@@ -1,10 +1,11 @@
+using Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AttackComponentEnemyBase : AttackComponentBase
 {
-    [Header("プレイヤーレイヤー")] public LayerMask playerLayer;
+    protected LayerMask playerLayer;
     [HideInInspector] public StatusComponentEnemy statusObj;
 
     protected override void Start()
@@ -12,5 +13,6 @@ public abstract class AttackComponentEnemyBase : AttackComponentBase
         base.Start();
         // キャストする型をキャラクターごとに変える
         statusObj = (StatusComponentEnemy)GetComponent<StatusComponentBase>();
+        playerLayer = LayerMask.GetMask(Define.PLAYER_LAYER);
     }
 }

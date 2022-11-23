@@ -4059,7 +4059,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1403084276}
   m_HandleRect: {fileID: 1403084275}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4884,7 +4884,7 @@ MonoBehaviour:
   unmovableList: []
   messageManager: {fileID: 0}
   riseValueHp: 0
-  enemyNextPosition: []
+  charsNextPosition: []
   isCloseCommand: 1
   hierarchyLevel: 1
   playersTurn: 1
@@ -5400,7 +5400,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.26997}
+  m_AnchoredPosition: {x: 142.74, y: -116.27001}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

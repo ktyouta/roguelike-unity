@@ -12,7 +12,7 @@ public class ThrowComponentPlayer : ThrowComponentBase
         playerObj = GetComponent<player>();
     }
 
-    public override IEnumerator throwAction(Item item, ThrowObject throwObj)
+    protected override IEnumerator throwAction(Item item, ThrowObject throwObj)
     {
         playerObj.isAttack = true;
         animator?.Play("PlayerAttack");

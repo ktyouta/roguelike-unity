@@ -9,8 +9,10 @@ public class SensorComponentAxis : SensorComponentBase
      */
     public override bool searchTarget(Vector2 nextSelfPosition, Vector2 nextTargetPosition)
     {
+        Vector2 nowPosition = transform.position;
+
         //xé≤Ç‹ÇΩÇÕyé≤Ç™àÍívÇ∑ÇÈèÍçá
-        if (nextSelfPosition.x == nextTargetPosition.x || nextSelfPosition.y == nextTargetPosition.y)
+        if (nowPosition.x == nextTargetPosition.x || nowPosition.y == nextTargetPosition.y)
         {
             return true;
         }

@@ -55,14 +55,14 @@ public class ThrowObject : MonoBehaviour
         {
             return;
         }
-        //“G‚É‚Ô‚Â‚©‚Á‚½ê‡
-        if (other.tag == "Enemy" && isThrownObj)
+        if (isThrownObj)
         {
-            Enemy enemy = other.GetComponent<Enemy>();
-            //enemy.enemyHp -= 10;
-            it.collisionItem(enemy);
-            it.deleteSelectedItem(it.id);
-            Destroy(this.gameObject);
+            //Õ“Ë‚ÌƒAƒNƒVƒ‡ƒ“
+            if (other.tag == "Enemy" || other.tag == "Player")
+            {
+                it.collisionItem(other.gameObject);
+                Destroy(this.gameObject);
+            }
         }
         rb.velocity = new Vector2(0.0f, 0.0f);
         isThrownObj = false;

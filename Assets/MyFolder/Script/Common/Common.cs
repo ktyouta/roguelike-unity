@@ -72,6 +72,9 @@ namespace Common
 
 		//不思議のダンジョン系マップのモンスターハウスの出現確率(%)
 		public const int MONSTERHOUSE_PROBABILITY = 95;
+
+		//レイヤーマスク
+		public const string PLAYER_LAYER = "Player";
 	}
 
 	//アイテムのタイプ

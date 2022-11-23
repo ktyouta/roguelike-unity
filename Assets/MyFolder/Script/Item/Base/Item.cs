@@ -34,7 +34,7 @@ public abstract class Item : MonoBehaviour
     /**
      * ƒAƒCƒeƒ€‚ªÕ“Ë‚µ‚½ê‡‚Ìˆ—
      */
-    public abstract void collisionItem(Enemy enemy);
+    public abstract void collisionItem(GameObject targetObj);
 
     private void OnTriggerEnter2D(Collider2D other)
     {

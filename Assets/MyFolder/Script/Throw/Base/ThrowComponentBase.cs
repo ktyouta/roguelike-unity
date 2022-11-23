@@ -59,6 +59,10 @@ public abstract class ThrowComponentBase : MonoBehaviour
         newThrownItemObj.GetComponent<Item>().isEnter = true;
         ThrowObject throwObj = newThrownItemObj.GetComponent<ThrowObject>();
         //ベクトルをセット
+        if (!throwObj.rb)
+        {
+            throwObj.rb = throwObj.GetComponent<Rigidbody2D>();
+        }
         throwObj.rb.velocity = velocityVector;
         //ThrowObjectのupdateが走る(アイテムが移動する)
         throwObj.isThrownObj = true;
@@ -70,5 +74,5 @@ public abstract class ThrowComponentBase : MonoBehaviour
     /**
      * アイテムを投げた際の処理(キャラごとの固有処理)
      */
-    public abstract IEnumerator throwAction(Item item, ThrowObject throwObj);
+    protected abstract IEnumerator throwAction(Item item, ThrowObject throwObj);
 }
