@@ -7,11 +7,6 @@ using Common;
 //abstractをつけると、抽象クラスの宣言になる
 public abstract class MovingObject : MonoBehaviour
 {
-    [Header("ブロッキングレイヤー(下記レイヤー以外で進行不可にしたいもの)")]public LayerMask blockingLayer;  //衝突がチェックされるレイヤー
-    [Header("敵レイヤー")] public LayerMask enemyLayer;
-    [Header("プレイヤーレイヤー")] public LayerMask playerLayer;
-    [Header("チェストレイヤー")] public LayerMask treasureLayer;
-    [Header("NPCレイヤー")] public LayerMask npcLayer;
     [HideInInspector] public bool isMoving;                    //動けるかどうか
     [HideInInspector] public Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
     protected bool canMove;

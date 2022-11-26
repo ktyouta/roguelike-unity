@@ -163,7 +163,7 @@ public class player : MovingObject
     {
         RaycastHit2D hit;
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
-        hit = Physics2D.Linecast(transform.position, end, blockingLayer | enemyLayer | treasureLayer | npcLayer);
+        hit = Physics2D.Linecast(transform.position, end, LayerUtil.blockingLayer | LayerUtil.enemyLayer | LayerUtil.treasureLayer | LayerUtil.npcLayer);
         //ヒットした場合は移動不可
         if (hit.transform != null)
         {
@@ -232,7 +232,7 @@ public class player : MovingObject
      */
     public void putItemFloor(GameObject item)
     {
-        RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position, itemLayer);
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position, LayerUtil.itemLayer);
         if (hit.transform != null)
         {
             GManager.instance.wrightLog("アイテムを置けません。");

@@ -111,7 +111,7 @@ public class Enemy : MovingObject
         boxCollider.enabled = false;
 
         //始点から終点までラインをキャストして、blockingLayerの衝突をチェックします。(ここで自分のオブジェクトとの接触判定が出ないようにfalseしている)
-        hit = Physics2D.Linecast(transform.position, end, enemyLayer);
+        hit = Physics2D.Linecast(transform.position, end, LayerUtil.enemyLayer);
 
         //ラインキャスト後にboxColliderを再度有効にする
         boxCollider.enabled = true;

@@ -11,7 +11,7 @@ public class AttackComponentPlayer : AttackComponentPlayerBase
     {
         playerObj.isAttack = true;
         animator?.Play("PlayerAttack");
-        RaycastHit2D hit = Physics2D.Linecast(start, end, enemyLayer | treasureLayer | blockingLayer);
+        RaycastHit2D hit = Physics2D.Linecast(start, end, LayerUtil.enemyLayer | LayerUtil.treasureLayer | LayerUtil.blockingLayer);
         //攻撃の場合は現在地を追加
         GManager.instance.charsNextPosition.Add(transform.position);
         //時間差で実行されるフラグをオンにする処理

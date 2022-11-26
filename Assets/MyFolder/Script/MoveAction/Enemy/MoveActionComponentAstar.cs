@@ -14,10 +14,6 @@ public class MoveActionComponentAstar : MoveActionComponentBase
         public int hCost;
     }
     List<Vector2> trackingNodeList = new List<Vector2>();
-    [Header("ブロッキングレイヤー(下記レイヤー以外で進行不可にしたいもの)")] public LayerMask blockingLayer;  //衝突がチェックされるレイヤー
-    [Header("プレイヤーレイヤー")] public LayerMask playerLayer;
-    [Header("チェストレイヤー")] public LayerMask treasureLayer;
-    [Header("NPCレイヤー")] public LayerMask npcLayer;
 
     /**
      * キャラクターの次の移動点を返却
@@ -118,7 +114,7 @@ public class MoveActionComponentAstar : MoveActionComponentBase
                 {
                     continue;
                 }
-                RaycastHit2D hit = Physics2D.Linecast(start, next, blockingLayer | treasureLayer | npcLayer);
+                RaycastHit2D hit = Physics2D.Linecast(start, next, LayerUtil.blockingLayer | LayerUtil.treasureLayer | LayerUtil.npcLayer | LayerUtil.npcFellowLayer);
                 //他のオブジェクトに当たる場合
                 if (hit.transform != null)
                 {

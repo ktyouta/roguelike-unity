@@ -4,9 +4,6 @@ using UnityEngine;
 
 public abstract class AttackComponentPlayerBase : AttackComponentBase
 {
-    [Header("ブロッキングレイヤー(下記レイヤー以外で進行不可にしたいもの)")] public LayerMask blockingLayer;  //衝突がチェックされるレイヤー
-    [Header("敵レイヤー")] public LayerMask enemyLayer;
-    [Header("チェストレイヤー")] public LayerMask treasureLayer;
     [HideInInspector] public StatusComponentPlayer statusObj;
     protected player playerObj;
 

@@ -23,9 +23,13 @@ namespace Common
 		public const int RANDOM_SETTING = 3;
 
 		//レイヤー設定
-		public const int BLOCKING_LAYER = 3;
-		public const int ENEMY_LAYER = 7;
-		public const int TREASURE_LAYER = 8;
+		public const string BLOCKING_LAYER = "BlockingLayer";
+		public const string PLAYER_LAYER = "Player";
+		public const string ENEMY_LAYER = "Enemy";
+		public const string TREASURE_LAYER = "Treasure";
+		public const string NPC_LAYER = "Npc";
+		public const string NPCFELLOW_LAYER = "NpcFellow";
+		public const string ITEM_LAYER = "Item";
 
 		//仲間にできるNPCの上限数
 		public const int FELLOWS_MAXNUM = 3;
@@ -72,9 +76,6 @@ namespace Common
 
 		//不思議のダンジョン系マップのモンスターハウスの出現確率(%)
 		public const int MONSTERHOUSE_PROBABILITY = 95;
-
-		//レイヤーマスク
-		public const string PLAYER_LAYER = "Player";
 	}
 
 	//アイテムのタイプ

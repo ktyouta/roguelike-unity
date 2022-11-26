@@ -142,7 +142,7 @@ public class NpcFellowTalk : NpcChoices
                         col.enabled = true;
                     }
                 }
-                GManager.instance.fellows[i].gameObject.layer = LayerMask.NameToLayer("Npc");
+                GManager.instance.fellows[i].gameObject.layer = LayerUtil.npcLayer;
                 GManager.instance.fellows[i].enabled = false;
                 //位置の入れ替え
                 GManager.instance.fellows[i].transform.position = npcFellowTalk.transform.position;
@@ -181,6 +181,6 @@ public class NpcFellowTalk : NpcChoices
             }
         }
         //レイヤーを変更
-        this.gameObject.layer = LayerMask.NameToLayer("NpcFellow");
+        this.gameObject.layer = LayerUtil.npcFellowLayer;
     }
 }

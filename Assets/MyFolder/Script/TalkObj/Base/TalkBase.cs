@@ -16,7 +16,6 @@ public abstract class TalkBase : MonoBehaviour
     [HideInInspector]public player playerObj;
     [Header("会話開始用UI")] public GameObject talkAreaObj;
     [HideInInspector] public GameObject npcCanvas;
-    [Header("会話用NPCレイヤー")] public LayerMask npcLayer;
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -40,7 +39,7 @@ public abstract class TalkBase : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D touchObj = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, npcLayer);
+                RaycastHit2D touchObj = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, LayerUtil.npcLayer);
                 
                 if (touchObj.transform == null)
                 {

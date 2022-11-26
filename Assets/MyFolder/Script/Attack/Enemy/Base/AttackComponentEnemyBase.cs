@@ -5,7 +5,6 @@ using UnityEngine;
 
 public abstract class AttackComponentEnemyBase : AttackComponentBase
 {
-    protected LayerMask playerLayer;
     [HideInInspector] public StatusComponentEnemy statusObj;
 
     protected override void Start()
@@ -13,6 +12,5 @@ public abstract class AttackComponentEnemyBase : AttackComponentBase
         base.Start();
         // キャストする型をキャラクターごとに変える
         statusObj = (StatusComponentEnemy)GetComponent<StatusComponentBase>();
-        playerLayer = LayerMask.GetMask(Define.PLAYER_LAYER);
     }
 }

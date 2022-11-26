@@ -93,7 +93,7 @@ public class NpcFellow : MovingObject
     protected override void moveChar(Vector2 end)
     {
         RaycastHit2D hit;
-        hit = Physics2D.Linecast(transform.position, end, blockingLayer | treasureLayer);
+        hit = Physics2D.Linecast(transform.position, end, LayerUtil.blockingLayer | LayerUtil.treasureLayer);
         if (hit.transform != null)
         {
             return;
