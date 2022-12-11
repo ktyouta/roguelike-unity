@@ -811,7 +811,7 @@ public class BoardManager : MonoBehaviour
                 break;
             }
         }
-        GManager.instance.wrightLog("モンスターハウスだ！！");
+        GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("8"));
     }
 
     /**

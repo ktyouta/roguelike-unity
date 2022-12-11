@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 8891534301706435478}
   - component: {fileID: -5261036379142713962}
   - component: {fileID: 5182532374464037030}
-  - component: {fileID: 8335463770138350297}
   - component: {fileID: -6269675788309310531}
   m_Layer: 7
   m_Name: TestBoss
@@ -168,21 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde20eb501e64e6469eeb9dd7f2078ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockingLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  treasureLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  npcLayer:
-    serializedVersion: 2
-    m_Bits: 3072
   isMoving: 0
   rb2D: {fileID: 0}
   isAction: 0
@@ -190,6 +174,8 @@ MonoBehaviour:
   attackComponentObj: {fileID: 0}
   moveActionComponentObj: {fileID: 0}
   sensorComponentObj: {fileID: 0}
+  damageActionComponentObj: {fileID: 0}
+  enemyId: 1
 --- !u!114 &-5261036379142713962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,33 +202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusObj: {fileID: 0}
---- !u!114 &8335463770138350297
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6411965051382903684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e40ee9c39827f2f439cf44290395b377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charHp:
-    hp: 10
-    maxHp: 0
-  charName:
-    name: "\u30DC\u30B9(\u30C6\u30B9\u30C8)"
-  charAttack:
-    attack: 5
-    totalAttack: 0
-  charDefence:
-    defence: 0
-    totalDefence: 0
-  charWallet:
-    money: 500
-    maxMoney: 0
-  experience: 100
 --- !u!114 &-6269675788309310531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,15 +214,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0abceeff26f2cd48b72070e32865f10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockingLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  treasureLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  npcLayer:
-    serializedVersion: 2
-    m_Bits: 3072

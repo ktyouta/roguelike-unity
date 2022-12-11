@@ -4059,7 +4059,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1403084276}
   m_HandleRect: {fileID: 1403084275}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4466,6 +4466,7 @@ GameObject:
   - component: {fileID: 1483692206}
   - component: {fileID: 1483692207}
   - component: {fileID: 1483692208}
+  - component: {fileID: 1483692209}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -4930,6 +4931,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c4da0a304bbc04491d937d2f5e196b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1483692209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483692203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99f4c335bc64cb47bd7112cf3ef12ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roguelikeEnemyInfoList: []
 --- !u!1 &1530178040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5400,7 +5414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.27001}
+  m_AnchoredPosition: {x: 142.74, y: -116.27}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

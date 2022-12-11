@@ -1,0 +1,8 @@
+{
+	"moveActionComponentMaster":[
+		{
+			"id":"1",
+			"name":"MoveActionComponentAstar"
+		}
+	]
+}

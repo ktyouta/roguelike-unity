@@ -79,6 +79,8 @@ public class GManager : MonoBehaviour
     EventManager eManager;
     //メッセージ用
     [HideInInspector] public MessageManager messageManager;
+    //コンポーネント設定用リスト
+    [HideInInspector] public ComponentSettingManager componentSettingManager;
 
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
@@ -92,6 +94,7 @@ public class GManager : MonoBehaviour
     [HideInInspector] public bool isEndPlayerAction = false;
     [HideInInspector] public bool isEndPlayerMoving = false;
     [HideInInspector] public int latestEnemyNumber = 0;
+    [HideInInspector] public bool doingSetup;
     //レベルを開始する前に待機する時間（秒単位）。
     public float levelStartDelay = 2f;
     //各プレイヤーのターン間の遅延。
@@ -101,7 +104,6 @@ public class GManager : MonoBehaviour
     public string weaponName = "なし";
     public string shieldName = "なし";
     private bool enemiesMoving;
-    private bool doingSetup;
     private bool loadFlg = false;
     private IEnumerator coroutine;
 
@@ -191,6 +193,7 @@ public class GManager : MonoBehaviour
         manualButton = GameObject.Find("ManualButton").GetComponent<Button>();
         manualButton.onClick.AddListener(() => openManual());
         messageManager = GetComponent<MessageManager>();
+        componentSettingManager = GetComponent<ComponentSettingManager>();
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -356,14 +359,14 @@ public class GManager : MonoBehaviour
     {
         Enemy enemyObj = enemy.GetComponent<Enemy>();
         //enemyObj.enemyNumber = enemyNumber;
-        string enemyName = enemy.GetComponent<StatusComponentBase>().charName.name;
-        if (string.IsNullOrEmpty(enemyName))
-        {
-            enemyName = "エネミー";
-        }
-        enemy.GetComponent<StatusComponentBase>().charName.name = enemyName + (enemyNumber + 1);
-        //enemyObj.enemyName = "エネミー" + (enemyNumber + 1);
-        //Listにエネミーを追加する
+        //string enemyName = enemy.GetComponent<StatusComponentBase>().charName.name;
+        //if (string.IsNullOrEmpty(enemyName))
+        //{
+        //    enemyName = "エネミー";
+        //}
+        //enemy.GetComponent<StatusComponentBase>().charName.name = enemyName + (enemyNumber + 1);
+        ////enemyObj.enemyName = "エネミー" + (enemyNumber + 1);
+        ////Listにエネミーを追加する
         enemies.Add(enemyObj);
         latestEnemyNumber++;
     }

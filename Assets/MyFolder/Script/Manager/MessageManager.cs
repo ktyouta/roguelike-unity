@@ -19,9 +19,9 @@ public class MessageManager : MonoBehaviour
     [HideInInspector] public MessageJsonArrayClass messageJsonData;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        string loadjson = Resources.Load<TextAsset>("json/RoguelikeMessage").ToString();
+        string loadjson = Resources.Load<TextAsset>("json/Message/RoguelikeMessage").ToString();
         messageJsonData = new MessageJsonArrayClass();
         JsonUtility.FromJsonOverwrite(loadjson, messageJsonData);
     }

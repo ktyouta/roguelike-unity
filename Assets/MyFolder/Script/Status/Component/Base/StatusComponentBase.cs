@@ -6,10 +6,10 @@ using UnityEngine.Events;
 [System.Serializable]
 public class StatusComponentBase : MonoBehaviour
 {
-    [Header("HP")] public HpClass charHp;
-    [Header("–¼‘O")] public NameClass charName;
-    [Header("UŒ‚—Í")] public AttackClass charAttack;
-    [Header("–hŒä—Í")] public DefenceClass charDefence;
+    [Header("HP")] public HpClass charHp = new HpClass();
+    [Header("–¼‘O")] public NameClass charName = new NameClass();
+    [Header("UŒ‚—Í")] public AttackClass charAttack = new AttackClass();
+    [Header("–hŒä—Í")] public DefenceClass charDefence = new DefenceClass();
 
     protected virtual void Start()
     {

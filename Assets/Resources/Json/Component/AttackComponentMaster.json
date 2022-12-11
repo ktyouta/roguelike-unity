@@ -1,0 +1,12 @@
+{
+	"attackComponentMaster":[
+		{
+			"id":"1",
+			"name":"AttackComponentEnemy"
+		},
+		{
+			"id":"2",
+			"name":"AttackComponentEnemyThrow"
+		}
+	]
+}

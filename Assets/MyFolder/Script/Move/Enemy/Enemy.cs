@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Common;
 using static MoveActionComponentBase;
+using static ComponentSettingManager;
+using System;
+using System.Linq;
 
 public class Enemy : MovingObject
 {
     [HideInInspector] public bool isAction = false;
     [HideInInspector] public SpriteRenderer sr = null;
-    protected StatusComponentBase statusObj;
+    protected StatusComponentEnemy statusObj;
     //次の移動点
     List<NextMovePositionClass> nextMovePosition = new List<NextMovePositionClass>();
 
@@ -19,6 +22,11 @@ public class Enemy : MovingObject
     [HideInInspector] public MoveActionComponentBase moveActionComponentObj;
     //センサー
     [HideInInspector] public SensorComponentBase sensorComponentObj;
+    //ダメージアクション
+    [HideInInspector] public DamageActionComponentBase damageActionComponentObj;
+
+    //識別用ID
+    [Header("識別用ID")] public int enemyId;
 
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
@@ -27,34 +35,62 @@ public class Enemy : MovingObject
         //スタート関数を抽象クラスから呼ぶ
         base.Start();
         sr = GetComponent<SpriteRenderer>();
-        this.statusObj = GetComponent<StatusComponentBase>();
-        if (this.statusObj == null)
+
+        //ステータスコンポーネントをセット
+        statusObj = GetComponent<StatusComponentEnemy>();
+        if (statusObj == null)
+        {
+            gameObject.AddComponent<StatusComponentEnemy>();
+            statusObj = GetComponent<StatusComponentEnemy>();
+        }
+
+        //機能コンポーネントを取得
+        // IDの一致する敵のデータを取得
+        RoguelikeEnemyClass enemyInfo = GManager.instance.componentSettingManager.roguelikeEnemyInfoList
+                                            .Where(e => e.id == enemyId).FirstOrDefault();
+
+        // データの取得に失敗した場合はオブジェクトを削除する
+        if (enemyInfo == null)
         {
             Destroy(gameObject);
-            GManager.instance.removeEnemyToList(GetComponent<Enemy>());
         }
-        //機能コンポーネントを取得
+
         //攻撃アクションコンポーネント
+        Type addComponentType = Type.GetType(enemyInfo.attackComponentName);
         attackComponentObj = GetComponent<AttackComponentBase>();
         if (attackComponentObj == null)
         {
-            gameObject.AddComponent<AttackComponentEnemy>();
+            gameObject.AddComponent(addComponentType);
             attackComponentObj = GetComponent<AttackComponentBase>();
         }
+
         //移動点取得コンポーネント
+        addComponentType = Type.GetType(enemyInfo.movePointGetComponentName);
         moveActionComponentObj = GetComponent<MoveActionComponentBase>();
         if (moveActionComponentObj == null)
         {
-            gameObject.AddComponent<MoveActionComponentAstar>();
+            gameObject.AddComponent(addComponentType);
             moveActionComponentObj = GetComponent<MoveActionComponentAstar>();
         }
+
         //センサーコンポーネント
+        addComponentType = Type.GetType(enemyInfo.sensorComponentName);
         sensorComponentObj = GetComponent<SensorComponentBase>();
         if (sensorComponentObj == null)
         {
-            gameObject.AddComponent<SensorComponentNext>();
+            gameObject.AddComponent(addComponentType);
             sensorComponentObj = GetComponent<SensorComponentBase>();
         }
+
+        //ダメージアクションコンポーネント
+        addComponentType = Type.GetType(enemyInfo.sensorComponentName);
+        damageActionComponentObj = GetComponent<DamageActionComponentBase>();
+        if (damageActionComponentObj == null)
+        {
+            gameObject.AddComponent(addComponentType);
+            damageActionComponentObj = GetComponent<DamageActionComponentBase>();
+        }
+        
     }
 
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。

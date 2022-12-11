@@ -1,0 +1,16 @@
+{
+	"sensorComponentMaster":[
+		{
+			"id":"1",
+			"name":"SensorComponentNext"
+		},
+        {
+			"id":"2",
+			"name":"SensorComponentAxis"
+		},
+        {
+			"id":"3",
+			"name":"SensorComponentRange"
+		}
+	]
+}

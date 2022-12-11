@@ -1,0 +1,12 @@
+{
+	"damageActionComponentMaster":[
+		{
+			"id":"1",
+			"name":"DamageActionComponentEnemy"
+		},
+		{
+			"id":"2",
+			"name":"DamageActionComponentBossEnemy"
+		}
+	]
+}

@@ -216,6 +216,7 @@ public class player : MovingObject
             GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("6", statusObj.charName.name));
             GManager.instance.GameOver();
             isDefeat = true;
+            Destroy(gameObject);
         }
     }
 
