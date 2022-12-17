@@ -123,28 +123,24 @@ public class GManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (!instance.loadFlg)
-        {
-            //シーンをリロードするときにこれが破棄されないように設定します
-            InitGame();
-            instance.loadFlg = true;
-        }
+        //ゲームの開始準備
+        instance.InitGame();
     }
 
     //これは1回だけ呼び出され、パラメータはシーンがロードされた後にのみ呼び出されるように指示します//（そうでない場合、Scene Loadコールバックは最初のロードと呼ばれ、必要ありません）
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static public void CallbackInitialization()
-    {
-        //シーンが読み込まれるたびに呼び出されるコールバックを登録します
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
+    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    //static public void CallbackInitialization()
+    //{
+    //    //シーンが読み込まれるたびに呼び出されるコールバックを登録します
+    //    SceneManager.sceneLoaded += OnSceneLoaded;
+    //}
 
-    //This is called each time a scene is loaded.
-    //2F以降のシーン読み込みで実行される
-    static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    {
-        instance.InitGame();
-    }
+    ////This is called each time a scene is loaded.
+    ////2F以降のシーン読み込みで実行される
+    //static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    //{
+    //    instance.InitGame();
+    //}
 
     //各レベルのゲームを初期化します。
     public void InitGame()
