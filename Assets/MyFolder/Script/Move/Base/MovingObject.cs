@@ -9,6 +9,10 @@ public abstract class MovingObject : MonoBehaviour
 {
     [HideInInspector] public bool isMoving;                    //動けるかどうか
     [HideInInspector] public Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
+    [HideInInspector] public bool isAttack = false;
+    [HideInInspector] public int nextHorizontalKey;
+    [HideInInspector] public int nextVerticalkey;
+
     protected bool canMove;
     protected BoxCollider2D boxCollider;         //このオブジェクトにアタッチされた、BoxCollider2Dの入れ物を用意
     protected Animator animator;

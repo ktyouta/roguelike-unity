@@ -6,7 +6,7 @@ public class DamageActionComponentEnemy : DamageActionComponentBase
 {
     protected bool isDefeat = false;
     private StatusComponentEnemy statusComponentEnemyObj;
-    [SerializeField, Header("キャラのステータス用コンポーネント")] public StatusComponentPlayer statusComponentObj;
+    [SerializeField, HideInInspector] public StatusComponentPlayer statusComponentObj;
 
     protected override void Start()
     {

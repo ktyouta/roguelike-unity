@@ -10,7 +10,7 @@ public class FollowCamera : MonoBehaviour
     player pl;
     Transform playerTransform;
     Vector2 cameraMaxPos; // カメラの右上限界点
-    Vector2 cameraMinPos = new Vector2(6.5f, 3.5f); // カメラの左下限界点
+    Vector2 cameraMinPos = new Vector2(5.6f, 2.5f); // カメラの左下限界点
     [Header("マップ生成用オブジェクト")] public BoardManager boardObj;
     private float cameraMaxPointX;
     private Camera camObj;
@@ -34,16 +34,16 @@ public class FollowCamera : MonoBehaviour
                 //ボス戦マップ
                 if (boardObj.isBossMode)
                 {
-                    cameraMaxPointX = Define.MYSTERYBOSSMAP_WHITH - 6.5f;
-                    cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYBOSSMAP_HEIGHT - 3.0f);
+                    cameraMaxPointX = Define.MYSTERYBOSSMAP_WHITH - 5.6f;
+                    cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYBOSSMAP_HEIGHT - 2.5f);
                 }
                 //通常マップ
                 else
                 {
-                    cameraMaxPointX = Define.MYSTERYMAP_WHITH - 6.5f;
-                    cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYMAP_HEIGHT - 3.0f);
+                    cameraMaxPointX = Define.MYSTERYMAP_WHITH - 5.6f;
+                    cameraMaxPos = new Vector2(cameraMaxPointX, Define.MYSTERYMAP_HEIGHT - 2.5f);
                 }
-                camObj.orthographicSize = camObj.orthographicSize - 0.5f;
+                camObj.orthographicSize = camObj.orthographicSize - 1.0f;
 
             }
         }

@@ -25,7 +25,7 @@ public class Enemy : MovingObject
     //ダメージアクション
     [HideInInspector] public DamageActionComponentBase damageActionComponentObj;
 
-    //識別用ID
+    //識別用ID(jsonから対応するデータ取得する用)
     [Header("識別用ID")] public int enemyId;
 
 
@@ -36,14 +36,6 @@ public class Enemy : MovingObject
         base.Start();
         sr = GetComponent<SpriteRenderer>();
 
-        //ステータスコンポーネントをセット
-        statusObj = GetComponent<StatusComponentEnemy>();
-        if (statusObj == null)
-        {
-            gameObject.AddComponent<StatusComponentEnemy>();
-            statusObj = GetComponent<StatusComponentEnemy>();
-        }
-
         //機能コンポーネントを取得
         // IDの一致する敵のデータを取得
         RoguelikeEnemyClass enemyInfo = GManager.instance.componentSettingManager.roguelikeEnemyInfoList
@@ -53,6 +45,14 @@ public class Enemy : MovingObject
         if (enemyInfo == null)
         {
             Destroy(gameObject);
+        }
+
+        //ステータスコンポーネントをセット
+        statusObj = GetComponent<StatusComponentEnemy>();
+        if (statusObj == null)
+        {
+            gameObject.AddComponent<StatusComponentEnemy>();
+            statusObj = GetComponent<StatusComponentEnemy>();
         }
 
         //攻撃アクションコンポーネント
@@ -83,14 +83,46 @@ public class Enemy : MovingObject
         }
 
         //ダメージアクションコンポーネント
-        addComponentType = Type.GetType(enemyInfo.sensorComponentName);
+        addComponentType = Type.GetType(enemyInfo.damageActionComponentName);
         damageActionComponentObj = GetComponent<DamageActionComponentBase>();
         if (damageActionComponentObj == null)
         {
             gameObject.AddComponent(addComponentType);
             damageActionComponentObj = GetComponent<DamageActionComponentBase>();
         }
-        
+
+        //外部アクセス用コンポーネントをセット
+        if (GetComponent<OutAccessComponentBase>() == null)
+        {
+            gameObject.AddComponent<OutAccessComponentBase>();
+        }
+
+        //リスポーン時に下方向を向く
+        nextHorizontalKey = 0;
+        nextVerticalkey = -1;
+    }
+
+    private void Update()
+    {
+        if (!isAttack)
+        {
+            if (nextHorizontalKey > 0)
+            {
+                animator?.Play("EnemyRightWalk");
+            }
+            else if (nextHorizontalKey < 0)
+            {
+                animator?.Play("EnemyLeftWalk");
+            }
+            else if (nextVerticalkey > 0)
+            {
+                animator?.Play("EnemyUpWalk");
+            }
+            else if (nextVerticalkey < 0)
+            {
+                animator?.Play("EnemyDownWalk");
+            }
+        }
     }
 
     //moveEnemyは毎ターンGameMangerによって呼び出され、各敵にプレイヤーに向かって移動するように指示します。
@@ -120,12 +152,15 @@ public class Enemy : MovingObject
         }
         xDir = (int)(nextMovePosition[0].xDir);
         yDir = (int)(nextMovePosition[0].yDir);
+        nextHorizontalKey = xDir;
+        nextVerticalkey = yDir;
         Vector2 start = transform.position;
         Vector2 next = start + new Vector2(xDir, yDir);
         //移動先がプレイヤーの移動先と被った場合は攻撃
         if (sensorComponentObj != null && sensorComponentObj.searchTarget(next, GManager.instance.charsNextPosition[0]))
         {
-            attackComponentObj?.attack(xDir, yDir);
+            StartCoroutine(attackComponentObj?.attack(xDir, yDir));
+            //attackComponentObj?.attack(xDir, yDir);
             return;
         }
         //移動点が他の敵と被れば移動できない

@@ -34,6 +34,7 @@ public class AttackButton : MonoBehaviour
             return;
         }
         //playerObj.Attack();
-        attackComponentObj.attack(playerObj.nextHorizontalKey,playerObj.nextVerticalkey);
+        //attackComponentObj.attack(playerObj.nextHorizontalKey,playerObj.nextVerticalkey);
+        StartCoroutine(attackComponentObj.attack(playerObj.nextHorizontalKey, playerObj.nextVerticalkey));
     }
 }

@@ -418,7 +418,7 @@ public class GManager : MonoBehaviour
         //敵の移動が完了したら、playersTurnをtrueに設定して、プレーヤーが移動できるようにする
         playersTurn = true;
         //プレイヤーの攻撃フラグをオフにする
-        playerObj.isAttack = false;
+        //playerObj.isAttack = false;
         //敵の移動が完了したら、enemiesMovingをfalseに設定
         enemiesMoving = false;
         //移動点を空にする

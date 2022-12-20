@@ -15,9 +15,6 @@ public class player : MovingObject
     [HideInInspector] public playerState plState = playerState.Normal;
     [HideInInspector] public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
     [HideInInspector] public GameObject levelText;
-    [HideInInspector] public int nextHorizontalKey;
-    [HideInInspector] public int nextVerticalkey;
-    [HideInInspector] public bool isAttack = false;
     [HideInInspector] public Enemy enemyObject;
     [HideInInspector] public int horizontal = 0;
     [HideInInspector] public int vertical = 0;
@@ -144,7 +141,8 @@ public class player : MovingObject
         //攻撃
         else if (inLeftShift)
         {
-            attackComponentObj?.attack(nextHorizontalKey, nextVerticalkey);
+            StartCoroutine(attackComponentObj?.attack(nextHorizontalKey, nextVerticalkey));
+            //attackComponentObj?.attack(nextHorizontalKey, nextVerticalkey);
         }
     }
 

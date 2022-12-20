@@ -4583,7 +4583,7 @@ MonoBehaviour:
       enemyObjList:
       - noSettingFlg: 1
         noSettingNomalMap: 0
-        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        multipleSettingObj: {fileID: 7054577723463671706, guid: b0c61e9a034a2fd4c988b71fe5648ae6, type: 3}
         minSettingNumNomalMap: 3
         maxSettingNumNomalMap: 6
         noSettingBossMap: 0
@@ -4599,7 +4599,7 @@ MonoBehaviour:
         maxSettingNumBossMap: 0
       trapObjList: []
       isCreateBossMap: 1
-      bossMonsterObj: {fileID: 6411965051382903684, guid: 9feae4fb56fedcc4686e1241a3940e84, type: 3}
+      bossMonsterObj: {fileID: 7952090157824048850, guid: 07fa0d640da438e49af3c6d773c3ceba, type: 3}
     - floreObj: {fileID: 7877200778571232546, guid: fdd83b8aeb956d347a41d69e645e579b, type: 3}
       subFloreObjList: []
       effectFloreObjList: []
@@ -4625,7 +4625,7 @@ MonoBehaviour:
       enemyObjList:
       - noSettingFlg: 0
         noSettingNomalMap: 0
-        multipleSettingObj: {fileID: 4450068965489674141, guid: 9415b761e5e66d548b7132b2b8db9abb, type: 3}
+        multipleSettingObj: {fileID: 7054577723463671706, guid: b0c61e9a034a2fd4c988b71fe5648ae6, type: 3}
         minSettingNumNomalMap: 5
         maxSettingNumNomalMap: 5
         noSettingBossMap: 0
@@ -4884,6 +4884,7 @@ MonoBehaviour:
   logMessage: []
   unmovableList: []
   messageManager: {fileID: 0}
+  componentSettingManager: {fileID: 0}
   riseValueHp: 0
   charsNextPosition: []
   isCloseCommand: 1
@@ -4894,6 +4895,7 @@ MonoBehaviour:
   isEndPlayerAction: 0
   isEndPlayerMoving: 0
   latestEnemyNumber: 0
+  doingSetup: 0
   levelStartDelay: 2
   turnDelay: 0.1
   boardScript: {fileID: 0}
@@ -5414,7 +5416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.27}
+  m_AnchoredPosition: {x: 142.74, y: -116.26969}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070

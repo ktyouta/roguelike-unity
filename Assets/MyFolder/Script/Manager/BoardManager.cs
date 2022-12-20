@@ -1037,8 +1037,7 @@ public class BoardManager : MonoBehaviour
                          isLessListCount &&
                          labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].isCreateBossMap &&
                          labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj &&
-                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj.GetComponent<BossScript>() &&
-                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj.GetComponent<BossScript>().enabled;
+                         labyrinthMapCreateMap.objList[quotientNowHierarchyLevel].bossMonsterObj?.GetComponent<Enemy>()?.enabled != null;
             //ボス戦マップ作成
             if (isBossMode)
             {

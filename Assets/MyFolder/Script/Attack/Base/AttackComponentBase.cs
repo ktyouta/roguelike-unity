@@ -5,18 +5,22 @@ using UnityEngine;
 public abstract class AttackComponentBase : MonoBehaviour
 {
     protected Animator animator;
+    protected MovingObject movingObj;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
+        movingObj = GetComponent<MovingObject>();
     }
 
-    public void attack(int horizontalDirection, int verticalDirection)
+    public IEnumerator attack(int horizontalDirection, int verticalDirection)
     {
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(horizontalDirection, verticalDirection);
-        StartCoroutine(attackAction(start, end));
+        movingObj.isAttack = true;
+        yield return StartCoroutine(attackAction(start, end));
+        movingObj.isAttack = false;
     }
 
     /**
