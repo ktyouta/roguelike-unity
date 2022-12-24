@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MessageManager : MonoBehaviour
+public static class MessageManager
 {
     public class MessageJsonArrayClass
     {
@@ -16,10 +16,9 @@ public class MessageManager : MonoBehaviour
         public string message;
     }
     // メッセージを格納
-    [HideInInspector] public MessageJsonArrayClass messageJsonData;
+    [HideInInspector] public static MessageJsonArrayClass messageJsonData;
 
-    // Start is called before the first frame update
-    void Awake()
+    static MessageManager()
     {
         string loadjson = Resources.Load<TextAsset>("json/Message/RoguelikeMessage").ToString();
         messageJsonData = new MessageJsonArrayClass();
@@ -29,7 +28,7 @@ public class MessageManager : MonoBehaviour
     /**
      * メッセージを作成
      */
-    public string createMessage(string id, params string[] args)
+    public static string createMessage(string id, params string[] args)
     {
         foreach (var messageInfo in messageJsonData.messageInfos)
         {

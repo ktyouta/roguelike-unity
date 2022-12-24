@@ -21,6 +21,6 @@ public class ThornScript : TrapBase
         OutAccessComponentBase outAccessObj = other.transform.gameObject?.GetComponent<OutAccessComponentBase>();
         //ƒ_ƒ[ƒWˆ—
         outAccessObj?.callCalculateDamage(damegePoint,
-            GManager.instance.messageManager.createMessage("7"));
+            MessageManager.createMessage("7"));
     }
 }

@@ -38,7 +38,7 @@ public class Enemy : MovingObject
 
         //機能コンポーネントを取得
         // IDの一致する敵のデータを取得
-        RoguelikeEnemyClass enemyInfo = GManager.instance.componentSettingManager.roguelikeEnemyInfoList
+        RoguelikeEnemyClass enemyInfo = ComponentSettingManager.roguelikeEnemyInfoList
                                             .Where(e => e.id == enemyId).FirstOrDefault();
 
         // データの取得に失敗した場合はオブジェクトを削除する

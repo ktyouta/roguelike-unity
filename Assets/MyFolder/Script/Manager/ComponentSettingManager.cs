@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ComponentSettingManager : MonoBehaviour
+public static class ComponentSettingManager
 {
     /// <summary>
     /// 敵のデータリスト
@@ -119,17 +119,10 @@ public class ComponentSettingManager : MonoBehaviour
     }
 
     // 結合後の敵のデータリスト
-    [HideInInspector] public List<RoguelikeEnemyClass> roguelikeEnemyInfoList = new List<RoguelikeEnemyClass>();
+    [HideInInspector] public static List<RoguelikeEnemyClass> roguelikeEnemyInfoList = new List<RoguelikeEnemyClass>();
 
-    // Start is called before the first frame update
-    void Awake()
+    static ComponentSettingManager()
     {
-        //一度取得した後は再度取得しない
-        if (GManager.instance.componentSettingManager?.roguelikeEnemyInfoList?.Count > 0)
-        {
-            return;
-        }
-
         //敵のデータを取得
         string loadjson = Resources.Load<TextAsset>("json/Component/RoguelikeEnemy").ToString();
         RoguelikeEnemyJsonArrayClass enemyInfosJsonData = new RoguelikeEnemyJsonArrayClass();

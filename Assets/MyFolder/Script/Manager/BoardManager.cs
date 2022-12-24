@@ -811,7 +811,7 @@ public class BoardManager : MonoBehaviour
                 break;
             }
         }
-        GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("8"));
+        GManager.instance.wrightLog(MessageManager.createMessage("8"));
     }
 
     /**
@@ -1001,7 +1001,7 @@ public class BoardManager : MonoBehaviour
     }
 
     //ゲームボードをレイアウトする
-    public void SetupScene()
+    public void Init()
     {
         createTreasureItemList();
         //横スクロールマップモード

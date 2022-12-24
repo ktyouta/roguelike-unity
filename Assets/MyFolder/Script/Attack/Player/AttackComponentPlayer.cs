@@ -24,6 +24,6 @@ public class AttackComponentPlayer : AttackComponentPlayerBase
         OutAccessComponentBase outAccessObj = hit.transform?.gameObject?.GetComponent<OutAccessComponentBase>();
         //É_ÉÅÅ[ÉWèàóù
         outAccessObj?.callCalculateDamage(statusObj.charAttack.totalAttack,
-            GManager.instance.messageManager.createMessage("1", statusObj.charName.name, outAccessObj.statusObj.charName.name, statusObj.charAttack.totalAttack.ToString()));
+            MessageManager.createMessage("1", statusObj.charName.name, outAccessObj.statusObj.charName.name, statusObj.charAttack.totalAttack.ToString()));
     }
 }

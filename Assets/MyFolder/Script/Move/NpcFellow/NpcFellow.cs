@@ -84,7 +84,7 @@ public class NpcFellow : MovingObject
         OutAccessComponentBase outAccessObj = playerObj.enemyObject.GetComponent<OutAccessComponentBase>();
         //É_ÉÅÅ[ÉWèàóù
         outAccessObj?.callCalculateDamage(tempNpcAttack,
-                    GManager.instance.messageManager.createMessage("1", npcName, outAccessObj.statusObj.charName.name, tempNpcAttack.ToString()));
+                    MessageManager.createMessage("1", npcName, outAccessObj.statusObj.charName.name, tempNpcAttack.ToString()));
     }
 
     /**

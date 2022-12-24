@@ -211,7 +211,7 @@ public class player : MovingObject
         //if (playerStatusObj.playerFoodPoint <= 0 || playerStatusObj.playerHp <= 0)
         if (statusObj.charFood.foodPoint <= 0 || statusObj.charHp.hp <= 0)
         {
-            GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("6", statusObj.charName.name));
+            GManager.instance.wrightLog(MessageManager.createMessage("6", statusObj.charName.name));
             GManager.instance.GameOver();
             isDefeat = true;
             Destroy(gameObject);

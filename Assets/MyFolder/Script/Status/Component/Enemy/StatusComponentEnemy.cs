@@ -19,7 +19,7 @@ public class StatusComponentEnemy : StatusComponentBase
         }
 
         //IDの一致する敵のデータを取得
-        EnemyStatusInfoClass enemyStatusInfo = GManager.instance.componentSettingManager.roguelikeEnemyInfoList
+        EnemyStatusInfoClass enemyStatusInfo = ComponentSettingManager.roguelikeEnemyInfoList
                                             .Where(e => e.id == enemyId).FirstOrDefault()?.status;
 
         // データの取得に失敗した場合はオブジェクトを削除する

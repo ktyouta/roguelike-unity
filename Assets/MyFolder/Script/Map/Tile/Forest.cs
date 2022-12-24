@@ -24,7 +24,7 @@ public class Forest : TileBase
                     return;
                 }
                 //‰ñ•œˆ—
-                outAccessObj.callCalculateRecoveryHp(recoveryValue, GManager.instance.messageManager.createMessage("2", outAccessObj.statusObj.charName.name, recoveryValue.ToString()));
+                outAccessObj.callCalculateRecoveryHp(recoveryValue, MessageManager.createMessage("2", outAccessObj.statusObj.charName.name, recoveryValue.ToString()));
             }
         }
     }

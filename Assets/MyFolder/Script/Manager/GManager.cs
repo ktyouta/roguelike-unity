@@ -77,10 +77,6 @@ public class GManager : MonoBehaviour
 
     //ゲーム内イベント用
     EventManager eManager;
-    //メッセージ用
-    [HideInInspector] public MessageManager messageManager;
-    //コンポーネント設定用リスト
-    [HideInInspector] public ComponentSettingManager componentSettingManager;
 
     //その他
     [Header("レベルアップによるHPの上昇値")] public int riseValueHp;
@@ -104,7 +100,6 @@ public class GManager : MonoBehaviour
     public string weaponName = "なし";
     public string shieldName = "なし";
     private bool enemiesMoving;
-    private bool loadFlg = false;
     private IEnumerator coroutine;
 
     //Start is called before the first frame update
@@ -126,21 +121,6 @@ public class GManager : MonoBehaviour
         //ゲームの開始準備
         instance.InitGame();
     }
-
-    //これは1回だけ呼び出され、パラメータはシーンがロードされた後にのみ呼び出されるように指示します//（そうでない場合、Scene Loadコールバックは最初のロードと呼ばれ、必要ありません）
-    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    //static public void CallbackInitialization()
-    //{
-    //    //シーンが読み込まれるたびに呼び出されるコールバックを登録します
-    //    SceneManager.sceneLoaded += OnSceneLoaded;
-    //}
-
-    ////This is called each time a scene is loaded.
-    ////2F以降のシーン読み込みで実行される
-    //static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    //{
-    //    instance.InitGame();
-    //}
 
     //各レベルのゲームを初期化します。
     public void InitGame()
@@ -188,8 +168,6 @@ public class GManager : MonoBehaviour
         nowStairs = GameObject.Find("NowStairs").GetComponent<Text>();
         manualButton = GameObject.Find("ManualButton").GetComponent<Button>();
         manualButton.onClick.AddListener(() => openManual());
-        messageManager = GetComponent<MessageManager>();
-        componentSettingManager = GetComponent<ComponentSettingManager>();
         if (commandPanel != null)
         {
             commandPanel.SetActive(false);
@@ -249,9 +227,10 @@ public class GManager : MonoBehaviour
             levelText.SetActive(false);
         }
 
-        boardScript = GetComponent<BoardManager>();
         //マップのランダム生成
-        boardScript.SetupScene();
+        boardScript = GetComponent<BoardManager>();
+        boardScript.Init();
+
         // 生成された敵オブジェクトを取得
         GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         playerObj = GameObject.FindGameObjectWithTag("Player").GetComponent<player>();
@@ -384,7 +363,7 @@ public class GManager : MonoBehaviour
     }
 
     /**
-     * 敵を順番に動かすコルーチン(現在使用中)
+     * 敵を順番に動かすコルーチン
      */
     IEnumerator moveEnemies()
     {
@@ -676,7 +655,7 @@ public class GManager : MonoBehaviour
         //アイテムの所持制限を超えている場合
         if (itemList.Count + 1 > nowMaxPosession)
         {
-            wrightLog(GManager.instance.messageManager.createMessage("3"));
+            wrightLog(MessageManager.createMessage("3"));
             return false;
         }
         //インベントリーが空の状態なら0を割り当てる

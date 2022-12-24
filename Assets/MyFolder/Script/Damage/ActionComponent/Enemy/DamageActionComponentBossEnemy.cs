@@ -9,6 +9,6 @@ public class DamageActionComponentBossEnemy : DamageActionComponentEnemy
         BoardManager boardObj = GManager.instance.gameObject.GetComponent<BoardManager>();
         boardObj.LayoutStairsAtRandom(transform.position);
         //GManager.instance.wrightLog("ŠK’i‚ªoŒ»‚µ‚½B");
-        GManager.instance.wrightLog(GManager.instance.messageManager.createMessage("5"));
+        GManager.instance.wrightLog(MessageManager.createMessage("5"));
     }
 }

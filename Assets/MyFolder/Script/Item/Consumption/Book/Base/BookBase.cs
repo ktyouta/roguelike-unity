@@ -25,6 +25,6 @@ public class BookBase : Consumption
             return;
         }
         //‰ñ•œˆ—
-        outAccessObj.callCalculateRecoveryHp(point, GManager.instance.messageManager.createMessage("2", outAccessObj.statusObj.charName.name, point.ToString()));
+        outAccessObj.callCalculateRecoveryHp(point, MessageManager.createMessage("2", outAccessObj.statusObj.charName.name, point.ToString()));
     }
 }
