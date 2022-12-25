@@ -12,7 +12,7 @@ public class Treasure : MonoBehaviour
     {
         GameObject getItem = Instantiate(GManager.instance.lotteryitemList[lotteryId][Random.Range(0, GManager.instance.lotteryitemList[lotteryId].Count - 1)]) as GameObject;
         //ƒAƒCƒeƒ€‚ÌŠ§ŒÀ‚Ì”»’è
-        if (GManager.instance.addItem(getItem))
+        if (ItemManager.addItem(getItem))
         {
             Destroy(this.gameObject);
         }

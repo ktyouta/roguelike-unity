@@ -56,7 +56,7 @@ public abstract class Item : MonoBehaviour
             return;
         }
         //所持制限のチェック
-        if (GManager.instance.addItem(this.gameObject))
+        if (ItemManager.addItem(this.gameObject))
         {
             this.gameObject.SetActive(false);
         }
@@ -67,11 +67,11 @@ public abstract class Item : MonoBehaviour
      */
     public void deleteSelectedItem(int selectId)
     {
-        for (int i = 0; i < GManager.instance.itemList.Count; i++)
+        for (int i = 0; i < ItemManager.itemList.Count; i++)
         {
-            if (GManager.instance.itemList[i].GetComponent<Item>().id == selectId)
+            if (ItemManager.itemList[i].GetComponent<Item>().id == selectId)
             {
-                GManager.instance.itemList.RemoveAt(i);
+                ItemManager.itemList.RemoveAt(i);
                 this.gameObject.SetActive(false);
             }
         }

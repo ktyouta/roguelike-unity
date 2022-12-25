@@ -11,7 +11,7 @@ public class Bag : NotAddItem
     protected override void getItem()
     {
         int tempAddNum = addNum == 0 ? 1 : addNum;
-        GManager.instance.nowMaxPosession += tempAddNum;
+        ItemManager.nowMaxPosession += tempAddNum;
         GManager.instance.wrightLog(name+"を拾った。\r\nアイテムの所持数が"+tempAddNum+"増えた");
     }
 }

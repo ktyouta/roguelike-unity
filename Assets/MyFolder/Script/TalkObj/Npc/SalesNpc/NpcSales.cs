@@ -119,7 +119,7 @@ public class NpcSales : NpcBase
         //売りに来た
         else if (shopMode == 1)
         {
-            displayItemList = GManager.instance.itemList;
+            displayItemList = ItemManager.itemList;
             npcTradeMessage = "何を売却されますか？";
         }
         showMessage(npcTradeMessage);
@@ -238,7 +238,7 @@ public class NpcSales : NpcBase
             return;
         }
         //アイテムの所持制限の判定
-        if (!GManager.instance.addItem(buyItem))
+        if (!ItemManager.addItem(buyItem))
         {
             showMessage("アイテムがいっぱいです。");
             return;
@@ -260,11 +260,11 @@ public class NpcSales : NpcBase
     void decisionSellItem(GameObject argItem)
     {
         Item item = argItem.GetComponent<Item>();
-        for (int i=0;i< GManager.instance.itemList.Count;i++)
+        for (int i=0;i< ItemManager.itemList.Count;i++)
         {
-            if (GManager.instance.itemList[i].GetComponent<Item>().id == item.id)
+            if (ItemManager.itemList[i].GetComponent<Item>().id == item.id)
             {
-                GManager.instance.itemList.RemoveAt(i);
+                ItemManager.itemList.RemoveAt(i);
                 showMessage("買い取りました。");
                 //所持金を増やす
                 //GManager.instance.playerMoney += item.sellPrice;
@@ -272,7 +272,7 @@ public class NpcSales : NpcBase
                 //GManager.instance.playerMoneyText.text = "所持金：" + GManager.instance.playerMoney + " $";
                 GManager.instance.playerMoneyText.text = "所持金：" + statusComponentObj?.charWallet.money + " $";
                 deleteChildButton(GManager.instance.shopItemListPanel.transform);
-                deploymentItemList(GManager.instance.itemList,GManager.instance.shopItemListPanel.transform.position);
+                deploymentItemList(ItemManager.itemList,GManager.instance.shopItemListPanel.transform.position);
                 hideTradePanel();
                 return;
             }

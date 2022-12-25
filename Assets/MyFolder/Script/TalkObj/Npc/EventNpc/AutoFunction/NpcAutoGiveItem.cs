@@ -32,7 +32,7 @@ public class NpcAutoGiveItem : NpcAutoFunction
     {
         GameObject tempItem = Instantiate(giveItem) as GameObject;
         //所持制限のチェック
-        if (GManager.instance.addItem(tempItem))
+        if (ItemManager.addItem(tempItem))
         {
             blockMessageNodeNumber = 1;
         }

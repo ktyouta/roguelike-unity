@@ -220,9 +220,9 @@ public class EventManager : MonoBehaviour
      */
     private bool checkPalyerPossessions(string itemName)
     {
-        for (int i=0;i<GManager.instance.itemList.Count;i++)
+        for (int i=0;i< ItemManager.itemList.Count;i++)
         {
-            if (GManager.instance.itemList[i].GetComponent<Item>().name == itemName)
+            if (ItemManager.itemList[i].GetComponent<Item>().name == itemName)
             {
                 return true;
             }

@@ -25,7 +25,6 @@ public class GManager : MonoBehaviour
     }
 
     //プレイヤーのステータス系
-    [Header("アイテムの所持数制限")] public int nowMaxPosession;
     [HideInInspector] public player playerObj;
     [HideInInspector] public StatusComponentPlayer statusComponentPlayer;
 
@@ -68,8 +67,6 @@ public class GManager : MonoBehaviour
     [HideInInspector] public List<Item> treasureItemList = new List<Item>();
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
     [HideInInspector] public List<List<GameObject>> lotteryitemList = new List<List<GameObject>>();
-    //インベントリー内のリスト
-    [HideInInspector] public List<GameObject> itemList = new List<GameObject>();
     //ログ
     [HideInInspector] public List<string> logMessage = new List<string>();
     //移動不可オブジェクトの座標を格納するリスト
@@ -547,22 +544,22 @@ public class GManager : MonoBehaviour
     void deploymentMyInventory(Vector3 parentPosition)
     {
         //アイテムを所持していない
-        if (itemList.Count < 1 && itemPanel != null)
+        if (ItemManager.itemList.Count < 1 && itemPanel != null)
         {
             itemPanel.enabled = true;
             itemPanel.text = "アイテムを所持していません";
             return;
         }
-        for (var i = 0; i < itemList.Count; i++)
+        for (var i = 0; i < ItemManager.itemList.Count; i++)
         {
             //メニューボタンの生成
             GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x - 20, parentPosition.y + 60 - i * 35, 0f), Quaternion.identity) as GameObject;
             listButton.transform.SetParent(itemText.transform, false);
-            listButton.transform.Find("Text").GetComponent<Text>().text = itemList[i].GetComponent<Item>().name;
+            listButton.transform.Find("Text").GetComponent<Text>().text = ItemManager.itemList[i].GetComponent<Item>().name;
             int index = i;
             listButton.GetComponent<ItemNameButton>().itemNameButtonId = index;
             //アイテムをクリックしたときの関数を設定
-            listButton.GetComponent<Button>().onClick.AddListener(() => clickItemButton(itemList[index], listButton, index));
+            listButton.GetComponent<Button>().onClick.AddListener(() => clickItemButton(ItemManager.itemList[index], listButton, index));
         }
     }
 
@@ -626,7 +623,10 @@ public class GManager : MonoBehaviour
     {
         item.useItem();
         isCloseCommand = true;
+        isEndPlayerAction = true;
         playersTurn = false;
+        //プレイヤーの位置情報は必ずリストの先頭になる
+        charsNextPosition.Add(playerObj.transform.position);
     }
 
     /**
@@ -645,26 +645,5 @@ public class GManager : MonoBehaviour
     {
         playerObj.throwItem(item);
         //isCloseCommand = true;
-    }
-
-    /**
-     * 取得したアイテムをリストに追加する
-     */
-    public bool addItem(GameObject item)
-    {
-        //アイテムの所持制限を超えている場合
-        if (itemList.Count + 1 > nowMaxPosession)
-        {
-            wrightLog(MessageManager.createMessage("3"));
-            return false;
-        }
-        //インベントリーが空の状態なら0を割り当てる
-        int itemId = itemList.Count == 0 ? 0 : itemList[itemList.Count - 1].GetComponent<Item>().id + 1;
-        //IDの割り当て
-        item.GetComponent<Item>().id = itemId;
-        //イベントフラグのチェック
-
-        itemList.Add(item);
-        return true;
     }
 }

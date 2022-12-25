@@ -28,7 +28,7 @@ public class NpcChoisesGiveItem : NpcChoices
      */
     protected void giveItemToPlayer()
     {
-        if (!GManager.instance.addItem(giveItem))
+        if (!ItemManager.addItem(giveItem))
         {
             nowNodeIndex = 2;
         }

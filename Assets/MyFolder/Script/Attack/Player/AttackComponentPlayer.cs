@@ -9,7 +9,6 @@ public class AttackComponentPlayer : AttackComponentPlayerBase
     */
     public override IEnumerator attackAction(Vector2 start, Vector2 end)
     {
-        //playerObj.isAttack = true;
         animator?.Play("PlayerAttack");
         RaycastHit2D hit = Physics2D.Linecast(start, end, LayerUtil.enemyLayer | LayerUtil.treasureLayer | LayerUtil.blockingLayer);
         //攻撃の場合は現在地を追加
@@ -18,7 +17,6 @@ public class AttackComponentPlayer : AttackComponentPlayerBase
         yield return new WaitForSeconds(0.3f);
         GManager.instance.isEndPlayerAction = true;
         GManager.instance.playersTurn = false;
-        //playerObj.isAttack = false;
 
         //対象オブジェクトのダメージ処理を行う
         OutAccessComponentBase outAccessObj = hit.transform?.gameObject?.GetComponent<OutAccessComponentBase>();

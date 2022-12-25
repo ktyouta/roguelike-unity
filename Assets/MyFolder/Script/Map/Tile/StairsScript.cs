@@ -28,9 +28,9 @@ public class StairsScript : MonoBehaviour
     {
         //ゲームオブジェクトを次のシーンに引き継ぐ
         //アイテム
-        for (int i=0;i<GManager.instance.itemList.Count;i++)
+        for (int i=0;i< ItemManager.itemList.Count;i++)
         {
-            DontDestroyOnLoad(GManager.instance.itemList[i]);
+            DontDestroyOnLoad(ItemManager.itemList[i]);
         }
         //NPC
         for (int i = 0; i < GManager.instance.fellows.Count; i++)
