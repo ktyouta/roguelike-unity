@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shield : EquipmentBase
 {
     [Header("防御力")] public int defenceParam;
-    [SerializeField, Header("キャラのステータス用コンポーネント")] private StatusComponentBase statusComponentObj;
+    [SerializeField, Header("キャラのステータス用コンポーネント")] private StatusComponentPlayer statusComponentObj;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -30,6 +30,6 @@ public class Shield : EquipmentBase
             statusComponentObj?.charDefence.initializeTotalDefence();
             shieldName = "なし";
         }
-        GManager.instance.shieldName = shieldName;
+        statusComponentObj.shieldName = shieldName;
     }
 }

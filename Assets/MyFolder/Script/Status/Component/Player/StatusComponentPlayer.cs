@@ -9,6 +9,8 @@ public class StatusComponentPlayer : StatusComponentBase
     [Header("満腹度")] public FoodPointClass charFood;
     [Header("経験値")] public ExperienceClass charExperience;
     [Header("魅力度")] public CharmClass charCarm;
+    [HideInInspector] public string weaponName = "なし";
+    [HideInInspector] public string shieldName = "なし";
 
     protected override void Start()
     {

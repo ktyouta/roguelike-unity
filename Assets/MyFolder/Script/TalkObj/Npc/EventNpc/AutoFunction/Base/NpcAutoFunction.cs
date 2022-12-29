@@ -52,10 +52,10 @@ public abstract class NpcAutoFunction : NpcBase
             }
             //現在のノード番号に一致する会話を取得
             FuncTriggerMessages tempFuncTriggerMessage = getNodeMessage(tempBranchFuncTriggerBlock[i].allBranchFuncMessage);
-            GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            pManager.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
             //処理を待機
             yield return null;
-            GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            pManager.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
             // 会話をwindowのtextフィールドに表示
             showMessage(tempFuncTriggerMessage.message);
             //メッセージ表示時に関数を実行する場合

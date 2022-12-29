@@ -6,6 +6,7 @@ using static player;
 public class ThrowComponentPlayer : ThrowComponentBase
 {
     player playerObj;
+
     protected override void Start()
     {
         base.Start();
@@ -16,7 +17,6 @@ public class ThrowComponentPlayer : ThrowComponentBase
     {
         playerObj.isAttack = true;
         animator?.Play("PlayerAttack");
-        GManager.instance.isCloseCommand = true;
         playerObj.setPlayerState(playerState.Wait);
         //アイテムが画面外に出るか、障害物に当たるまで行動不可
         yield return new WaitUntil(() => !throwObj.isThrownObj);
@@ -25,6 +25,7 @@ public class ThrowComponentPlayer : ThrowComponentBase
         GManager.instance.charsNextPosition.Add(transform.position);
         GManager.instance.playersTurn = false;
         GManager.instance.isEndPlayerAction = true;
+        playerObj.isAttack = false;
         playerObj.setPlayerState(playerState.Normal);
     }
 }

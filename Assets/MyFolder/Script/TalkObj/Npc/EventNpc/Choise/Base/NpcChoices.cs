@@ -98,10 +98,10 @@ public abstract class NpcChoices : NpcBase
                 break;
             }
             clickChioseButtonFlag = false;
-            GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            pManager.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
             //処理を待機
             yield return null;
-            GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            pManager.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
             MessageClass displayMessageBlock = getNodeMessageBlock(branchMessages[i].branchMessageBlock);
             //ノードに一致する会話が取得できなかった場合は、会話を終了する
             if (displayMessageBlock.messageNodeNumber == -1)
@@ -113,13 +113,13 @@ public abstract class NpcChoices : NpcBase
             //選択肢を表示するパターン
             if (displayMessageBlock.isSelect)
             {
-                GManager.instance.choisePanel.SetActive(true);
-                var parentPosition = GManager.instance.choisePanel.transform.position;
+                pManager.choisePanel.SetActive(true);
+                var parentPosition = pManager.choisePanel.transform.position;
                 //現在のノード番号に一致する選択肢を取得
                 List<choiseMessageFuncClass> messageBlocks = getNodeChoiseBlock(choiseMessageBlock[choiseCount].choiseMessage);
                 //選択肢の数から選択肢パネルの高さを求める
                 float panelHeight = messageBlocks.Count * 40f + 10;
-                RectTransform choisePanelRect = GManager.instance.choisePanel.GetComponent<RectTransform>();
+                RectTransform choisePanelRect = pManager.choisePanel.GetComponent<RectTransform>();
                 Vector2 size = choisePanelRect.sizeDelta;
                 size.y = panelHeight;
                 choisePanelRect.sizeDelta = size;
@@ -131,16 +131,16 @@ public abstract class NpcChoices : NpcBase
                     //選択肢ボタンの生成
                     GameObject choiseButton = Instantiate(selectBtn, new Vector3(parentPosition.x - 10, pivotY + panelHeight * 0.5f - 30 - j * 35, 0f), Quaternion.identity) as GameObject;
                     //choisePanelの子オブジェクトにする
-                    choiseButton.transform.SetParent(GManager.instance.choisePanel.transform, false);
+                    choiseButton.transform.SetParent(pManager.choisePanel.transform, false);
                     choiseButton.transform.Find("Text").GetComponent<Text>().text = messageBlocks[j].message;
                     int funcIndex = messageBlocks[j].funcNumber;
                     //選択肢をクリックした際のメソッドを設定
                     choiseButton.GetComponent<Button>().onClick.AddListener(() => selectMessage(funcIndex));
                 }
                 yield return new WaitUntil(() => clickChioseButtonFlag);
-                GManager.instance.choisePanel.SetActive(false);
+                pManager.choisePanel.SetActive(false);
                 //選択肢ボタンをすべて削除
-                foreach (Transform child in GManager.instance.choisePanel.transform)
+                foreach (Transform child in pManager.choisePanel.transform)
                 {
                     Destroy(child.gameObject);
                 }

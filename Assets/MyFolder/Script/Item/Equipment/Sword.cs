@@ -6,7 +6,7 @@ public class Sword : EquipmentBase
 {
 
     [Header("攻撃力")] public int attackParam;
-    [SerializeField,Header("キャラのステータス用コンポーネント")] private StatusComponentBase statusComponentObj;
+    [SerializeField,Header("キャラのステータス用コンポーネント")] private StatusComponentPlayer statusComponentObj;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -31,6 +31,6 @@ public class Sword : EquipmentBase
             statusComponentObj?.charAttack.initializeTotalAttack();
             weaponName = "なし";
         }
-        GManager.instance.weaponName = weaponName;
+        statusComponentObj.weaponName = weaponName;
     }
 }

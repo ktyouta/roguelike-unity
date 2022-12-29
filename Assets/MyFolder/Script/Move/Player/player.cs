@@ -51,6 +51,8 @@ public class player : MovingObject
         attackComponentObj = GetComponent<AttackComponentBase>();
         // アイテムの投擲用コンポーネント
         throwComponentObj = GetComponent<ThrowComponentBase>();
+
+        //リスポーン時に下方向を向く
         nextHorizontalKey = 0;
         nextVerticalkey = -1;
     }
@@ -110,7 +112,7 @@ public class player : MovingObject
             return;
         }
         //ゲームオーバーまたはメニューオープン時
-        if (isDefeat || !GManager.instance.isCloseCommand)
+        if (isDefeat)
         {
             return;
         }

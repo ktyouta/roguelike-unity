@@ -13,15 +13,15 @@ public abstract class NpcBase : TalkBase
 
     protected override IEnumerator OnAction()
     {
-        GManager.instance.npcNameText.text = npcName + "ÅF";
+        pManager.npcNameText.text = npcName + "ÅF";
         if(npcPicture != null)
         {
-            GManager.instance.npcImage.SetActive(true);
-            GManager.instance.npcImage.GetComponent<Image>().sprite = npcPicture;
+            pManager.npcImage.SetActive(true);
+            pManager.npcImage.GetComponent<Image>().sprite = npcPicture;
         }
         yield return TalkEvent();
-        GManager.instance.npcImage.GetComponent<Image>().sprite = null;
-        GManager.instance.npcImage.SetActive(false);
+        pManager.npcImage.GetComponent<Image>().sprite = null;
+        pManager.npcImage.SetActive(false);
         yield break;
     }
 

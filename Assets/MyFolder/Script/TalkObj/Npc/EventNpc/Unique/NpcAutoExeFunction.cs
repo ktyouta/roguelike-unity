@@ -36,10 +36,10 @@ public class NpcAutoExeFunction : NpcBase
         }
         for (int i = 0; i < tempMessage.Count; i++)
         {
-            GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            pManager.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = false;
             //処理を待機
             yield return null;
-            GManager.instance.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            pManager.npcWindowImage.transform.Find("Cursol").gameObject.GetComponent<SpriteRenderer>().enabled = true;
             // 会話をwindowのtextフィールドに表示
             showMessage(tempMessage[i]);
             // キー入力を待機

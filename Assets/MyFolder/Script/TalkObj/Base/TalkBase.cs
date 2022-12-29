@@ -16,6 +16,7 @@ public abstract class TalkBase : MonoBehaviour
     [HideInInspector]public player playerObj;
     [Header("会話開始用UI")] public GameObject talkAreaObj;
     [HideInInspector] public GameObject npcCanvas;
+    protected PanelManager pManager;
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -30,6 +31,7 @@ public abstract class TalkBase : MonoBehaviour
         bottomArea = this.gameObject.transform.Find("BottomTalkArea").gameObject.GetComponent<TalkDetection>();
         rightArea = this.gameObject.transform.Find("RightTalkArea").gameObject.GetComponent<TalkDetection>();
         leftArea = this.gameObject.transform.Find("LeftTalkArea").gameObject.GetComponent<TalkDetection>();
+        pManager = GameObject.Find("GameController").GetComponent<PanelManager>();
     }
 
     private void Update()
@@ -63,14 +65,14 @@ public abstract class TalkBase : MonoBehaviour
     private IEnumerator CreateCoroutine()
     {
         // window起動
-        GManager.instance.npcWindowImage.SetActive(true);
+        pManager.npcWindowImage.SetActive(true);
 
         // 抽象メソッド呼び出し 詳細は子クラスで実装
         yield return OnAction();
 
         // window終了
-        GManager.instance.npcMessageText.text = "";
-        GManager.instance.npcWindowImage.SetActive(false);
+        pManager.npcMessageText.text = "";
+        pManager.npcWindowImage.SetActive(false);
 
         StopCoroutine(coroutine);
         coroutine = null;
@@ -84,6 +86,6 @@ public abstract class TalkBase : MonoBehaviour
      */
     protected void showMessage(string message)
     {
-        GManager.instance.npcMessageText.text = message;
+        pManager.npcMessageText.text = message;
     }
 }

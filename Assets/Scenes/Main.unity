@@ -4465,6 +4465,7 @@ GameObject:
   - component: {fileID: 1483692204}
   - component: {fileID: 1483692206}
   - component: {fileID: 1483692207}
+  - component: {fileID: 1483692208}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -4850,27 +4851,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerObj: {fileID: 0}
   statusComponentPlayer: {fileID: 0}
-  itemBtn: {fileID: 725165651287123956, guid: 6bf867a6b0c37a04bb426e340e81a662, type: 3}
-  itemPanel: {fileID: 1657887070}
   levelText: {fileID: 0}
-  levelImage: {fileID: 0}
-  commandPanel: {fileID: 0}
-  statusText: {fileID: 0}
-  itemText: {fileID: 0}
-  itemUsePanel: {fileID: 0}
-  npcWindowImage: {fileID: 0}
-  npcImage: {fileID: 0}
-  choisePanel: {fileID: 0}
-  shopPanel: {fileID: 0}
-  shopItemListPanel: {fileID: 0}
-  shopSelectPanel: {fileID: 0}
-  itemDescriptionPanel: {fileID: 0}
   grayImage: {fileID: 0}
   mapLoadingImage: {fileID: 0}
-  playerStatusPanel: {fileID: 0}
-  npcMessageText: {fileID: 0}
-  npcNameText: {fileID: 0}
-  playerMoneyText: {fileID: 0}
   loadingText: {fileID: 0}
   mapLoadingText: {fileID: 0}
   nowStairs: {fileID: 0}
@@ -4915,6 +4898,43 @@ MonoBehaviour:
   ghostAppearanceFlg: 0
   ghostAppearanceEventTurnNum: 0
   nomalEnemyAppearanceTurnNum: 0
+--- !u!114 &1483692208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483692203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9727ed51a3771ea4f9dde732f4b1ca78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemBtn: {fileID: 725165651287123956, guid: 6bf867a6b0c37a04bb426e340e81a662, type: 3}
+  itemPanel: {fileID: 0}
+  levelText: {fileID: 0}
+  levelImage: {fileID: 0}
+  commandPanel: {fileID: 0}
+  statusText: {fileID: 0}
+  itemText: {fileID: 0}
+  itemUsePanel: {fileID: 0}
+  npcWindowImage: {fileID: 0}
+  npcImage: {fileID: 0}
+  choisePanel: {fileID: 0}
+  shopPanel: {fileID: 0}
+  shopItemListPanel: {fileID: 0}
+  shopSelectPanel: {fileID: 0}
+  itemDescriptionPanel: {fileID: 0}
+  grayImage: {fileID: 0}
+  playerStatusPanel: {fileID: 0}
+  npcMessageText: {fileID: 0}
+  npcNameText: {fileID: 0}
+  playerMoneyText: {fileID: 0}
+  loadingText: {fileID: 0}
+  mapLoadingText: {fileID: 0}
+  isCloseCommand: 1
+  playerObj: {fileID: 0}
+  statusComponentPlayer: {fileID: 0}
 --- !u!1 &1530178040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5385,7 +5405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.74, y: -116.269806}
+  m_AnchoredPosition: {x: 142.74, y: -116.26981}
   m_SizeDelta: {x: 272.67, y: 222.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657887070
