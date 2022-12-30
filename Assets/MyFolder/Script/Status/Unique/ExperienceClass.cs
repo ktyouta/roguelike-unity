@@ -39,7 +39,7 @@ public class ExperienceClass
         level++;
         updateStatus();
         //GManager.instance.wrightLog("ƒŒƒxƒ‹" + level +"‚É‚È‚Á‚½B");
-        GManager.instance.wrightLog(MessageManager.createMessage("4", level.ToString()));
+        LogMessageManager.wrightLog(MessageManager.createMessage("4", level.ToString()));
         maxExperience += 50;
         experience = 0;
     }

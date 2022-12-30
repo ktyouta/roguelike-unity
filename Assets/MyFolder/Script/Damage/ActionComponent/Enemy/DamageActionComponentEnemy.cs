@@ -32,7 +32,7 @@ public class DamageActionComponentEnemy : DamageActionComponentBase
             //経験値を追加
             statusComponentObj?.charExperience.addExperience(statusComponentEnemyObj.experience);
             //GManager.instance.wrightDeadLog(statusComponentEnemyObj.charName.name);
-            GManager.instance.wrightLog(MessageManager.createMessage("6", statusComponentEnemyObj.charName.name));
+            LogMessageManager.wrightLog(MessageManager.createMessage("6", statusComponentEnemyObj.charName.name));
             GManager.instance.removeEnemyToList(GetComponent<Enemy>());
             //敵ごとの固有アクション
             specialAction();

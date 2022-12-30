@@ -41,7 +41,7 @@ public class OutAccessComponentBase : MonoBehaviour
         //ログ出力
         if (!string.IsNullOrEmpty(message))
         {
-            GManager.instance.wrightLog(message);
+            LogMessageManager.wrightLog(message);
         }
         //ダメージを受けた際のアクション
         damageActionObj.reciveDamageAction(calHp);
@@ -64,8 +64,7 @@ public class OutAccessComponentBase : MonoBehaviour
         //ログ出力
         if (!string.IsNullOrEmpty(message))
         {
-            GManager.instance.wrightLog(message);
-
+            LogMessageManager.wrightLog(message);
         }
     }
 }

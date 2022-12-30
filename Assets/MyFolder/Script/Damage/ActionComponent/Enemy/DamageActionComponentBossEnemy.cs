@@ -8,7 +8,6 @@ public class DamageActionComponentBossEnemy : DamageActionComponentEnemy
     protected override void specialAction() {
         BoardManager boardObj = GManager.instance.gameObject.GetComponent<BoardManager>();
         boardObj.LayoutStairsAtRandom(transform.position);
-        //GManager.instance.wrightLog("ŠK’i‚ªoŒ»‚µ‚½B");
-        GManager.instance.wrightLog(MessageManager.createMessage("5"));
+        LogMessageManager.wrightLog(MessageManager.createMessage("5"));
     }
 }

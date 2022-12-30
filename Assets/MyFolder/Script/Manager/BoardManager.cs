@@ -811,7 +811,7 @@ public class BoardManager : MonoBehaviour
                 break;
             }
         }
-        GManager.instance.wrightLog(MessageManager.createMessage("8"));
+        LogMessageManager.wrightLog(MessageManager.createMessage("8"));
     }
 
     /**

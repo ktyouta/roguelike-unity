@@ -11,17 +11,17 @@ public class DamageActionComponentOuterWall : DamageActionComponentBase
     {
         if (isIndestructible)
         {
-            GManager.instance.wrightLog("破壊不能オブジェクトです。");
+            LogMessageManager.wrightLog(MessageManager.createMessage("13"));
             return;
         }
         if (hp <= 0)
         {
-            GManager.instance.wrightLog("壁が壊れた。");
+            LogMessageManager.wrightLog(MessageManager.createMessage("14"));
             Destroy(this.gameObject);
         }
         else
         {
-            GManager.instance.wrightLog("外壁の残り耐久値：" + hp);
+            LogMessageManager.wrightLog(MessageManager.createMessage("15",$"{hp}"));
         }
     }
 }

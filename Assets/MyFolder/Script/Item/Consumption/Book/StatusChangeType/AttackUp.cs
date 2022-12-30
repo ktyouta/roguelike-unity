@@ -18,7 +18,7 @@ public class AttackUp : BookBase
     {
         //GManager.instance.playerAttack += attackRiseValue==0?10: attackRiseValue;
         statusComponentObj?.charAttack.addAttack(attackRiseValue);
-        GManager.instance.wrightLog(name+"‚ðŽg—p‚µ‚½");
+        LogMessageManager.wrightLog(MessageManager.createMessage("12",name));
         base.useItem();
     }
 }

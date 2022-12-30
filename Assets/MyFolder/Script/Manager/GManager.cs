@@ -39,8 +39,6 @@ public class GManager : MonoBehaviour
     [HideInInspector] public List<Item> treasureItemList = new List<Item>();
     //抽選用アイテムのリスト(TreasureクラスのlotteryIdによりインデックスを切り替える)
     [HideInInspector] public List<List<GameObject>> lotteryitemList = new List<List<GameObject>>();
-    //ログ
-    [HideInInspector] public List<string> logMessage = new List<string>();
     //移動不可オブジェクトの座標を格納するリスト
     [HideInInspector] public List<Vector2> unmovableList = new List<Vector2>();
 
@@ -295,20 +293,6 @@ public class GManager : MonoBehaviour
             enemyActionEndCount = enemies.Count;
         }
         grayImage.SetActive(false);
-    }
-
-    public void wrightLog(string message)
-    {
-        deleteLog();
-        logMessage.Add(message);
-    }
-
-    private void deleteLog()
-    {
-        if (logMessage.Count > 5)
-        {
-            logMessage.Clear();
-        }
     }
 
 }

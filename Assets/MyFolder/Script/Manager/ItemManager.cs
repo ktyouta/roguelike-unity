@@ -25,7 +25,7 @@ public static class ItemManager
         //アイテムの所持制限を超えている場合
         if (itemList.Count + 1 > nowMaxPosession)
         {
-            GManager.instance.wrightLog(MessageManager.createMessage("3"));
+            LogMessageManager.wrightLog(MessageManager.createMessage("3"));
             return false;
         }
         //インベントリーが空の状態なら0を割り当てる

@@ -213,7 +213,7 @@ public class player : MovingObject
         //if (playerStatusObj.playerFoodPoint <= 0 || playerStatusObj.playerHp <= 0)
         if (statusObj.charFood.foodPoint <= 0 || statusObj.charHp.hp <= 0)
         {
-            GManager.instance.wrightLog(MessageManager.createMessage("6", statusObj.charName.name));
+            LogMessageManager.wrightLog(MessageManager.createMessage("6", statusObj.charName.name));
             GManager.instance.GameOver();
             isDefeat = true;
             Destroy(gameObject);
@@ -236,7 +236,7 @@ public class player : MovingObject
         RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position, LayerUtil.itemLayer);
         if (hit.transform != null)
         {
-            GManager.instance.wrightLog("アイテムを置けません。");
+            LogMessageManager.wrightLog(MessageManager.createMessage("16"));
             return;
         }
         Item tempItem = item.GetComponent<Item>();

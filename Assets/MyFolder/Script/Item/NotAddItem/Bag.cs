@@ -12,6 +12,7 @@ public class Bag : NotAddItem
     {
         int tempAddNum = addNum == 0 ? 1 : addNum;
         ItemManager.nowMaxPosession += tempAddNum;
-        GManager.instance.wrightLog(name+"を拾った。\r\nアイテムの所持数が"+tempAddNum+"増えた");
+        Debug.Log(MessageManager.createMessage("17", name, tempAddNum.ToString()));
+        LogMessageManager.wrightLog(MessageManager.createMessage("17",name,tempAddNum.ToString()));
     }
 }

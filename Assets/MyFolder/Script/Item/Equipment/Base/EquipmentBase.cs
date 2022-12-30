@@ -23,16 +23,16 @@ public class EquipmentBase : Item
                 {
                     if (isEquip)
                     {
+                        //装備を外す
                         isEquip = false;
+                        LogMessageManager.wrightLog(MessageManager.createMessage("19", name));
                     }
                     else
                     {
+                        //アイテムを装備する
                         isEquip = true;
+                        LogMessageManager.wrightLog(MessageManager.createMessage("18", name));
                     }
-                }
-                else
-                {
-                    ItemManager.itemList[i].GetComponent<EquipmentBase>().isEquip = false;
                 }
             }
         }

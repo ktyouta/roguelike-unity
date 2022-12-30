@@ -12,8 +12,8 @@ public abstract class Consumption : Item
 
     public override void useItem()
     {
+        LogMessageManager.wrightLog(MessageManager.createMessage("12",name));
         deleteSelectedItem(id);
         Destroy(this.gameObject);
-        GManager.instance.playersTurn = false;
     }
 }

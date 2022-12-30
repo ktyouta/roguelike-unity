@@ -22,7 +22,7 @@ public class FoodItem : RecoveryItem
         //if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
         if (playerStatusObj.charFood.foodPoint >= playerStatusObj.charFood.maxFoodPoint)
         {
-            GManager.instance.wrightLog("プレイヤーの満腹度が満タンです。");
+            LogMessageManager.wrightLog(MessageManager.createMessage("11"));
             return;
         }
         playerStatusObj.charFood.addFoodPoint(foodPoint);

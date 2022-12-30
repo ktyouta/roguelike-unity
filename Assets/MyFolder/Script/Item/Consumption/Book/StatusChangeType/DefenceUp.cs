@@ -18,7 +18,7 @@ public class DefenceUp : BookBase
     {
         //GManager.instance.playerDefence += defenceRiseValue==0?10: defenceRiseValue;
         statusComponentObj?.charDefence.adddefence(defenceRiseValue);
-        GManager.instance.wrightLog(name + "を使用した");
+        LogMessageManager.wrightLog(name + "を使用した");
         base.useItem();
     }
 }

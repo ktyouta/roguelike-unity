@@ -18,7 +18,7 @@ public class PortionItem : RecoveryItem
         //if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
         if (playerStatusObj.charHp.hp >= playerStatusObj.charHp.maxHp)
         {
-            GManager.instance.wrightLog("プレイヤーのHPが満タンです。");
+            LogMessageManager.wrightLog(MessageManager.createMessage("11"));
             return;
         }
         playerStatusObj.charHp.addHp(hpPoint);

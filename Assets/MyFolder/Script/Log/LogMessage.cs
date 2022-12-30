@@ -8,19 +8,17 @@ public class LogMessage : MonoBehaviour
     [Header("ログテキスト")] public Text log;
     private string logText;
     private int logBeforeLength = 0;
-    // Start is called before the first frame update
     
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(GManager.instance.logMessage);
-        int logArrayNum = GManager.instance.logMessage.Count;
+        int logArrayNum = LogMessageManager.logMessage.Count;
         if (logBeforeLength != logArrayNum)
         {
-            logText = "";
+            logText = string.Empty;
             for (int i=0;i<logArrayNum;i++)
             {
-                logText += GManager.instance.logMessage[i];
+                logText += LogMessageManager.logMessage[i];
                 logText += "\n";
             }
             log.text = logText;

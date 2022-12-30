@@ -12,7 +12,7 @@ public class DamageActionComponentTreasure : DamageActionComponentBase
         }
         else
         {
-            GManager.instance.wrightLog("•ó” ‚Ìc‚è‘Ï‹v’lF" + hp);
+            LogMessageManager.wrightLog(MessageManager.createMessage("10",$"{hp}"));
         }
     }
 
