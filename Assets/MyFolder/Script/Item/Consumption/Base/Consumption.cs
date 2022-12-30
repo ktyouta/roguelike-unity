@@ -10,9 +10,9 @@ public abstract class Consumption : Item
         base.Start();
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statusObj)
     {
-        LogMessageManager.wrightLog(MessageManager.createMessage("12",name));
+        LogMessageManager.wrightLog(MessageManager.createMessage("12", statusObj.charName.name,name));
         deleteSelectedItem(id);
         Destroy(this.gameObject);
     }

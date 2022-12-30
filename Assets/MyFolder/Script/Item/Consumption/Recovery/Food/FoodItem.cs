@@ -15,17 +15,15 @@ public class FoodItem : RecoveryItem
         foodText = GameObject.Find("Food").GetComponent<Text>();
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statusObj)
     {
-        StatusComponentPlayer playerStatusObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
         //プレイヤーの満腹度が満タンの場合は回復しない
-        //if (GManager.instance.playerFoodPoint == GManager.instance.playerMaxFoodPoint)
-        if (playerStatusObj.charFood.foodPoint >= playerStatusObj.charFood.maxFoodPoint)
+        if (((StatusComponentPlayer)statusObj).charFood.foodPoint >= ((StatusComponentPlayer)statusObj).charFood.maxFoodPoint)
         {
-            LogMessageManager.wrightLog(MessageManager.createMessage("11"));
+            LogMessageManager.wrightLog(MessageManager.createMessage("11", statusObj.charName.name));
             return;
         }
-        playerStatusObj.charFood.addFoodPoint(foodPoint);
-        base.useItem();
+        ((StatusComponentPlayer)statusObj).charFood.addFoodPoint(foodPoint);
+        base.useItem(statusObj);
     }
 }

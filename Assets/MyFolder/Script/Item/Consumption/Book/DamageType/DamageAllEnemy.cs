@@ -12,7 +12,7 @@ public class DamageAllEnemy : BookBase
         damageValue = damageValue == 0 ? 10 : damageValue;
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statuObj)
     {
         for (var i=0;i<GManager.instance.enemies.Count;i++)
         {
@@ -23,6 +23,6 @@ public class DamageAllEnemy : BookBase
                 GManager.instance.enemies[i].GetComponent<OutAccessComponentBase>()?.callCalculateDamage(damageValue);
             }
         }
-        base.useItem();
+        base.useItem(statuObj);
     }
 }

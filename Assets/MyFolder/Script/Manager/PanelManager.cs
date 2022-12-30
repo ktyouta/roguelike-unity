@@ -347,7 +347,7 @@ public class PanelManager : MonoBehaviour
             }
         }
         //アイテム使用イベント
-        itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.AddListener(() => { adduUseItemFunc(item, listButton); });
+        itemUsePanel.transform.Find("UseButton").GetComponent<Button>().onClick.AddListener(() => { adduUseItemFunc(item); });
         //アイテムを床に置くイベント
         itemUsePanel.transform.Find("PutButton").GetComponent<Button>().onClick.AddListener(() => { addPutItemFunc(argItem); });
         //アイテムを投げるイベント
@@ -357,14 +357,10 @@ public class PanelManager : MonoBehaviour
     /**
      * アイテムを使用
      */
-    public void adduUseItemFunc(Item item, GameObject useBtnObj)
+    public void adduUseItemFunc(Item item)
     {
-        item.useItem();
+        playerObj.useItem(item);
         isCloseCommand = true;
-        GManager.instance.isEndPlayerAction = true;
-        GManager.instance.playersTurn = false;
-        //プレイヤーの位置情報は必ずリストの先頭になる
-        GManager.instance.charsNextPosition.Add(playerObj.transform.position);
     }
 
     /**

@@ -11,17 +11,15 @@ public class PortionItem : RecoveryItem
         base.Start();
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statusObj)
     {
-        StatusComponentPlayer playerStatusObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
         //プレイヤーのHPが満タンの場合は回復しない
-        //if (GManager.instance.playerHp == GManager.instance.nowPlayerMaxHp)
-        if (playerStatusObj.charHp.hp >= playerStatusObj.charHp.maxHp)
+        if (statusObj.charHp.hp >= statusObj.charHp.maxHp)
         {
-            LogMessageManager.wrightLog(MessageManager.createMessage("11"));
+            LogMessageManager.wrightLog(MessageManager.createMessage("20",statusObj.charName.name));
             return;
         }
-        playerStatusObj.charHp.addHp(hpPoint);
-        base.useItem();
+        statusObj.charHp.addHp(hpPoint);
+        base.useItem(statusObj);
     }
 }

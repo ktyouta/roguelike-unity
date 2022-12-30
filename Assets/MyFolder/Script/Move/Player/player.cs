@@ -26,6 +26,7 @@ public class player : MovingObject
     // 機能コンポーネント
     [HideInInspector] public AttackComponentBase attackComponentObj;
     [HideInInspector] public ThrowComponentBase throwComponentObj;
+    [HideInInspector] public UseItemComponentBase useItemComponentObj;
 
     public enum playerState
     {
@@ -45,12 +46,14 @@ public class player : MovingObject
     protected override void Start()
     {
         base.Start();
-        // 1Fの時のみ取得し、以降は前のシーンから引き継ぐ
+        //1Fの時のみ取得し、以降は前のシーンから引き継ぐ
         setPlayerStatus();
-        // 攻撃用コンポーネント
+        //攻撃用コンポーネント
         attackComponentObj = GetComponent<AttackComponentBase>();
-        // アイテムの投擲用コンポーネント
+        //アイテムの投擲用コンポーネント
         throwComponentObj = GetComponent<ThrowComponentBase>();
+        //アイテム使用のコンポーネント
+        useItemComponentObj = GetComponent<UseItemComponentBase>();
 
         //リスポーン時に下方向を向く
         nextHorizontalKey = 0;
@@ -223,9 +226,9 @@ public class player : MovingObject
     /**
      * アイテムを使用
      */
-    public void useItem(GameObject item)
+    public void useItem(Item item)
     {
-        item.GetComponent<Item>().useItem();
+        useItemComponentObj.use(item,statusObj);
     }
 
     /**

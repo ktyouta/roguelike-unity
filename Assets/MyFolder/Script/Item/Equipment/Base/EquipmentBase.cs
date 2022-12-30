@@ -13,7 +13,7 @@ public class EquipmentBase : Item
         base.Start();
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statusObj)
     {
         for (int i=0;i< ItemManager.itemList.Count;i++)
         {
@@ -25,13 +25,13 @@ public class EquipmentBase : Item
                     {
                         //装備を外す
                         isEquip = false;
-                        LogMessageManager.wrightLog(MessageManager.createMessage("19", name));
+                        LogMessageManager.wrightLog(MessageManager.createMessage("19", statusObj.charName.name, name));
                     }
                     else
                     {
                         //アイテムを装備する
                         isEquip = true;
-                        LogMessageManager.wrightLog(MessageManager.createMessage("18", name));
+                        LogMessageManager.wrightLog(MessageManager.createMessage("18", statusObj.charName.name, name));
                     }
                 }
             }
@@ -67,11 +67,7 @@ public class EquipmentBase : Item
         //enemy.enemyHp -= point;
         //対象オブジェクトのダメージ処理を行う
         OutAccessComponentBase outAccessObj = targetObj?.GetComponent<OutAccessComponentBase>();
-        if (outAccessObj == null)
-        {
-            return;
-        }
         //ダメージ処理
-        //outAccessObj.callCalculateDamage(point, statusObj.charName.name);
+        outAccessObj?.callCalculateDamage(point);
     }
 }

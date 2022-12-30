@@ -29,7 +29,7 @@ public abstract class Item : MonoBehaviour
     /**
      * アイテムを使用
      */
-    public abstract void useItem();
+    public abstract void useItem(StatusComponentBase statusObj);
 
     /**
      * アイテムが衝突した場合の処理

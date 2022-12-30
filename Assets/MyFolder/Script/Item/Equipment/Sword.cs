@@ -15,22 +15,22 @@ public class Sword : EquipmentBase
         statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statusObj)
     {
         string weaponName;
-        base.useItem();
+        base.useItem(statusObj);
         if (isEquip)
         {
             //GManager.instance.playerAttack += attackParam;
-            statusComponentObj?.charAttack.setTotalAttack(attackParam);
+            statusObj?.charAttack.setTotalAttack(attackParam);
             weaponName = name;
         }
         else
         {
             //GManager.instance.playerAttack -= attackParam;
-            statusComponentObj?.charAttack.initializeTotalAttack();
+            statusObj?.charAttack.initializeTotalAttack();
             weaponName = "‚È‚µ";
         }
-        statusComponentObj.weaponName = weaponName;
+        ((StatusComponentPlayer)statusObj).weaponName = weaponName;
     }
 }

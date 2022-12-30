@@ -5,31 +5,29 @@ using UnityEngine;
 public class Shield : EquipmentBase
 {
     [Header("防御力")] public int defenceParam;
-    [SerializeField, Header("キャラのステータス用コンポーネント")] private StatusComponentPlayer statusComponentObj;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
-    public override void useItem()
+    public override void useItem(StatusComponentBase statuObj)
     {
         string shieldName;
-        base.useItem();
+        base.useItem(statuObj);
         if (isEquip)
         {
             //GManager.instance.playerDefence += defenceParam;
-            statusComponentObj?.charDefence.settotalDefence(defenceParam);
+            statuObj?.charDefence.settotalDefence(defenceParam);
             shieldName = name;
         }
         else
         {
             //GManager.instance.playerDefence -= defenceParam;
-            statusComponentObj?.charDefence.initializeTotalDefence();
+            statuObj?.charDefence.initializeTotalDefence();
             shieldName = "なし";
         }
-        statusComponentObj.shieldName = shieldName;
+        ((StatusComponentPlayer)statuObj).shieldName = shieldName;
     }
 }
