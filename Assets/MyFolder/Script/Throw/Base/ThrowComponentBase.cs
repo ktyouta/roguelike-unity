@@ -56,7 +56,6 @@ public abstract class ThrowComponentBase : MonoBehaviour
         //投擲用のアイテムを生成
         GameObject newThrownItemObj = Instantiate(item, new Vector3(transform.position.x, transform.position.y, 0.0f), Quaternion.identity) as GameObject;
         newThrownItemObj.SetActive(true);
-        newThrownItemObj.GetComponent<Item>().isEnter = true;
         ThrowObject throwObj = newThrownItemObj.GetComponent<ThrowObject>();
         //ベクトルをセット
         if (!throwObj.rb)

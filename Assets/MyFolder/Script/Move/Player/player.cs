@@ -243,9 +243,9 @@ public class player : MovingObject
             return;
         }
         Item tempItem = item.GetComponent<Item>();
+        //プレイヤーの足元にアイテムを生成する
         GameObject newPutItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, 0.0f), Quaternion.identity) as GameObject;
         newPutItem.SetActive(true);
-        newPutItem.GetComponent<Item>().isEnter = true;
         newPutItem.GetComponent<Item>().isPut = true;
         tempItem.deleteSelectedItem(tempItem.id);
     }

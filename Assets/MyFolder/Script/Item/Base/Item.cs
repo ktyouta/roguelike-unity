@@ -12,7 +12,6 @@ public abstract class Item : MonoBehaviour
     [Header("ステージ難易度に応じたID")] public int diffId;
     [Header("買値")] public int buyPrice;
     [Header("売値")] public int sellPrice;
-    [HideInInspector] public bool isEnter = false;
     [HideInInspector] public bool isPut = false;
     public GameObject itemPanelObj;
     public GameObject itemPanel;
@@ -42,17 +41,9 @@ public abstract class Item : MonoBehaviour
         {
             return;
         }
-        //出入り時に2回実行される対策
-        isEnter = !isEnter;
-        if (!isEnter)
-        {
-            return;
-        }
         //アイテムを足元に置いたとき
         if (isPut)
         {
-            isEnter = !isEnter;
-            isPut = !isPut;
             return;
         }
         //所持制限のチェック
@@ -60,6 +51,12 @@ public abstract class Item : MonoBehaviour
         {
             this.gameObject.SetActive(false);
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        isPut = false;
+        return;   
     }
 
     /**
