@@ -14,12 +14,7 @@ GameObject:
   - component: {fileID: 3465309927118038359}
   - component: {fileID: 5216184424250817722}
   - component: {fileID: 2687941389892111325}
-  - component: {fileID: 4201193582003233999}
-  - component: {fileID: 8369460049026615599}
-  - component: {fileID: 7314220277912530285}
-  - component: {fileID: 4578234016624487480}
-  - component: {fileID: 7798226450782474965}
-  - component: {fileID: -1006539707079245198}
+  - component: {fileID: -2832170693532916529}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -170,26 +165,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 182165b102f44eb408f51bc483a1a1a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jsonDataId: 0
   isMoving: 0
   rb2D: {fileID: 0}
   isAttack: 0
   nextHorizontalKey: 1
   nextVerticalkey: 0
   statusObj: {fileID: 0}
-  itemLayer:
-    serializedVersion: 2
-    m_Bits: 512
   playerBeforePosition: {x: 0, y: 0}
   plState: 0
-  restartLevelDelay: 1
-  levelText: {fileID: 0}
   enemyObject: {fileID: 0}
   horizontal: 0
   vertical: 0
   leftShift: 0
   attackComponentObj: {fileID: 0}
   throwComponentObj: {fileID: 0}
---- !u!114 &4201193582003233999
+  useItemComponentObj: {fileID: 0}
+--- !u!114 &-2832170693532916529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -202,12 +194,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charHp:
-    hp: 100
-    maxHp: 100
+    hp: 0
+    maxHp: 0
   charName:
-    name: "\u30D7\u30EC\u30A4\u30E4\u30FC"
+    name: 
   charAttack:
-    attack: 5
+    attack: 0
     totalAttack: 0
   charDefence:
     defence: 0
@@ -216,7 +208,7 @@ MonoBehaviour:
     money: 0
     maxMoney: 99999
   charFood:
-    foodPoint: 100
+    foodPoint: 0
     maxFoodPoint: 100
   charExperience:
     level: 1
@@ -232,71 +224,7 @@ MonoBehaviour:
       defence: 0
       totalDefence: 0
   charCarm:
-    charmPoint: 100
+    charmPoint: 0
     maxCharmPoint: 100
   weaponName: "\u306A\u3057"
   shieldName: "\u306A\u3057"
---- !u!114 &8369460049026615599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5587551642981322463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32094c765ae74ed48ab04b526b84bd1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statusObj: {fileID: 0}
---- !u!114 &7314220277912530285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5587551642981322463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adbc9a755702f0845b0e0173ddaea401, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4578234016624487480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5587551642981322463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dacd849759f1ab44ca6eb2391ebae450, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statusObj: {fileID: 0}
---- !u!114 &7798226450782474965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5587551642981322463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7393099585eb85147b71c958779c4fc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemXSpeed: 10
-  itemYSpeed: 10
---- !u!114 &-1006539707079245198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5587551642981322463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6893d22b814b48248bf5bdcb6e227436, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

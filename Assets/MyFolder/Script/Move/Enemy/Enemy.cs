@@ -22,11 +22,6 @@ public class Enemy : MovingObject
     [HideInInspector] public MoveActionComponentBase moveActionComponentObj;
     //センサー
     [HideInInspector] public SensorComponentBase sensorComponentObj;
-    //ダメージアクション
-    [HideInInspector] public DamageActionComponentBase damageActionComponentObj;
-
-    //識別用ID(jsonから対応するデータ取得する用)
-    [Header("識別用ID")] public int enemyId;
 
 
     //Startは、基本クラスの仮想Start関数をオーバーライドします。
@@ -39,7 +34,7 @@ public class Enemy : MovingObject
         //機能コンポーネントを取得
         // IDの一致する敵のデータを取得
         RoguelikeEnemyClass enemyInfo = ComponentSettingManager.roguelikeEnemyInfoList
-                                            .Where(e => e.id == enemyId).FirstOrDefault();
+                                            .Where(e => e.id == jsonDataId).FirstOrDefault();
 
         // データの取得に失敗した場合はオブジェクトを削除する
         if (enemyInfo == null)
@@ -57,38 +52,48 @@ public class Enemy : MovingObject
 
         //攻撃アクションコンポーネント
         Type addComponentType = Type.GetType(enemyInfo.attackComponentName);
-        attackComponentObj = GetComponent<AttackComponentBase>();
-        if (attackComponentObj == null)
+        if (addComponentType != null)
         {
-            gameObject.AddComponent(addComponentType);
             attackComponentObj = GetComponent<AttackComponentBase>();
+            if (attackComponentObj == null)
+            {
+                gameObject.AddComponent(addComponentType);
+                attackComponentObj = GetComponent<AttackComponentBase>();
+            }
         }
 
         //移動点取得コンポーネント
         addComponentType = Type.GetType(enemyInfo.movePointGetComponentName);
-        moveActionComponentObj = GetComponent<MoveActionComponentBase>();
-        if (moveActionComponentObj == null)
+        if (addComponentType != null)
         {
-            gameObject.AddComponent(addComponentType);
-            moveActionComponentObj = GetComponent<MoveActionComponentAstar>();
+            moveActionComponentObj = GetComponent<MoveActionComponentBase>();
+            if (moveActionComponentObj == null)
+            {
+                gameObject.AddComponent(addComponentType);
+                moveActionComponentObj = GetComponent<MoveActionComponentBase>();
+            }
         }
 
         //センサーコンポーネント
         addComponentType = Type.GetType(enemyInfo.sensorComponentName);
-        sensorComponentObj = GetComponent<SensorComponentBase>();
-        if (sensorComponentObj == null)
+        if (addComponentType != null)
         {
-            gameObject.AddComponent(addComponentType);
             sensorComponentObj = GetComponent<SensorComponentBase>();
+            if (sensorComponentObj == null)
+            {
+                gameObject.AddComponent(addComponentType);
+                sensorComponentObj = GetComponent<SensorComponentBase>();
+            }
         }
 
         //ダメージアクションコンポーネント
         addComponentType = Type.GetType(enemyInfo.damageActionComponentName);
-        damageActionComponentObj = GetComponent<DamageActionComponentBase>();
-        if (damageActionComponentObj == null)
+        if (addComponentType != null)
         {
-            gameObject.AddComponent(addComponentType);
-            damageActionComponentObj = GetComponent<DamageActionComponentBase>();
+            if (GetComponent<DamageActionComponentBase>() == null)
+            {
+                gameObject.AddComponent(addComponentType);
+            }
         }
 
         //外部アクセス用コンポーネントをセット

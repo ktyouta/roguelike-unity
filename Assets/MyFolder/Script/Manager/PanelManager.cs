@@ -178,6 +178,10 @@ public class PanelManager : MonoBehaviour
      */
     public void openStatus()
     {
+        if (statusComponentPlayer == null)
+        {
+            statusComponentPlayer = playerObj.GetComponent<StatusComponentPlayer>();
+        }
         //アイテム用パネルを非表示にする
         itemText.SetActive(false);
         itemUsePanel.SetActive(false);

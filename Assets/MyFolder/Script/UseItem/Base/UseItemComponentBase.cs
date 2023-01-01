@@ -11,7 +11,7 @@ public class UseItemComponentBase : MonoBehaviour
     }
 
     //アイテムを使用
-    public virtual void use(Item item,StatusComponentBase statusObj)
+    public virtual void use(Item item, StatusComponentMoving statusObj)
     {
         item.useItem(statusObj);
     }

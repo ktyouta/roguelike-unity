@@ -12,7 +12,7 @@ public class AttackUp : BookBase
         base.Start();
     }
 
-    public override void useItem(StatusComponentBase statuObj)
+    public override void useItem(StatusComponentMoving statuObj)
     {
         //GManager.instance.playerAttack += attackRiseValue==0?10: attackRiseValue;
         statuObj?.charAttack.addAttack(attackRiseValue);

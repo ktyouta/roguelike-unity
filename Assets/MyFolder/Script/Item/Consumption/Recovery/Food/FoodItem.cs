@@ -15,7 +15,7 @@ public class FoodItem : RecoveryItem
         foodText = GameObject.Find("Food").GetComponent<Text>();
     }
 
-    public override void useItem(StatusComponentBase statusObj)
+    public override void useItem(StatusComponentMoving statusObj)
     {
         //プレイヤーの満腹度が満タンの場合は回復しない
         if (((StatusComponentPlayer)statusObj).charFood.foodPoint >= ((StatusComponentPlayer)statusObj).charFood.maxFoodPoint)

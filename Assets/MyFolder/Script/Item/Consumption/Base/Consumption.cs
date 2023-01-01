@@ -10,7 +10,7 @@ public abstract class Consumption : Item
         base.Start();
     }
 
-    public override void useItem(StatusComponentBase statusObj)
+    public override void useItem(StatusComponentMoving statusObj)
     {
         LogMessageManager.wrightLog(MessageManager.createMessage("12", statusObj.charName.name,name));
         deleteSelectedItem(id);

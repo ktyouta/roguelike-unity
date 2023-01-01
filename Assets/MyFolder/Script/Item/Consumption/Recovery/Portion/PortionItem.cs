@@ -11,7 +11,7 @@ public class PortionItem : RecoveryItem
         base.Start();
     }
 
-    public override void useItem(StatusComponentBase statusObj)
+    public override void useItem(StatusComponentMoving statusObj)
     {
         //プレイヤーのHPが満タンの場合は回復しない
         if (statusObj.charHp.hp >= statusObj.charHp.maxHp)

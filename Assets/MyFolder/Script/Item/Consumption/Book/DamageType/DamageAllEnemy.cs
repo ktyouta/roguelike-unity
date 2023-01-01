@@ -12,7 +12,7 @@ public class DamageAllEnemy : BookBase
         damageValue = damageValue == 0 ? 10 : damageValue;
     }
 
-    public override void useItem(StatusComponentBase statuObj)
+    public override void useItem(StatusComponentMoving statuObj)
     {
         for (var i=0;i<GManager.instance.enemies.Count;i++)
         {

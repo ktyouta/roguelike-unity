@@ -13,7 +13,7 @@ public class EquipmentBase : Item
         base.Start();
     }
 
-    public override void useItem(StatusComponentBase statusObj)
+    public override void useItem(StatusComponentMoving statusObj)
     {
         for (int i=0;i< ItemManager.itemList.Count;i++)
         {

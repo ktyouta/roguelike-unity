@@ -6,6 +6,19 @@ using UnityEngine;
 public static class ComponentSettingManager
 {
     /// <summary>
+    /// 共通のステータス
+    /// </summary>
+    [System.Serializable]
+    public class CommonStatusInfoClass
+    {
+        public string name;
+        public int hp;
+        public int attack;
+        public int defence;
+    }
+
+
+    /// <summary>
     /// 敵のデータリスト
     /// </summary>
     public class RoguelikeEnemyJsonArrayClass
@@ -36,12 +49,8 @@ public static class ComponentSettingManager
     /// 敵のステータス
     /// </summary>
     [System.Serializable]
-    public class EnemyStatusInfoClass
+    public class EnemyStatusInfoClass : CommonStatusInfoClass
     {
-        public string name;
-        public int hp;
-        public int attack;
-        public int defence;
         public int wallet;
         public int experience;
     }
@@ -118,35 +127,66 @@ public static class ComponentSettingManager
         public string name;
     }
 
+    /// <summary>
+    /// プレイヤーのデータリスト
+    /// </summary>
+    public class RoguelikePlayerJsonArrayClass
+    {
+        public RoguelikePlayerClass[] playerInfos;
+    }
+
+    /// <summary>
+    /// プレイヤーのデータ
+    /// </summary>
+    [System.Serializable]
+    public class RoguelikePlayerClass
+    {
+        public int id;
+        public PlayerStatusInfoClass status;
+    }
+
+    /// <summary>
+    /// プレイヤーのステータス
+    /// </summary>
+    [System.Serializable]
+    public class PlayerStatusInfoClass : CommonStatusInfoClass
+    {
+        public int wallet;
+        public int food;
+        public int charm;
+    }
+
     // 結合後の敵のデータリスト
     [HideInInspector] public static List<RoguelikeEnemyClass> roguelikeEnemyInfoList = new List<RoguelikeEnemyClass>();
+    // プレイヤーのデータリスト
+    [HideInInspector] public static List<RoguelikePlayerClass> roguelikePlayerInfoList = new List<RoguelikePlayerClass>();
 
     static ComponentSettingManager()
     {
         //敵のデータを取得
-        string loadjson = Resources.Load<TextAsset>("json/Component/RoguelikeEnemy").ToString();
+        string loadEnemyJson = Resources.Load<TextAsset>("json/Component/RoguelikeEnemy").ToString();
         RoguelikeEnemyJsonArrayClass enemyInfosJsonData = new RoguelikeEnemyJsonArrayClass();
-        JsonUtility.FromJsonOverwrite(loadjson, enemyInfosJsonData);        
+        JsonUtility.FromJsonOverwrite(loadEnemyJson, enemyInfosJsonData);
 
         //攻撃用コンポーネントのマスターを取得
-        loadjson = Resources.Load<TextAsset>("json/Component/AttackComponentMaster").ToString();
+        loadEnemyJson = Resources.Load<TextAsset>("json/Component/AttackComponentMaster").ToString();
         AttackComponentMasterJsonArrayClass attackComponentJsonData = new AttackComponentMasterJsonArrayClass();
-        JsonUtility.FromJsonOverwrite(loadjson, attackComponentJsonData);
+        JsonUtility.FromJsonOverwrite(loadEnemyJson, attackComponentJsonData);
 
         //移動用コンポーネントのマスターを取得
-        loadjson = Resources.Load<TextAsset>("json/Component/MoveActionComponentMaster").ToString();
+        loadEnemyJson = Resources.Load<TextAsset>("json/Component/MoveActionComponentMaster").ToString();
         MoveActionComponentMasterJsonArrayClass moveActionComponentJsonData = new MoveActionComponentMasterJsonArrayClass();
-        JsonUtility.FromJsonOverwrite(loadjson, moveActionComponentJsonData);
+        JsonUtility.FromJsonOverwrite(loadEnemyJson, moveActionComponentJsonData);
 
         //センサー用コンポーネントのマスターを取得
-        loadjson = Resources.Load<TextAsset>("json/Component/SensorComponentMaster").ToString();
+        loadEnemyJson = Resources.Load<TextAsset>("json/Component/SensorComponentMaster").ToString();
         SensorComponentMasterJsonArrayClass sensorComponentJsonData = new SensorComponentMasterJsonArrayClass();
-        JsonUtility.FromJsonOverwrite(loadjson, sensorComponentJsonData);
+        JsonUtility.FromJsonOverwrite(loadEnemyJson, sensorComponentJsonData);
 
         //ダメージアクション用コンポーネントのマスターを取得
-        loadjson = Resources.Load<TextAsset>("json/Component/DamageActionComponentMaster").ToString();
+        loadEnemyJson = Resources.Load<TextAsset>("json/Component/DamageActionComponentMaster").ToString();
         DamageActionComponentMasterJsonArrayClass damageActionComponentJsonData = new DamageActionComponentMasterJsonArrayClass();
-        JsonUtility.FromJsonOverwrite(loadjson, damageActionComponentJsonData);
+        JsonUtility.FromJsonOverwrite(loadEnemyJson, damageActionComponentJsonData);
 
         //取得したデータを敵のデータリストと結合する
         roguelikeEnemyInfoList = enemyInfosJsonData.enemyInfos
@@ -240,5 +280,11 @@ public static class ComponentSettingManager
                             sensorComponentName = table.sensorComponentName,
                             damageActionComponentName = table.damageActionComponentName,
                         }).ToList();
+
+        //プレイヤーのデータを取得
+        string loadPlayerJson = Resources.Load<TextAsset>("json/Component/RoguelikePlayer").ToString();
+        RoguelikePlayerJsonArrayClass playerInfosJsonData = new RoguelikePlayerJsonArrayClass();
+        JsonUtility.FromJsonOverwrite(loadPlayerJson, playerInfosJsonData);
+        roguelikePlayerInfoList = playerInfosJsonData.playerInfos.ToList();
     }
 }

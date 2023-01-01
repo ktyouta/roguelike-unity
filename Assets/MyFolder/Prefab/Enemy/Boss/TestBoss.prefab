@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d213aa80134f1d49bd8eff32fe16506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jsonDataId: 1
   isMoving: 0
   rb2D: {fileID: 0}
   isAttack: 0
@@ -201,5 +202,3 @@ MonoBehaviour:
   attackComponentObj: {fileID: 0}
   moveActionComponentObj: {fileID: 0}
   sensorComponentObj: {fileID: 0}
-  damageActionComponentObj: {fileID: 0}
-  enemyId: 1

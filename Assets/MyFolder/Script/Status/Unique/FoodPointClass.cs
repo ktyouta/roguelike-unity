@@ -33,4 +33,12 @@ public class FoodPointClass
     {
         maxFoodPoint += point;
     }
+
+    /**
+     * maxFoodPoint‚ğŠî€’l‚É–ß‚·
+     */
+    public void initializeMaxFoodPoint()
+    {
+        maxFoodPoint = foodPoint;
+    }
 }

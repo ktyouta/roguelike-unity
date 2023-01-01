@@ -12,7 +12,7 @@ public abstract class AttackComponentPlayerBase : AttackComponentBase
     {
         base.Start();
         // キャストする型をキャラクターごとに変える
-        statusObj = (StatusComponentPlayer)GetComponent<StatusComponentBase>();
+        statusObj = GetComponent<StatusComponentPlayer>();
         playerObj = GetComponent<player>();
     }
 }

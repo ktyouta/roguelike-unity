@@ -6,9 +6,9 @@ using UnityEngine.Events;
 [System.Serializable]
 public class ExperienceClass
 {
-    [Header("キャラのレベル")] public int level;
+    [Header("キャラのレベル")] public int level = 1;
     [Header("現在の経験値")] public int experience;
-    [Header("経験値の上限")] public int maxExperience;
+    [Header("経験値の上限")] public int maxExperience = 50;
     [HideInInspector] public HpClass charHp;
     [HideInInspector] public AttackClass charAttack;
     [HideInInspector] public DefenceClass charDefence;

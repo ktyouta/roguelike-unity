@@ -10,16 +10,12 @@ public class player : MovingObject
     // プレイヤーのステータス用オブジェクト
     [HideInInspector] public StatusComponentPlayer statusObj;
 
-    [Header("アイテムレイヤー")] public LayerMask itemLayer;
     [HideInInspector] public Vector2 playerBeforePosition;
     [HideInInspector] public playerState plState = playerState.Normal;
-    [HideInInspector] public float restartLevelDelay = 1f;        //レベルを再始動するまでの秒単位の遅延時間。(ステージのこと)
-    [HideInInspector] public GameObject levelText;
     [HideInInspector] public Enemy enemyObject;
     [HideInInspector] public int horizontal = 0;
     [HideInInspector] public int vertical = 0;
     [HideInInspector] public bool leftShift = false;
-    private Treasure treasureObject;
     private bool isDefeat = false;
     private int reduceFoodCounter = 0;
 
@@ -46,27 +42,50 @@ public class player : MovingObject
     protected override void Start()
     {
         base.Start();
-        //1Fの時のみ取得し、以降は前のシーンから引き継ぐ
-        setPlayerStatus();
+
+        //機能コンポーネントをセット
+        //ステータスコンポーネント
+        statusObj = GetComponent<StatusComponentPlayer>();
+
         //攻撃用コンポーネント
         attackComponentObj = GetComponent<AttackComponentBase>();
+        if (attackComponentObj == null)
+        {
+            gameObject.AddComponent<AttackComponentPlayer>();
+            attackComponentObj = GetComponent<AttackComponentBase>();
+        }
+
         //アイテムの投擲用コンポーネント
         throwComponentObj = GetComponent<ThrowComponentBase>();
+        if (throwComponentObj == null)
+        {
+            gameObject.AddComponent<ThrowComponentPlayer>();
+            throwComponentObj = GetComponent<ThrowComponentBase>();
+        }
+
         //アイテム使用のコンポーネント
         useItemComponentObj = GetComponent<UseItemComponentBase>();
+        if (useItemComponentObj == null)
+        {
+            gameObject.AddComponent<UseItemComponentPlayer>();
+            useItemComponentObj = GetComponent<UseItemComponentBase>();
+        }
+
+        //ダメージアクションコンポーネント
+        if (GetComponent<DamageActionComponentBase>() == null)
+        {
+            gameObject.AddComponent<DamageActionComponentPlayer>();
+        }
+
+        //外部アクセス用コンポーネント
+        if (GetComponent<OutAccessComponentBase>() == null)
+        {
+            gameObject.AddComponent<OutAccessComponentBase>();
+        }
 
         //リスポーン時に下方向を向く
         nextHorizontalKey = 0;
         nextVerticalkey = -1;
-    }
-
-    /**
-     * キャラクターのステータスを取得
-     */
-    protected virtual void setPlayerStatus()
-    {
-        // キャストする型をキャラクターごとに変える
-        statusObj = (StatusComponentPlayer)GetComponent<StatusComponentBase>();
     }
 
     private void Update()

@@ -12,7 +12,7 @@ public class Shield : EquipmentBase
         base.Start();
     }
 
-    public override void useItem(StatusComponentBase statuObj)
+    public override void useItem(StatusComponentMoving statuObj)
     {
         string shieldName;
         base.useItem(statuObj);

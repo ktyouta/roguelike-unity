@@ -7,6 +7,9 @@ using Common;
 //abstractをつけると、抽象クラスの宣言になる
 public abstract class MovingObject : MonoBehaviour
 {
+    //識別用ID(jsonから対応するデータ取得する用)
+    [Header("識別用ID")] public int jsonDataId;
+
     [HideInInspector] public bool isMoving;                    //動けるかどうか
     [HideInInspector] public Rigidbody2D rb2D;                //このオブジェクトにアタッチされた、Rigidbody2Dの入れ物を用意
     [HideInInspector] public bool isAttack = false;
@@ -30,6 +33,14 @@ public abstract class MovingObject : MonoBehaviour
         //移動時間の逆数を保存することで、除算ではなく乗算で使用できるため、より効率的です。
         inverseMoveTime = 1f / moveTime;
         animator = GetComponent<Animator>();
+    }
+
+    /**
+     * コンポーネントをセットする
+     */
+    protected void setFuncComponent()
+    {
+
     }
 
     /**

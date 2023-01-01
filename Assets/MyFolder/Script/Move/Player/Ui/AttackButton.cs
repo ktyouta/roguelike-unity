@@ -23,6 +23,10 @@ public class AttackButton : MonoBehaviour
      */
     private void attackAction()
     {
+        if (attackComponentObj == null)
+        {
+            attackComponentObj = playerObj.GetComponent<AttackComponentBase>();
+        }
         //プレイヤーの状態が通常以外
         if (playerObj.plState != player.playerState.Normal)
         {

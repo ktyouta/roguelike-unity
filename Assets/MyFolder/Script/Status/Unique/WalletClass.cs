@@ -6,7 +6,7 @@ using UnityEngine;
 public class WalletClass
 {
     [Header("Š‹à")] public int money;
-    [Header("Š‹àãŒÀŠz")] public int maxMoney;
+    [Header("Š‹àãŒÀŠz")] public int maxMoney = 99999;
 
     public void addMoney(int point)
     {

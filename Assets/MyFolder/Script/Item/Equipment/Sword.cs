@@ -15,7 +15,7 @@ public class Sword : EquipmentBase
         statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
-    public override void useItem(StatusComponentBase statusObj)
+    public override void useItem(StatusComponentMoving statusObj)
     {
         string weaponName;
         base.useItem(statusObj);

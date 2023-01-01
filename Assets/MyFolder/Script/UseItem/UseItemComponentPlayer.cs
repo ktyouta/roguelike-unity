@@ -5,7 +5,7 @@ using UnityEngine;
 public class UseItemComponentPlayer : UseItemComponentBase
 {
     //アイテムを使用
-    public override void use(Item item, StatusComponentBase statusObj)
+    public override void use(Item item, StatusComponentMoving statusObj)
     {
         base.use(item,statusObj);
         GManager.instance.isEndPlayerAction = true;

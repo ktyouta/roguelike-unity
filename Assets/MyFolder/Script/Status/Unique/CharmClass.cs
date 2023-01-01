@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharmClass
 {
     [Header("魅力度")] public int charmPoint;
-    [Header("魅力度上限値")] public int maxCharmPoint;
+    [Header("魅力度上限値")] public int maxCharmPoint = 100;
 
     public void addCharmPoint(int point)
     {

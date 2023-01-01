@@ -14,10 +14,10 @@ public class DefenceUp : BookBase
         statusComponentObj = GameObject.FindGameObjectWithTag("Player").GetComponent<StatusComponentPlayer>();
     }
 
-    public override void useItem(StatusComponentBase statusObj)
+    public override void useItem(StatusComponentMoving statusObj)
     {
         //GManager.instance.playerDefence += defenceRiseValue==0?10: defenceRiseValue;
-        statusComponentObj?.charDefence.adddefence(defenceRiseValue);
+        statusObj?.charDefence.adddefence(defenceRiseValue);
         LogMessageManager.wrightLog(name + "‚ðŽg—p‚µ‚½");
         base.useItem(statusObj);
     }
