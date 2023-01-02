@@ -75,7 +75,7 @@ namespace Common
 		public const int WALL_LOTTERY_PARAM = 10;
 
 		//不思議のダンジョン系マップのモンスターハウスの出現確率(%)
-		public const int MONSTERHOUSE_PROBABILITY = 95;
+		public const int MONSTERHOUSE_PROBABILITY = 5;
 	}
 
 	//アイテムのタイプ

@@ -5,7 +5,7 @@ using UnityEngine;
 public static class ItemManager
 {
     //初期のアイテム所持制限数
-    private const int INIT_MAX_POSESSION = 3;
+    private const int INIT_MAX_POSESSION = 10;
 
     //プレイヤーのアイテムリスト
     public static List<GameObject> itemList;

@@ -8,12 +8,12 @@ public class PanelManager : MonoBehaviour
 
     //パネル制御系
     [Header("インベントリーに展開されるアイテムボタン")] public GameObject itemBtn;
-    [Header("インベントリーの子オブジェクト(テキスト)")] public Text itemPanel;
+    [Header("インベントリーの子オブジェクト(テキスト)")] public Text itemPanelText;
     public GameObject levelText;
     public GameObject levelImage;
     public GameObject commandPanel;
     public GameObject statusText;
-    public GameObject itemText;
+    public GameObject itemPanel;
     public GameObject itemUsePanel;
     public GameObject npcWindowImage;
     public GameObject npcImage;
@@ -68,7 +68,7 @@ public class PanelManager : MonoBehaviour
         levelText = GameObject.Find("LevelText");
         commandPanel = GameObject.Find("CommandPanel");
         statusText = GameObject.Find("StatusPanel");
-        itemText = GameObject.Find("ItemPanel");
+        itemPanel = GameObject.Find("ItemPanel");
         statusButton = GameObject.Find("StatusButton").GetComponent<Button>();
         statusButton.onClick.AddListener(() => openStatus());
         itemButton = GameObject.Find("ItemButton").GetComponent<Button>();
@@ -95,10 +95,10 @@ public class PanelManager : MonoBehaviour
             statusText.SetActive(false);
             playerStatusPanel = statusText.transform.Find("PlayerStatusText").GetComponent<Text>();
         }
-        if (itemText != null)
+        if (itemPanel != null)
         {
-            itemText.SetActive(false);
-            itemPanel = itemText.transform.Find("ItemPanelText").GetComponent<Text>();
+            itemPanel.SetActive(false);
+            itemPanelText = itemPanel.transform.Find("ItemPanelText").GetComponent<Text>();
         }
         if (itemUsePanel != null)
         {
@@ -155,7 +155,7 @@ public class PanelManager : MonoBehaviour
     public void openManual()
     {
         //アイテム用パネルを非表示にする
-        itemText.SetActive(false);
+        itemPanel.SetActive(false);
         itemUsePanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
         //ステータスパネルを共有して使う
@@ -183,7 +183,7 @@ public class PanelManager : MonoBehaviour
             statusComponentPlayer = playerObj.GetComponent<StatusComponentPlayer>();
         }
         //アイテム用パネルを非表示にする
-        itemText.SetActive(false);
+        itemPanel.SetActive(false);
         itemUsePanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
         statusText.SetActive(true);
@@ -216,15 +216,16 @@ public class PanelManager : MonoBehaviour
      */
     public void openItem()
     {
-        deleteChildButton(itemText.transform);
+        //ボタンをすべて削除
+        deleteChildButton(itemPanelText.transform);
         statusText.SetActive(false);
-        itemText.SetActive(true);
-        GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
-        for (int i = 0; i < itemBtns.Length; i++)
-        {
-            itemBtns[i].GetComponent<Image>().color = new Color32(140, 168, 166, 255);
-        }
-        Vector3 parentPosition = itemText.transform.position;
+        itemPanel.SetActive(true);
+        //GameObject[] itemBtns = GameObject.FindGameObjectsWithTag("ItemButton");
+        //for (int i = 0; i < itemBtns.Length; i++)
+        //{
+        //    itemBtns[i].GetComponent<Image>().color = new Color32(140, 168, 166, 255);
+        //}
+        Vector3 parentPosition = itemPanel.transform.position;
         deploymentMyInventory(parentPosition);
     }
 
@@ -234,17 +235,17 @@ public class PanelManager : MonoBehaviour
     void deploymentMyInventory(Vector3 parentPosition)
     {
         //アイテムを所持していない
-        if (ItemManager.itemList.Count < 1 && itemPanel != null)
+        if (ItemManager.itemList.Count < 1 && itemPanelText != null)
         {
-            itemPanel.enabled = true;
-            itemPanel.text = "アイテムを所持していません";
+            itemPanelText.enabled = true;
+            itemPanelText.text = "アイテムを所持していません";
             return;
         }
         for (var i = 0; i < ItemManager.itemList.Count; i++)
         {
             //メニューボタンの生成
-            GameObject listButton = Instantiate(itemBtn, new Vector3(parentPosition.x - 20, parentPosition.y + 60 - i * 35, 0f), Quaternion.identity) as GameObject;
-            listButton.transform.SetParent(itemText.transform, false);
+            GameObject listButton = Instantiate(itemBtn) as GameObject;
+            listButton.transform.SetParent(itemPanelText.transform, false);
             listButton.transform.Find("Text").GetComponent<Text>().text = ItemManager.itemList[i].GetComponent<Item>().name;
             int index = i;
             listButton.GetComponent<ItemNameButton>().itemNameButtonId = index;
@@ -267,10 +268,10 @@ public class PanelManager : MonoBehaviour
         coroutine = null;
         commandPanel.SetActive(false);
         statusText.SetActive(false);
-        itemText.SetActive(false);
+        itemPanel.SetActive(false);
         itemUsePanel.SetActive(false);
         itemDescriptionPanel.SetActive(false);
-        itemPanel.enabled = false;
+        itemPanelText.enabled = false;
         playerObj.setPlayerState(player.playerState.Normal);
     }
 
@@ -290,15 +291,12 @@ public class PanelManager : MonoBehaviour
         //選択肢ボタンをすべて削除
         foreach (Transform child in childButtons)
         {
-            if (child.name != "ItemPanelText" && child.name != "Scrollbar")
-            {
-                Destroy(child.gameObject);
-            }
+            Destroy(child.gameObject);
         }
     }
 
     /**
-     * itemPanel(インベントリー)に展開されたアイテム名をクリック
+     * itemPanelText(インベントリー)に展開されたアイテム名をクリック
      */
     public void clickItemButton(GameObject argItem, GameObject listButton, int index)
     {
